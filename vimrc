@@ -89,4 +89,5 @@ vmap <C-c> y:call DumpToClipBoard()<CR>
 
 let @r="lte_common|lte_cpm|lte_mgmt|lte_mscp|lte_pmip|mc_red"
 
+set csprg='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
 
