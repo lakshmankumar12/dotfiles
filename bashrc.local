@@ -3,13 +3,29 @@ alias ls='ls --color -F'
 alias lsof='/usr/sbin/lsof'
 alias grep='egrep --color'
 
-alias wincyg='cd /Users/lnara002/cygwin'
-alias pidgin='cd /drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
+export WINCYG='/Users/lnara002/cygwin'
+export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
+export WINWS='/drive_c/home/lnara002/linux'
+export WINHOME='/drive_c/Users/lnara002'
+export WINDWN='/drive_c/Users/lnara002/Downloads'
+export WINLK='/drive_c/Lakshman'
+export WINTMP='/drive_c/Lakshman/temp'
+export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
+export WINGH='/drive_c/Users/lnara002/cygwin/github'
+
+alias wincyg="cd $WINCYG"
+alias pidgin="cd $PIDGIN"
+alias winws="cd $WINWS"
+alias winhome="cd $WINHOME"
+alias windwn="cd $WINDWN"
+alias winlk="cd $WINLK"
+alias wintmp="cd $WINTMP"
+alias winrs="cd $WINRS"
+alias wingh="cd $WINGH"
+
+
 alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
 
-export WINCYG='/Users/lnara002/cygwin'
-export WINWS='/drive_c/home/lnara002/linux'
-export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
 
 export PATH=$PATH:$WINCYG/scripts
 
