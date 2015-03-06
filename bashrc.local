@@ -2,8 +2,10 @@ export EMAIL_ADDR=Lakshman_Kumar.Narayanan@alcatel-lucent.com
 alias ls='ls --color -F'
 alias lsof='/usr/sbin/lsof'
 alias grep='egrep --color'
+alias tmux='/home/lnara002/software/tmux/tmux-1.9a/postinstall/bin/tmux'
 
 export WINCYG='/Users/lnara002/cygwin'
+export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'
 export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
 export WINWS='/drive_c/home/lnara002/linux'
 export WINHOME='/drive_c/Users/lnara002'
@@ -14,6 +16,7 @@ export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
 
 alias wincyg="cd $WINCYG"
+alias winnotes="cd $WINNOTES"
 alias pidgin="cd $PIDGIN"
 alias winws="cd $WINWS"
 alias winhome="cd $WINHOME"
@@ -65,7 +68,7 @@ howlong()
 
 mkf()
 {
-  ps -ef | grep mk
+  ps -ef | grep '\<mk\>' | grep -v egrep | uniq -f 5
 }
 
 mkp()
@@ -80,6 +83,7 @@ mkp()
     return 1
   fi
   echo "pid is $pid"
+  ls -l /proc/$pid/cwd
   pstree -p $pid
   howlong $pid
 }
@@ -122,4 +126,84 @@ dtsdir()
   fi
   cd /home/lnara002/ws/dts/$1
 }
+
+setr()
+{
+  /drive_c/Users/lnara002/cygwin/repo-of-scripts/new-clone/shiftclone.sh
+  if [ $? -eq 0 ] ; then 
+    export CURRENT_PANOS=$(cat /home/lnara002/.currp)
+    echo "CURRENT_PANOS set to $CURRENT_PANOS"
+    cd $CURRENT_PANOS
+  fi
+}
+
+check_sanity()
+{
+  if [ -z "$CURRENT_PANOS" ]; then
+    echo "CURRENT_PANOS is not set. Do setr first"
+    return 1
+  fi
+  if [[ ! $(pwd) == *"$CURRENT_PANOS"* ]] ; then
+    echo "CURRENT_PANOS:$CURRENT_PANOS doesn't seem to be in pwd:$(pwd)"
+    return 1
+  fi
+  return 0
+}
+
+cdr()
+{ 
+  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
+  cd $CURRENT_PANOS
+}
+
+cdp()
+{ 
+  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
+  cd $CURRENT_PANOS/panos
+}
+
+cdpbinx()
+{ 
+  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
+  cd $CURRENT_PANOS/panos/bin/7xxx-i386
+}
+
+cdpbinx64()
+{ 
+  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
+  cd $CURRENT_PANOS/panos/bin/7xxx-x86_64
+}
+
+cdpchile()
+{ 
+  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
+  cd $CURRENT_PANOS/panos/bin/7xxx-chile
+}
+
+cdplg()
+{ 
+  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
+  cd $CURRENT_PANOS/panos/lte_gtp
+}
+
+cdpg()
+{ 
+  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
+  cd $CURRENT_PANOS/panos/gen
+}
+
+testbd()
+{
+  if [ -z "$testbed" && -z "$1" ] ; then
+    echo "no testbed is set"
+  fi
+  if [ -n "$1" ] ; then
+    echo "seting testbed to $1"
+    export testbed=$1
+  else
+    echo "using testbed $testbed"
+  fi
+  ssh $testbed@$testbed
+}
+
 
