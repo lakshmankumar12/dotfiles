@@ -2,7 +2,7 @@ export EMAIL_ADDR=Lakshman_Kumar.Narayanan@alcatel-lucent.com
 alias ls='ls --color -F'
 alias lsof='/usr/sbin/lsof'
 alias grep='egrep --color'
-alias tmux='/home/lnara002/software/tmux/tmux-1.9a/postinstall/bin/tmux'
+alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
 
 export WINCYG='/Users/lnara002/cygwin'
 export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'
@@ -31,6 +31,7 @@ alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope
 
 
 export PATH=$PATH:$WINCYG/scripts
+export EDITOR=vim
 
 ovcs()
 {
@@ -194,7 +195,7 @@ cdpg()
 
 testbd()
 {
-  if [ -z "$testbed" && -z "$1" ] ; then
+  if [ -z "$testbed" -a -z "$1" ] ; then
     echo "no testbed is set"
   fi
   if [ -n "$1" ] ; then
@@ -206,4 +207,7 @@ testbd()
   ssh $testbed@$testbed
 }
 
-
+vi()
+{
+  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
+}
