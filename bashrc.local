@@ -3,6 +3,7 @@ alias ls='ls --color -F'
 alias lsof='/usr/sbin/lsof'
 alias grep='egrep --color'
 alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
+alias gitnp='git --no-pager'
 
 export WINCYG='/Users/lnara002/cygwin'
 export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'
@@ -28,6 +29,11 @@ alias wingh="cd $WINGH"
 
 
 alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
+
+alias findf='percol --match-method=regex tags_f'
+alias finds='percol --match-method=regex tags_s'
+alias findm='percol --match-method=regex tags_m'
+alias findd='percol --match-method=regex tags_d'
 
 
 export PATH=$PATH:$WINCYG/scripts
@@ -204,10 +210,23 @@ testbd()
   else
     echo "using testbed $testbed"
   fi
-  ssh $testbed@$testbed
+  ssh -X $testbed@$testbed
 }
 
 vi()
 {
   LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
+}
+
+open_conver()
+{
+  if [ -z "$1" ] ; then
+    echo "Supply the html file"
+    return 1
+  fi
+  if [ ! -f "$1" ] ; then
+    echo "html file $1 doesn't seem to be present"
+    return 1
+  fi
+  htmltotext.py $1 | vim -R -
 }
