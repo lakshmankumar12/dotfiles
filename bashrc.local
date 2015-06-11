@@ -61,6 +61,13 @@ newcsc()
   fi
   cscope -bqki cscope.files -f tmpcsc
   ovcs
+  echo -n "cscope completed. Rebuilding ctags .. "
+  ctags -L cscope.files --c++-kinds=+p --fields=+iaS --extra=+q
+  egrep ';"[[:space:]]f' tags > tags_f
+  egrep ';"[[:space:]]m' tags > tags_m
+  egrep ';"[[:space:]](s|t)' tags > tags_s
+  egrep ';"[[:space:]](d|e)' tags > tags_d
+  echo "done"
 }
 
 analy()
