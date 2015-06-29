@@ -3,6 +3,7 @@ alias ls='ls --color -F'
 alias lsof='/usr/sbin/lsof'
 alias grep='egrep --color'
 alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
+alias ag='/home/lnara002/software/ag/the_silver_searcher-0.30.0/postinstall/bin/ag'
 alias gitnp='git --no-pager'
 
 export WINCYG='/Users/lnara002/cygwin'
@@ -59,14 +60,19 @@ newcsc()
     echo "Huh .. There is already a tmpcsc.out here. Please clean that up first!"
     return 1
   fi
-  cscope -bqki cscope.files -f tmpcsc
-  ovcs
-  echo -n "cscope completed. Rebuilding ctags .. "
+  echo "starting cscope in background"
+  cscope -bqki cscope.files -f tmpcsc &
+  cscope_pid=$!
+  echo -n "Rebuilding ctags .. "
   ctags -L cscope.files --c++-kinds=+p --fields=+iaS --extra=+q
   egrep ';"[[:space:]]f' tags > tags_f
   egrep ';"[[:space:]]m' tags > tags_m
   egrep ';"[[:space:]](s|t)' tags > tags_s
   egrep ';"[[:space:]](d|e)' tags > tags_d
+  echo "done"
+  echo -n "waiting for cscope($cscope_pid) to complete .. "
+  check_for_pid.sh $cscope_pid
+  ovcs
   echo "done"
 }
 
@@ -82,7 +88,7 @@ howlong()
 
 mkf()
 {
-  ps -ef | grep '\<mk\>' | grep -v egrep | uniq -f 5
+  ps -ef | grep '\<mk\>' | grep -v egrep | sort -u -k6,6
 }
 
 mkp()
@@ -223,6 +229,11 @@ testbd()
 vi()
 {
   LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
+}
+
+nvim()
+{
+  /home/lnara002/software/neovim/neovim/postinstall/bin/nvim $*
 }
 
 open_conver()
