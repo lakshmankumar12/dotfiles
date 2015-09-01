@@ -5,6 +5,7 @@ alias grep='egrep --color'
 alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
 alias ag='/home/lnara002/software/ag/the_silver_searcher-0.30.0/postinstall/bin/ag'
 alias gitnp='git --no-pager'
+alias tmuxatt='tmux -2 attach -d -t main'
 
 export WINCYG='/Users/lnara002/cygwin'
 export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'

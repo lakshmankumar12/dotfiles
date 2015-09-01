@@ -13,6 +13,10 @@ if exists percol; then
     bindkey '^R' percol_select_history
 fi
 
+setopt extendedglob
+emulate bash -c 'source ~/bashrc_for_zsh'
+export DISABLE_AUTO_TITLE=true
+
 __git_files () {
       _wanted files expl 'local files' _files
 }
