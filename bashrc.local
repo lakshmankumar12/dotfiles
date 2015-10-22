@@ -5,6 +5,7 @@ alias grep='egrep --color'
 alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
 alias ag='/home/lnara002/software/ag/the_silver_searcher-0.30.0/postinstall/bin/ag'
 alias gitnp='git --no-pager'
+alias npgit='git --no-pager'
 alias tmuxatt='tmux -2 attach -d -t main'
 alias ttyrec='/home/lnara002/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='/home/lnara002/software/ttygif/ttygif'
@@ -251,4 +252,23 @@ open_conver()
     return 1
   fi
   htmltotext.py $1 | vim -R -
+}
+
+listtmuxpanes()
+{
+  if [ -z "$1" ] ; then
+    session=main
+  else
+    session="$1"
+  fi
+  tmux list-panes -s -t $session -F "#I|#W|#P|#T|#{pane_tty}"
+}
+
+viewpdf()
+{
+  if [ -z "$1" ] ; then
+    echo "Supply pdf file"
+    return 1
+  fi
+  pdftotext -layout $1 - | vim -R -
 }
