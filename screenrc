@@ -1,0 +1,15 @@
+shell -/bin/bash
+bind j focus down
+bind k focus up
+defscrollback 100000
+
+# Set Bottom Display
+hardstatus alwayslastline
+#hardstatus string '%{= yd} [ %{yd}%H %{yd} ] [%= %{= yd}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{yd}][%{yd} %d/%m %{yd}%c %{yd}]'
+#hardstatus string '%{= yb} %{= yb}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{yb}]'
+#hardstatus string [ %{=yb}%Lw ]
+hardstatus string '%-Lw%{= Gk}%50>%n%f* %t%{-}%+Lw%<'
+bufferfile /home/lnara002/screen-exchange
+escape `a
+
+bind > eval writebuf "exec sh -c 'xsel -b -i < /home/lnara002/screen-exchange'"
