@@ -40,6 +40,10 @@ alias findf='percol --match-method=regex tags_f'
 alias finds='percol --match-method=regex tags_s'
 alias findm='percol --match-method=regex tags_m'
 alias findd='percol --match-method=regex tags_d'
+alias findgf='percol --match-method=regex gtp_tags_f'
+alias findgs='percol --match-method=regex gtp_tags_s'
+alias findgm='percol --match-method=regex gtp_tags_m'
+alias findgd='percol --match-method=regex gtp_tags_d'
 
 
 export PATH=$PATH:$WINCYG/scripts
@@ -262,6 +266,16 @@ listtmuxpanes()
     session="$1"
   fi
   tmux list-panes -s -t $session -F "#I|#W|#P|#T|#{pane_tty}"
+}
+
+listtmuxlog()
+{
+   ps -ef | grep '\<cat\>' | grep -v grep
+   pids=$(ps -ef | grep '\<cat\>' | grep -v grep | awk '{print $2}')
+   for i in $pids ; do
+     echo "$i"
+     lsof -p $i
+   done
 }
 
 viewpdf()

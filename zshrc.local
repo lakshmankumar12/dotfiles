@@ -45,3 +45,5 @@ down-line-or-local-history() {
     zle set-local-history 0
 }
 zle -N down-line-or-local-history
+
+source /drive_c/Users/lnara002/cygwin/github/zsh-git-prompt/zshrc.sh
