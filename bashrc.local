@@ -6,6 +6,7 @@ alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
 alias ag='/home/lnara002/software/ag/the_silver_searcher-0.30.0/postinstall/bin/ag'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
+alias altgit='/home/lnara002/software/git/git/postinstall/bin/git'
 alias tmuxatt='tmux -2 attach -d -t main'
 alias ttyrec='/home/lnara002/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='/home/lnara002/software/ttygif/ttygif'
@@ -36,14 +37,14 @@ alias wingh="cd $WINGH"
 
 alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
 
-alias findf='percol --match-method=regex tags_f'
-alias finds='percol --match-method=regex tags_s'
-alias findm='percol --match-method=regex tags_m'
-alias findd='percol --match-method=regex tags_d'
-alias findgf='percol --match-method=regex gtp_tags_f'
-alias findgs='percol --match-method=regex gtp_tags_s'
-alias findgm='percol --match-method=regex gtp_tags_m'
-alias findgd='percol --match-method=regex gtp_tags_d'
+alias findf='percol --match-method=regex ../tags_f'
+alias finds='percol --match-method=regex ../tags_s'
+alias findm='percol --match-method=regex ../tags_m'
+alias findd='percol --match-method=regex ../tags_d'
+alias findgf='percol --match-method=regex ../gtp_tags_f'
+alias findgs='percol --match-method=regex ../gtp_tags_s'
+alias findgm='percol --match-method=regex ../gtp_tags_m'
+alias findgd='percol --match-method=regex ../gtp_tags_d'
 
 
 export PATH=$PATH:$WINCYG/scripts
@@ -92,7 +93,7 @@ analy()
 
 howlong()
 {
-  ps -eo "%p %t" | grep $1 
+  ps -o "%p %t" $1 
 }
 
 mkf()
@@ -115,6 +116,15 @@ mkp()
   ls -l /proc/$pid/cwd
   pstree -p $pid
   howlong $pid
+  pand=$(\ls -l /proc/$pid/cwd | awk '{print $11}')
+  echo "comments:"
+  cat $pand/../comments
+  echo "log.txt progress:"
+  wc $pand/log.txt
+  echo "db machine:"
+  cat $pand/db2_user_cfg
+  echo "prefs file:"
+  find $pand -name prefs.mk | parallel --no-notice 'echo {}; cat {}'
 }
 
 pc()
