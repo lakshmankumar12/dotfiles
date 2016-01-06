@@ -22,6 +22,7 @@ export WINLK='/drive_c/Lakshman'
 export WINTMP='/drive_c/Lakshman/temp'
 export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
+export GITLOCALCACHE='/home/lnara002/.gitcache/panos.git'
 
 alias wincyg="cd $WINCYG"
 alias winnotes="cd $WINNOTES"
@@ -33,6 +34,7 @@ alias winlk="cd $WINLK"
 alias wintmp="cd $WINTMP"
 alias winrs="cd $WINRS"
 alias wingh="cd $WINGH"
+alias lcache="cd $GITLOCALCACHE"
 
 
 alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
@@ -48,7 +50,7 @@ alias findgd='percol --match-method=regex ../gtp_tags_d'
 
 
 export PATH=$PATH:$WINCYG/scripts
-export EDITOR=vim
+export EDITOR=/home/lnara002/software/vim/vim74/postinstall/bin/vim
 
 ovcs()
 {
@@ -141,6 +143,13 @@ pc()
   xsel -b
   xsel -b | ssh $testbed@$testbed "DISPLAY=$TDISPLAY" xclip 
 }
+
+shareclip()
+{
+   xsel -b > ~/chrome-Downloads/a.txt
+   unix2dos ~/chrome-Downloads/a.txt
+}
+
 
 pgprog()
 {

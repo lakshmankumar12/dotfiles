@@ -1,5 +1,10 @@
 function exists { which $1 &> /dev/null }
 
+#override prompt
+WANTED_PROMPT='${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$fg_bold[blue]%}$ %{$reset_color%}'
+ALTERNATE_PROMPT='%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}%{$fg_bold[blue]%}$ %{$reset_color%}'
+PROMPT=$WANTED_PROMPT
+
 if exists percol; then
     function percol_select_history() {
         local tac
