@@ -7,7 +7,6 @@ alias ag='/home/lnara002/software/ag/the_silver_searcher-0.30.0/postinstall/bin/
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
 alias altgit='/home/lnara002/software/git/git/postinstall/bin/git'
-alias tmuxatt='tmux -2 attach -d -t main'
 alias ttyrec='/home/lnara002/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='/home/lnara002/software/ttygif/ttygif'
 alias ttygif_concat='/home/lnara002/software/ttygif/concat.sh'
@@ -304,4 +303,14 @@ viewpdf()
     return 1
   fi
   pdftotext -layout $1 - | vim -R -
+}
+
+tmuxatt()
+{
+  if [ -z "$1" ] ; then
+    session="main"
+  else
+    session="$1"
+  fi
+  tmux -2 attach -d -t $session
 }
