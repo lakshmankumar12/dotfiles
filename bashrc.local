@@ -314,3 +314,18 @@ tmuxatt()
   fi
   tmux -2 attach -d -t $session
 }
+
+
+# From https://gist.github.com/msabramo/746585#file-pyval-sh
+_pyval() {
+    local python_cmd="print $@"
+    python -c "${python_cmd}"
+
+    case "$shopts" in
+        *noglob*) ;;
+        *) set +f;;
+    esac
+
+    unset shopts
+}
+alias pyval='shopts="$SHELLOPTS"; set -f; _pyval'
