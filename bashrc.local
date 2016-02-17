@@ -22,6 +22,7 @@ export WINTMP='/drive_c/Lakshman/temp'
 export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
 export GITLOCALCACHE='/home/lnara002/.gitcache/panos.git'
+export WSROOT='/home/lnara002/ws'
 
 alias wincyg="cd $WINCYG"
 alias winnotes="cd $WINNOTES"
@@ -34,6 +35,7 @@ alias wintmp="cd $WINTMP"
 alias winrs="cd $WINRS"
 alias wingh="cd $WINGH"
 alias lcache="cd $GITLOCALCACHE"
+alias cdw="cd $WSROOT"
 
 
 alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
@@ -147,6 +149,13 @@ shareclip()
 {
    xsel -b > ~/chrome-Downloads/a.txt
    unix2dos ~/chrome-Downloads/a.txt
+}
+
+inclip()
+{
+  dos2unix < ~/chrome-Downloads/clipboard.txt | xsel -i -b
+  dos2unix < ~/chrome-Downloads/clipboard.txt | xsel -i -p
+  dos2unix < ~/chrome-Downloads/clipboard.txt | xsel -i -s
 }
 
 
