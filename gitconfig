@@ -1,0 +1,56 @@
+[user]
+	email = lakshman_kumar.narayanan@alcatel-lucent.com
+	name = lnara002
+[alias]
+	dt = difftool --dir-diff
+	cset = diff-tree --no-commit-id --name-only -r
+	lsm = ls-files --modified
+	export = "!f() { /usr/bin/git show --pretty=format: $1 ; } ; f "
+	logol = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n20
+	supercommitpatch = "!f() { patch -p1 -i $1 ; if [ $? -ne 0 ] ; then echo \"patching failed\" ; return 1 ; fi ; chmod +w $(git ls-files --modified) ; /usr/bin/git add $(/usr/bin/git ls-files --modified) ; /usr/bin/git commit -m \"$2\" ; } ; f "
+	statusporcut = !/usr/bin/git status --porcelain | cut -c4-
+    dpeek = !/usr/bin/git diff --color=always | less -r
+    bot = "!git log --pretty=oneline | tail -n 1 | cut -f 1 -d\\ "
+	ci = !cd ${GIT_PREFIX:-.} && /usr/local/timostools/git.d/git-helper.sh ci
+	up = !/usr/local/timostools/git.d/git-helper.sh up
+	co = !/usr/local/timostools/git.d/git-helper.sh co
+	set-hooks = !/usr/local/timostools/git.d/git-helper.sh set-hooks
+	logg = !/usr/local/timostools/git.d/git-helper.sh logg
+	update-helper = "!cd /usr/local/timostools/git.d; git pull; /usr/local/timostools/git.d/git-helper.sh install /usr/local/timostools/git.d"
+	edit-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`"
+	add-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
+	login = !/usr/local/timostools/git.d/git-helper.sh login
+	statusnewporcut = !/usr/bin/git status --porcelain | grep '^??' | cut -c4-
+	csetr = "!f() { /usr/bin/git fetch ; /usr/bin/git log HEAD..origin/$(/usr/bin/git rev-parse --abbrev-ref HEAD) ; } ; f"
+    resetbasetag = "!f() { git tag -d base ; git tag base HEAD ; } ; f"
+    mytags = tag -l 'lnara002*'
+    nontimos = !git tag | grep -v TiMOS | grep -v SPR
+[diff]
+	tool = meld
+[push]
+	default = simple
+[merge]
+	tool = diffconflicts
+[mergetool "diffconflicts"]
+	cmd = diffconflicts /home/lnara002/software/vim/vim74/postinstall/bin/vim $BASE $LOCAL $REMOTE $MERGED
+	trustExitCode = true
+	keepBackup = false
+[mergetool "splice"]
+    cmd = "/home/lnara002/software/vim/vim74/postinstall/bin/vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
+	trustExitCode = true
+	keepBackup = false
+[mergetool "mymeld"]
+    cmd = meld "$LOCAL" "$BASE" "$REMOTE" --auto-merge --diff $BASE $MERGED
+[mergetool "p4merge"]
+    cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    keepTemporaries = false
+    trustExitCode = false
+    keepBackup = false
+[difftool]
+	prompt = false
+[sr]
+	githelperver = b7a3e3ec809368a9ae66f2bf054f528a0d96b859
+[remote "origin"]
+	fetch = +refs/notes/*:refs/notes/*
+[apply]
+	whitespace = nowarn
