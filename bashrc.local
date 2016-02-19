@@ -304,6 +304,7 @@ listtmuxlog()
      lsof -p $i
    done
 }
+alias ltl=listtmuxlog
 
 viewpdf()
 {

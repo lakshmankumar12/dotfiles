@@ -25,6 +25,7 @@
     resetbasetag = "!f() { git tag -d base ; git tag base HEAD ; } ; f"
     mytags = tag -l 'lnara002*'
     nontimos = !git tag | grep -v TiMOS | grep -v SPR
+    newfiles = ls-files --others --exclude-standard
 [diff]
 	tool = meld
 [push]
