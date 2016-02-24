@@ -2,7 +2,6 @@ export EMAIL_ADDR=Lakshman_Kumar.Narayanan@alcatel-lucent.com
 alias ls='ls --color -F'
 alias lsof='/usr/sbin/lsof'
 alias grep='egrep --color'
-alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
 alias ag='/home/lnara002/software/ag/the_silver_searcher-0.30.0/postinstall/bin/ag'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
@@ -260,11 +259,6 @@ testbd()
     echo "using testbed $testbed"
   fi
   ssh -X $testbed@$testbed
-}
-
-vi()
-{
-  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
 }
 
 nvim()
