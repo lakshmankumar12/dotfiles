@@ -62,4 +62,5 @@ zle -N down-line-or-local-history
 #ctrl-u like in bash/readline
 bindkey \^U backward-kill-line
 
-source /home/lnara002/github/zsh-git-prompt/zshrc.sh
+source ~/github/zsh-git-prompt/zshrc.sh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
