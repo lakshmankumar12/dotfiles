@@ -63,3 +63,4 @@ zle -N down-line-or-local-history
 bindkey \^U backward-kill-line
 
 source /drive_c/Users/lnara002/cygwin/github/zsh-git-prompt/zshrc.sh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
