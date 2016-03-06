@@ -6,3 +6,9 @@ vi()
 }
 
 
+cmdsh()
+{
+  percol --match-method=regex /drive_c/Users/lnara002/cygwin/notes/git-tracks/general-notes/grepper_commands | tr -d '\n' > /tmp/resultcmdsh
+  tmux load-buffer /tmp/resultcmdsh
+}
+
