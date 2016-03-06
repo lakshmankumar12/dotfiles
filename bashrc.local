@@ -37,14 +37,22 @@ alias cdw="cd $WSROOT"
 
 alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
 
-alias findf='percol --match-method=regex ../tags_f'
-alias finds='percol --match-method=regex ../tags_s'
-alias findm='percol --match-method=regex ../tags_m'
-alias findd='percol --match-method=regex ../tags_d'
-alias findgf='percol --match-method=regex ../gtp_tags_f'
-alias findgs='percol --match-method=regex ../gtp_tags_s'
-alias findgm='percol --match-method=regex ../gtp_tags_m'
-alias findgd='percol --match-method=regex ../gtp_tags_d'
+taggrepper()
+{
+  if [ -z "$1" ] ; then
+    echo "supply tag file to grep"
+    return 1
+  fi
+  awk '{printf "%-70s %s\n",$1,$2 }' $1 | fzf --exact | awk '{print $1}'
+}
+alias findf='taggrepper ../tags_f'
+alias finds='taggrepper ../tags_s'
+alias findm='taggrepper ../tags_m'
+alias findd='taggrepper ../tags_d'
+alias findgf='taggrepper ../gtp_tags_f'
+alias findgs='taggrepper ../gtp_tags_s'
+alias findgm='taggrepper ../gtp_tags_m'
+alias findgd='taggrepper ../gtp_tags_d'
 
 
 export PATH=$PATH:$WINCYG/scripts
