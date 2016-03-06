@@ -6,9 +6,22 @@ vi()
 }
 
 
-cmdsh()
+cmdsh2ndpart()
 {
-  percol --match-method=regex /drive_c/Users/lnara002/cygwin/notes/git-tracks/general-notes/grepper_commands | tr -d '\n' > /tmp/resultcmdsh
-  tmux load-buffer /tmp/resultcmdsh
+  FILE=/tmp/tmuxbuffer/resultcmdsh
+  DIR_PREFIX=$(dirname $FILE)
+  if [ -f $FILE ] ; then
+    :
+  else
+    /usr/bin/inotifywait $DIR_PREFIX -e create -e moved_to | while read path action file; do : ; done
+  fi
+  perl -pi -e 'chomp if eof' $FILE
 }
 
+cmdsh()
+{
+  FILE=/tmp/tmuxbuffer/resultcmdsh
+  DIR_PREFIX=$(dirname $FILE)
+  rm -f /tmp/tmuxbuffer/resultcmdsh
+  cat /drive_c/Users/lnara002/cygwin/notes/git-tracks/general-notes/grepper_commands | /home/lnara002/github/fzf/bin/fzf-tmux -d 20% --reverse -m > $FILE
+}
