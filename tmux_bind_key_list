@@ -1,0 +1,30 @@
+a  -- (MY MAP) send prefix                     A -- rename window
+b  --
+c  -- create new window
+d  -- detach                                   D -- choose to detach
+e  -- (MY MAP) switch-client -l
+f  -- find window
+g  -- (MY MAP) attach-session with detach
+h  -- (MY MAP) tab left
+i  -- (MY MAP) stop logging                    I -- start logging
+j  -- (MY MAP) tab down                        J -- join pane
+k  -- (MY MAP) tab up
+l  -- (MY MAP) tab right
+m                                              M -- move pane
+n  -- next window
+o                                              O -- sanitize pane
+p  -- prev window
+q  -- show pane numbers
+r  -- reload conf
+s  -- switch-session                           S -- swap windows
+t  -- show time
+u
+v
+w  -- switch-window
+x  -- kill pane
+y  -- ^r for testbeds
+z
+
+,  -- rename
+[  -- copy-mode
+]  -- paste
