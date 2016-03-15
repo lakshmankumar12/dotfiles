@@ -5,6 +5,16 @@ vi()
   LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
 }
 
+setr()
+{
+  /drive_c/Users/lnara002/cygwin/repo-of-scripts/new-clone/shiftclone.py
+  if [ $? -eq 0 ] ; then 
+    export CURRENT_PANOS=$(cat /home/lnara002/.currp)
+    echo "CURRENT_PANOS set to $CURRENT_PANOS"
+    cd $CURRENT_PANOS/panos
+  fi
+}
+
 
 cmdsh2ndpart()
 {
@@ -20,6 +30,7 @@ cmdsh2ndpart()
   else
     echo " " > $FILE
   fi
+  sed -i 's/;#.*$//g' $FILE
   perl -pi -e 'chomp if eof' $FILE
 }
 
