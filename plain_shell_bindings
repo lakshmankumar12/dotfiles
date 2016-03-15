@@ -1,0 +1,26 @@
+C-a: Go to beginning of line
+C-b: back one char
+C-c: Abort
+C-d: send eof
+C-e: Go to end of line
+C-f: Forward one char
+C-g: escape from history searching mode
+C-h: backspace
+C-i: tab
+C-j: Enter
+C-h: backspace
+C-k: Kill till end
+C-l: Refresh
+C-m: Enter (again?)
+C-n: next command in history
+C-o: Execute command found by ctr-r or s
+C-p: prev command in history
+C-q: Allow o/p of suspended job to screen?
+C-r: Search backwards
+C-s: Forward search
+C-t: transpose words
+C-u: line kill till beg
+C-v: NONE
+C-x: something happens..findout
+C-y: Paste
+C-z: suspend
