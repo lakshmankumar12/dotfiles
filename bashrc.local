@@ -180,16 +180,6 @@ dtsdir()
   cd /home/lnara002/ws/dts/$1
 }
 
-setr()
-{
-  /drive_c/Users/lnara002/cygwin/repo-of-scripts/new-clone/shiftclone.sh
-  if [ $? -eq 0 ] ; then 
-    export CURRENT_PANOS=$(cat /home/lnara002/.currp)
-    echo "CURRENT_PANOS set to $CURRENT_PANOS"
-    cd $CURRENT_PANOS
-  fi
-}
-
 check_sanity()
 {
   if [ -z "$CURRENT_PANOS" ]; then
@@ -315,6 +305,39 @@ tmuxatt()
     session="$1"
   fi
   tmux -2 attach -d -t $session
+}
+
+tmuxrandchoose()
+{
+  FILE=/tmp/chossepanetmux
+  FILE2=/tmp/chossepanetmux2
+  tmux list-panes -a -F "#S | #I | #W | #P | #T" | /home/lnara002/github/fzf/bin/fzf-tmux -d 20% --exact --reverse --no-sort > $FILE
+  session=$(cut -d\| -f 1 $FILE | sed -e 's/^ *//g;s/ *$//g')
+  window=$(cut -d\| -f 2 $FILE | sed -e 's/^ *//g;s/ *$//g')
+  echo -n "$session:$window" > $FILE2
+}
+
+ftpane() {
+  local panes current_window current_pane target target_window target_pane
+  panes=$(tmux list-panes -a -F '#S:#I:#W:#P:#T - #{pane_current_path} #{pane_current_command}' | nl -s ':')
+  current_pane=$(tmux display-message -p '#I:#P')
+  current_window=$(tmux display-message -p '#I')
+  current_session=$(tmux display-message -p '#S')
+
+  target=$(echo "$panes" | grep -v "$current_pane" | /home/lnara002/github/fzf/bin/fzf-tmux -d 20% --exact --reverse --no-sort ) || return
+
+  target_session=$(echo $target | awk 'BEGIN{FS=":"} {print$2}')
+  target_window=$(echo $target | awk 'BEGIN{FS=":"} {print$3}')
+  target_pane=$(echo $target | awk 'BEGIN{FS=":"} {print$5}')
+  echo "$target" > /tmp/debugftpane
+  echo "$target_session:$target_window.$target_pane" >> /tmp/debugftpane
+  echo "$current_session:$current_window.$current_pane" >> /tmp/debugftpane
+
+  if [[ $current_session != $target_session ]]; then
+    tmux switch-client -t $target_session
+  fi
+  tmux select-pane -t ${target_window}.${target_pane} &&
+  tmux select-window -t $target_window
 }
 
 

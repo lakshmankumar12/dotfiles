@@ -49,5 +49,25 @@ zle -N down-line-or-local-history
 #ctrl-u like in bash/readline
 bindkey \^U backward-kill-line
 
+function history_search()
+{
+    BUFFER=$(sed 's/^: [0-9]*:[0-9]*;//' ~/.zsh_history | fzf --no-sort --tac --exact )
+    CURSOR=$#BUFFER         # move cursor
+    zle -R -c               # refresh
+}
+
+zle -N history_search
+bindkey '^S' history_search
+
+#Unnecessary cd<tab> does this automagically :)
+function cd_dir_widget()
+{
+    BUFFER="cd $(find . -name .git -prune -o -type d -print | fzf --exact )"
+    CURSOR=$#BUFFER         # move cursor
+    zle -R -c               # refresh
+}
+zle -N cd_dir_widget
+bindkey '^V' cd_dir_widget
+
 source ~/github/zsh-git-prompt/zshrc.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
