@@ -17,7 +17,7 @@ p  -- prev window
 q  -- show pane numbers
 r  -- reload conf
 s  -- switch-session                           S -- swap windows
-t  -- show time
+t  -- (MY MAP) choose any pane
 u
 v
 w  -- switch-window
