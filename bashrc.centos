@@ -1,4 +1,61 @@
-alias tmux='/home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
+alias tmux='TERM=xterm-256color /home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
+
+i386 () { cd bin/7xxx-i386/
+          cp iom.tim i386-iom.tim
+          cp cpm.tim i386-cpm.tim
+          cp boot.tim i386-boot.tim
+          cp both.tim i386-both.tim
+          cp isa-aa.tim i386-isa-aa.tim
+          scp i3*.tim $1@$1.mv.usa.alcatel.com:/home/$1/images
+          cd ../.. ;}
+i386n () { cd bin/7xxx-i386/
+          cp iom.tim i386-iom.tim
+          cp cpm.tim i386-cpm.tim
+          cp boot.tim i386-boot.tim
+          cp both.tim i386-both.tim
+          cp isa-aa.tim i386-isa-aa.tim
+          scp i3*.tim $1@$1.us.alcatel-lucent.com:/home/$1/images
+          cd ../.. ;}		  
+i386np () { cd bin/7xxx-i386/
+          cp iom.tim i386-iom.tim
+          cp cpm.tim i386-cpm.tim
+          cp boot.tim i386-boot.tim
+          cp both.tim i386-both.tim
+          cp isa-aa.tim i386-isa-aa.tim
+          scp i3*.tim $1@$1.ih.lucent.com:/home/$1/images
+          cd ../.. ;}		  
+hops () { cd bin/7xxx-hops/
+          scp *.tim $1@$1.mv.usa.alcatel.com:/home/$1/images
+          cd ../7xxx-chile/
+          scp isa-aa.tim $1@$1.mv.usa.alcatel.com:/home/$1/images
+          cd ../.. ;}
+hopsn () { cd bin/7xxx-hops/
+          scp *.tim $1@$1.us.alcatel-lucent.com:/home/$1/images
+          cd ../7xxx-chile/
+          scp isa-aa.tim $1@$1.us.alcatel-lucent.com:/home/$1/images
+          cd ../.. ;}
+
+
+hopsnp () { cd bin/7xxx-hops/
+          scp *.tim $1@$1.ih.lucent.com:/home/$1/images
+          cd ../7xxx-chile/
+          scp isa-aa.tim $1@$1.ih.lucent.com:/home/$1/images
+          cd ../.. ;}
+
+queen () { cd bin/7xxx-i386/
+           cp iom.tim i386-iom.tim
+           cp cpm.tim i386-cpm.tim
+           cp boot.tim i386-boot.tim
+           cp both.tim i386-both.tim
+           cp isa-aa.tim i386-isa-aa.tim
+           scp i3*.tim lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/$1
+           cd ../.. ;}
+
+queenhops () { cd bin/7xxx-hops/
+          scp *.tim lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/images/$1
+          cd ../7xxx-chile/
+          scp isa-aa.tim lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/images/$1
+          cd ../.. ;}		   
 
 vi()
 {
@@ -30,8 +87,7 @@ cmdsh2ndpart()
   else
     echo " " > $FILE
   fi
-  sed -i 's/;#.*$//g' $FILE
-  perl -pi -e 'chomp if eof' $FILE
+  perl -pi -e 's/^;#.*?;#\s*//;s/\s*;#.*$//;chomp if eof' $FILE
 }
 
 cmdsh()
