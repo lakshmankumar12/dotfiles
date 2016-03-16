@@ -372,6 +372,16 @@ makemp3()
    avconv -i "$1" -vn -acodec libmp3lame "$2".mp3
 }
 
+loaddisplay()
+{
+   DISP_FILE=/tmp/displayset
+   if [ -f "/tmp/displayset" ] ; then
+     perl -pi -e 'chomp if eof' $DISP_FILE
+     export DISPLAY=$(cat $DISP_FILE)
+   fi
+}
+loaddisplay
+
 if [ -e ~/.bashrc.centos ] ; then
   source ~/.bashrc.centos
 fi
