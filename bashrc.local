@@ -366,6 +366,7 @@ makemp3()
 
 loaddisplay()
 {
+   echo $DISPLAY > /tmp/last_display
    DISP_FILE=/tmp/displayset
    if [ -f "/tmp/displayset" ] ; then
      perl -pi -e 'chomp if eof' $DISP_FILE
