@@ -62,6 +62,13 @@ vi()
   LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
 }
 
+vicode()
+{
+  sed -i 's/"Plugin '"'"'Valloric\/YouCompleteMe/Plugin '"'"'Valloric\/YouCompleteMe/' ~/.vimrc
+  ( sleep 10 ; sed -i 's/Plugin '"'"'Valloric\/YouCompleteMe/"Plugin '"'"'Valloric\/YouCompleteMe/' ~/.vimrc ) &
+  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
+}
+
 setr()
 {
   /drive_c/Users/lnara002/cygwin/repo-of-scripts/new-clone/shiftclone.py
@@ -72,6 +79,16 @@ setr()
   fi
 }
 
+setw()
+{
+  /drive_c/Users/lnara002/cygwin/repo-of-scripts/new-clone/shiftclone.py -w
+  if [ $? -eq 0 ] ; then 
+    export CURRENT_PANOS=$(cat /home/lnara002/.currp)
+    echo "CURRENT_PANOS set to $CURRENT_PANOS"
+    cd $CURRENT_PANOS/panos
+  fi
+  export PATH=/home/lnara002/software/git/git/postinstall/bin:$PATH
+}
 
 cmdsh2ndpart()
 {

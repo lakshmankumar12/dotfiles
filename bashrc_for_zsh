@@ -265,15 +265,15 @@ alias cvsstatus='cvs status | grep Status'
 #set -o vi
 
 #make an intelligent guess as to what your DISPLAY env var should be
-if [ -z ${DISPLAY:=""} ]; then
-    XSERVER=$(who am i | /bin/awk '{print $6}' | /bin/sed 's/[()]//g')
-    XSERVER=${XSERVER%%:*}
-    if [[ -z ${XSERVER}  || ${XSERVER} == $(hostname) || ${XSERVER} == "unix" ]]; then 
-      export DISPLAY=$(hostname):0.0		# Display on local host
-    else		
-      export DISPLAY=${XSERVER}:0.0	# Display on remote host
-    fi
-fi
+#if [ -z ${DISPLAY:=""} ]; then
+    #XSERVER=$(who am i | /bin/awk '{print $6}' | /bin/sed 's/[()]//g')
+    #XSERVER=${XSERVER%%:*}
+    #if [[ -z ${XSERVER}  || ${XSERVER} == $(hostname) || ${XSERVER} == "unix" ]]; then 
+      #export DISPLAY=$(hostname):0.0		# Display on local host
+    #else		
+      #export DISPLAY=${XSERVER}:0.0	# Display on remote host
+    #fi
+#fi
 
 #
 # Finally, if a ~/.bashrc.local exists, source it
