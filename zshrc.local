@@ -1,9 +1,9 @@
 function exists { which $1 &> /dev/null }
 
 #override prompt
-WANTED_PROMPT='${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$fg_bold[blue]%}$ %{$reset_color%}'
-ALTERNATE_PROMPT='%{$fg_bold[green]%}%p%{$fg[cyan]%}%~ %{$fg_bold[blue]%}%{$fg_bold[blue]%}$ %{$reset_color%}'
-PROMPT=$WANTED_PROMPT
+#WANTED_PROMPT='${ret_status}%{$reset_color%} %{$fg[cyan]%}%~%{$reset_color%} %{$fg_bold[blue]%}$(git_super_status)%{$fg_bold[blue]%}»%{$reset_color%}'
+#ALTERNATE_PROMPT='%{$fg[cyan]%}%~%{$reset_color%} $'
+#PROMPT=$WANTED_PROMPT
 
 promptalt () {
    PROMPT=$ALTERNATE_PROMPT
@@ -51,7 +51,7 @@ bindkey \^U backward-kill-line
 
 function history_search()
 {
-    BUFFER=$(sed 's/^: [0-9]*:[0-9]*;//' ~/.zsh_history | nl -s ":" | fzf --no-sort --tac --exact | perl -pi -e 's/^.*?://;')
+    BUFFER=$(sed 's/^: [0-9]*:[0-9]*;//' ~/.zsh_history | nl -s ":" | fzf-tmux -d 40% --no-sort --tac --exact | perl -pi -e 's/^.*?://;')
     CURSOR=$#BUFFER         # move cursor
     zle -R -c               # refresh
 }
