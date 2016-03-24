@@ -42,14 +42,22 @@ hopsnp () { cd bin/7xxx-hops/
           scp isa-aa.tim $1@$1.ih.lucent.com:/home/$1/images
           cd ../.. ;}
 
-queen () { cd bin/7xxx-i386/
-           cp iom.tim i386-iom.tim
-           cp cpm.tim i386-cpm.tim
-           cp boot.tim i386-boot.tim
-           cp both.tim i386-both.tim
-           cp isa-aa.tim i386-isa-aa.tim
-           scp i3*.tim lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/$1
-           cd ../.. ;}
+queen () { 
+  if [ -z "$1" ] ; then
+    dest="images/current_testing"
+  else
+    dest="images/$1"
+  fi
+  cd bin/7xxx-i386/
+  cp iom.tim i386-iom.tim
+  cp cpm.tim i386-cpm.tim
+  cp boot.tim i386-boot.tim
+  cp both.tim i386-both.tim
+  cp isa-aa.tim i386-isa-aa.tim
+  echo "copying to $dest"
+  scp i3*.tim lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/$dest
+  cd ../.. ;
+}
 
 queenhops () { cd bin/7xxx-hops/
           scp *.tim lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/images/$1
