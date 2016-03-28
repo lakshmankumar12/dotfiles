@@ -312,6 +312,7 @@ tmuxatt()
   else
     session="$1"
   fi
+  export TERM=screen-256color-bce
   tmux -2 attach -d -t $session
 }
 
