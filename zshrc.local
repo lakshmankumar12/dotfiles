@@ -51,7 +51,7 @@ bindkey \^U backward-kill-line
 
 function history_search()
 {
-    BUFFER=$(sed 's/^: [0-9]*:[0-9]*;//' ~/.zsh_history | nl -s ":" | fzf-tmux -d 40% --no-sort --tac --exact | perl -pi -e 's/^.*?://;')
+    BUFFER=$(sed 's/^: [0-9]*:[0-9]*;//' ~/.zsh_history | nl -s ":" | fzf-tmux -d 40% --no-sort --tac --exact | perl -p -e 's/^.*?://;')
     CURSOR=$#BUFFER         # move cursor
     zle -R -c               # refresh
 }
