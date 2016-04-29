@@ -68,6 +68,8 @@ function cd_dir_widget()
 zle -N cd_dir_widget
 bindkey '^V' cd_dir_widget
 
+eval $(dircolors ~/software/dircolors-solarized/dircolors.ansi-dark )
+
 source /drive_c/Users/lnara002/cygwin/github/zsh-git-prompt/zshrc.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

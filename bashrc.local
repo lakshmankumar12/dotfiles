@@ -3,7 +3,6 @@ alias ls='ls --color -F'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
-alias altgit='/home/lnara002/software/git/git/postinstall/bin/git'
 alias ttyrec='/home/lnara002/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='/home/lnara002/software/ttygif/ttygif'
 alias ttygif_concat='/home/lnara002/software/ttygif/concat.sh'
@@ -20,6 +19,7 @@ export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
 export GITLOCALCACHE='/home/lnara002/.gitcache/panos.git'
 export WSROOT='/home/lnara002/ws'
+export GOPATH='/home/lnara002/gopath'
 
 alias wincyg="cd $WINCYG"
 alias winnotes="cd $WINNOTES"
@@ -56,6 +56,7 @@ alias findgd='taggrepper ../gtp_tags_d'
 
 
 export PATH=$PATH:$WINCYG/scripts
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export EDITOR=vim
 
 ovcs()
@@ -125,13 +126,21 @@ mkp()
   pstree -p $pid
   howlong $pid
   pand=$(\ls -l /proc/$pid/cwd | awk '{print $11}')
+  tput setaf 4
   echo "comments:"
+  tput sgr0
   cat $pand/../comments
+  tput setaf 4
   echo "log.txt progress:"
+  tput sgr0
   wc $pand/log.txt
+  tput setaf 4
   echo "db machine:"
+  tput sgr0
   cat $pand/db2_user_cfg
+  tput setaf 4
   echo "prefs file:"
+  tput sgr0
   find $pand -name prefs.mk | parallel --no-notice 'echo {}; cat {}'
 }
 
@@ -349,6 +358,22 @@ ftpane() {
   tmux select-window -t $target_window
 }
 
+gotoNofifPane() {
+  current_pane=$(tmux display-message -p '#I:#P')
+  current_window=$(tmux display-message -p '#I')
+  current_session=$(tmux display-message -p '#S')
+
+  target_session="aux"
+  target_window="0"
+  target_pane="0"
+
+  if [[ $current_session != $target_session ]]; then
+    tmux switch-client -t $target_session
+  fi
+  tmux select-pane -t ${target_window}.${target_pane} &&
+  tmux select-window -t $target_window
+}
+
 
 # From https://gist.github.com/msabramo/746585#file-pyval-sh
 _pyval() {
@@ -384,6 +409,29 @@ loaddisplay()
 }
 loaddisplay
 
+removecolorandctrlm()
+{
+    if [ ! -f $1 ] ; then
+      echo "Supply a file name"
+      return
+    fi
+    sed -i -r -e 's:\x1B\[[0-9;]*[mK]::g' -e 's:\x0d::g' $1
+}
+
+resetclipvm()
+{
+  op=$(ps -ef | grep VBoxClient | grep clip)
+  lines=$(echo $op | wc -l)
+  if [ $lines -ne 1 ] ; then
+    echo "Got more than one line - $op"
+    return 1
+  fi
+  pid=$(echo $op | awk '{print $2}')
+  echo "killing pid: $pid, op:$op"
+  kill -9 $pid
+  echo "starting again"
+  /usr/bin/VBoxClient --clipboard
+}
 if [ -e ~/.bashrc.centos ] ; then
   source ~/.bashrc.centos
 fi
