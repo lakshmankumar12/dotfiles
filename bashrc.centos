@@ -1,4 +1,5 @@
 alias tmux='TERM=xterm-256color /home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
+alias altgit='/home/lnara002/software/git/git/postinstall/bin/git'
 
 i386 () { cd bin/7xxx-i386/
           cp iom.tim i386-iom.tim
@@ -69,6 +70,7 @@ vi()
 {
   LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
 }
+export EDITOR=/home/lnara002/software/vim/vim74/postinstall/bin/vim
 
 vicode()
 {
@@ -122,3 +124,14 @@ cmdsh()
   rm -f /tmp/tmuxbuffer/resultcmdsh
   cat /drive_c/Users/lnara002/cygwin/notes/git-tracks/general-notes/grepper_commands | /home/lnara002/github/fzf/bin/fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
 }
+
+listvm()
+{
+  list_testbeds.py - | grep mvltevm | sort | grep IDLE
+}
+
+listtb()
+{
+  list_testbeds.py - | grep mvltetb | sort | grep IDLE
+}
+
