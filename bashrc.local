@@ -9,7 +9,6 @@ alias ttygif_concat='/home/lnara002/software/ttygif/concat.sh'
 
 export WINCYG='/Users/lnara002/cygwin'
 export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'
-export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
 export WINWS='/drive_c/home/lnara002/linux'
 export WINHOME='/drive_c/Users/lnara002'
 export WINDWN='/drive_c/Users/lnara002/Downloads'
@@ -23,7 +22,6 @@ export GOPATH='/home/lnara002/gopath'
 
 alias wincyg="cd $WINCYG"
 alias winnotes="cd $WINNOTES"
-alias pidgin="cd $PIDGIN"
 alias winws="cd $WINWS"
 alias winhome="cd $WINHOME"
 alias windwn="cd $WINDWN"
