@@ -1,5 +1,7 @@
-export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
+export PIDGINOLD='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
+export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@on.nokia.com%2clakshman_kumar.narayanan@on.nokia.com'
 
+alias pidginold="cd $PIDGINOLD"
 alias pidgin="cd $PIDGIN"
 alias tmux='TERM=xterm-256color /home/lnara002/software/tmux/mytmux/tmux-1.9a/postinstall/bin/tmux'
 alias altgit='/home/lnara002/software/git/git/postinstall/bin/git'
