@@ -18,7 +18,7 @@ export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
 export GITLOCALCACHE='/home/lnara002/.gitcache/panos.git'
 export WSROOT='/home/lnara002/ws'
-export GOPATH='/home/lnara002/gopath'
+export GOPATH="$HOME/gopath"
 
 alias wincyg="cd $WINCYG"
 alias winnotes="cd $WINNOTES"
@@ -264,6 +264,11 @@ testbd()
   ssh -X $testbed@$testbed
 }
 
+vi()
+{
+  vim.nox-py2 $*
+}
+
 nvim()
 {
   /home/lnara002/software/neovim/neovim/postinstall/bin/nvim $*
@@ -395,6 +400,27 @@ makemp3()
       return 1
    fi
    avconv -i "$1" -vn -acodec libmp3lame "$2".mp3
+}
+
+rejigcovermp3()
+{
+  \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 --remove-images
+  \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 --no-tagging-time-frame -2 --add-image 'cover.jpg:FRONT_COVER'
+}
+
+extractcovermp3()
+{
+  if [ -z "$1" ] ; then 
+    echo "supply mp3"
+    return
+  fi
+  coverdir="cover-$1"
+  mkdir -p "$coverdir"
+  if [ $? -ne 0 ] ; then
+    echo "problem creating dir"
+    return
+  fi
+  eyeD3 "--write-images=$coverdir" "$1"
 }
 
 loaddisplay()
