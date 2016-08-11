@@ -22,10 +22,11 @@
 	login = !/usr/local/timostools/git.d/git-helper.sh login
 	statusnewporcut = !/usr/bin/git status --porcelain | grep '^??' | cut -c4-
 	csetr = "!f() { /usr/bin/git fetch ; /usr/bin/git log HEAD..origin/$(/usr/bin/git rev-parse --abbrev-ref HEAD) ; } ; f"
-    resetbasetag = "!f() { git tag -d base ; git tag base HEAD ; } ; f"
+	resetbasetag = "! f() { git tag -d $1 ; git tag $1 $(git merge-base @{u} $(git symbolic-ref --short -q HEAD)) ; } ; if [ -z "$1" ] ; then tg=base ; else tg=$1 ; fi ; f $tg"
     mytags = tag -l 'lnara002*'
     nontimos = !git tag | grep -v TiMOS | grep -v SPR
     newfiles = ls-files --others --exclude-standard
+	meonallbranches = log --author=lnara002 remotes/origin/TiMOS-MG_8_0_current remotes/origin/TiMOS-MG_8_0_future remotes/origin/TiMOS-MG_0_0 HEAD
 [diff]
 	tool = meld
 [push]
@@ -50,8 +51,14 @@
 [difftool]
 	prompt = false
 [sr]
-	githelperver = bb33c8d08ca7af00f05d2271afb4dcb2bbccc44a
+	githelperver = 9342cdeeca603c5a66a3484e9332534df0be75f1
 [remote "origin"]
 	fetch = +refs/notes/*:refs/notes/*
 [apply]
 	whitespace = nowarn
+[sr "push.verify"]
+	forgottenfiles = on
+	dtsformat = on
+	dtsrequired = on
+[sr "precommit.verify"]
+	filechecks = on

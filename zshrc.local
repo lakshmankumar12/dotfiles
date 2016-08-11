@@ -74,3 +74,5 @@ source /drive_c/Users/lnara002/cygwin/github/zsh-git-prompt/zshrc.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 bindkey '^R' history_search
+
+source /home/lnara002/software/fzf-marks/fzf-marks.plugin.zsh
