@@ -1,6 +1,6 @@
 [user]
-	email = lakshman_kumar.narayanan@alcatel-lucent.com
-	name = lnara002
+	email = lakshmankumar@gmail.com
+	name = lakshman kumar
 [alias]
 	dt = difftool --dir-diff
 	cset = diff-tree --no-commit-id --name-only -r
