@@ -26,12 +26,15 @@
     mytags = tag -l 'lnara002*'
     nontimos = !git tag | grep -v TiMOS | grep -v SPR
     newfiles = ls-files --others --exclude-standard
+	reflogd = reflog --date=relative
 [diff]
 	tool = meld
+	renameLimit = 25000
 [push]
-	default = simple
+	default = upstream
 [merge]
 	tool = diffconflicts
+	renameLimit = 25000
 [mergetool "diffconflicts"]
 	cmd = diffconflicts /home/lnara002/software/vim/vim74/postinstall/bin/vim $BASE $LOCAL $REMOTE $MERGED
 	trustExitCode = true
