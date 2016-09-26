@@ -31,6 +31,7 @@ alias winrs="cd $WINRS"
 alias wingh="cd $WINGH"
 alias lcache="cd $GITLOCALCACHE"
 alias cdw="cd $WSROOT"
+alias less="TERM=xterm less"
 
 
 alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'

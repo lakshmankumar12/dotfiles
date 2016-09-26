@@ -62,6 +62,8 @@ queen () {
   cp isa-aa.tim i386-isa-aa.tim
   echo "copying to $dest"
   scp i3*.tim lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/$dest
+  cd ../test
+  scp codeversion.mk  setup_cli.cfg  teardown_cli.cfg  timos_features.mk lnara002@queen2.mv.usa.alcatel.com:/home/lnara002/$dest
   cd ../.. ;
 }
 
@@ -73,7 +75,7 @@ queenhops () { cd bin/7xxx-hops/
 
 vi()
 {
-  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim74/postinstall/bin/vim $*
+  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim.git/postinstall/bin/vim $*
 }
 export EDITOR=/home/lnara002/software/vim/vim74/postinstall/bin/vim
 
