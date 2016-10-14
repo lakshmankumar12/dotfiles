@@ -28,6 +28,7 @@
     newfiles = ls-files --others --exclude-standard
 	meonallbranches = log --author=lnara002 remotes/origin/TiMOS-MG_8_0_current remotes/origin/TiMOS-MG_8_0_future remotes/origin/TiMOS-MG_0_0 HEAD
 	reflogd = reflog --date=relative
+    diffno = diff --name-only
 [diff]
 	tool = meld
 	renameLimit = 25000

@@ -309,6 +309,28 @@ listtmuxlog()
 }
 alias ltl=listtmuxlog
 
+dumptmuxpane()
+{
+   if [ -z "$3" ] ; then
+      session="main"
+   else
+      session=$3
+   fi
+   if [ -z "$2" ] ; then
+      file="log.txt"
+   else
+      file=$2
+   fi
+   if [ -z "$1" ] ; then
+      echo "Supply window-name"
+      echo "Usage: $0 <window> [<filename> [<session>]]"
+   else
+      window=$1
+   fi
+   tmux capture-pane -S- -t $session:$window
+   tmux save-buffer $file
+}
+
 viewpdf()
 {
   if [ -z "$1" ] ; then
