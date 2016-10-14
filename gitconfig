@@ -27,6 +27,7 @@
     nontimos = !git tag | grep -v TiMOS | grep -v SPR
     newfiles = ls-files --others --exclude-standard
 	reflogd = reflog --date=relative
+    diffno = diff --name-only
 [diff]
 	tool = meld
 	renameLimit = 25000
