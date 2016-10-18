@@ -70,7 +70,7 @@ bindkey '^V' cd_dir_widget
 
 eval $(dircolors ~/software/dircolors-solarized/dircolors.ansi-dark )
 
-source /drive_c/Users/lnara002/cygwin/github/zsh-git-prompt/zshrc.sh
+source /home/lnara002/github/zsh-git-prompt/zshrc.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 bindkey '^R' history_search
