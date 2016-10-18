@@ -348,7 +348,7 @@ tmuxatt()
     session="$1"
   fi
   export TERM=screen-256color-bce
-  export LD_LIBRARY_PATH=/home/lnara002/software/libevent/libevent-2.0.21-stable/postinstall/lib
+  export LD_LIBRARY_PATH=/home/lnara002/software/libevent/libevent-2.0.22-stable/postinstall/lib
   tmux -2 attach -d -t $session
 }
 

@@ -77,7 +77,7 @@ queenhops () { cd bin/7xxx-hops/
 
 vi()
 {
-  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002/software/vim/vim.git/postinstall/bin/vim $*
+  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002//bin/vim $*
 }
 export EDITOR=/home/lnara002/software/vim/vim74/postinstall/bin/vim
 
@@ -90,7 +90,7 @@ vicode()
 
 setr()
 {
-  /drive_c/Users/lnara002/cygwin/repo-of-scripts/new-clone/shiftclone.py
+  /home/lnara002/work/gitlab/new-clone/shiftclone.py
   if [ $? -eq 0 ] ; then 
     export CURRENT_PANOS=$(cat /home/lnara002/.currp)
     echo "CURRENT_PANOS set to $CURRENT_PANOS"
@@ -100,7 +100,7 @@ setr()
 
 setw()
 {
-  /drive_c/Users/lnara002/cygwin/repo-of-scripts/new-clone/shiftclone.py -w
+  /home/lnara002/work/gitlab/new-clone/shiftclone.py -w
   if [ $? -eq 0 ] ; then 
     export CURRENT_PANOS=$(cat /home/lnara002/.currp)
     echo "CURRENT_PANOS set to $CURRENT_PANOS"
@@ -131,7 +131,7 @@ cmdsh()
   FILE=/tmp/tmuxbuffer/resultcmdsh
   DIR_PREFIX=$(dirname $FILE)
   rm -f /tmp/tmuxbuffer/resultcmdsh
-  cat /drive_c/Users/lnara002/cygwin/notes/git-tracks/general-notes/grepper_commands | /home/lnara002/github/fzf/bin/fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
+  cat /home/lnara002/work/bitbucket/alu-common-stuff-notes/grepper_commands | /home/lnara002/bin/fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
 }
 
 listvm()
