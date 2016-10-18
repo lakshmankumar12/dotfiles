@@ -37,11 +37,11 @@
 	tool = diffconflicts
 	renameLimit = 25000
 [mergetool "diffconflicts"]
-	cmd = diffconflicts /home/lnara002/software/vim/vim74/postinstall/bin/vim $BASE $LOCAL $REMOTE $MERGED
+	cmd = diffconflicts /home/lnara002/bin/vim $BASE $LOCAL $REMOTE $MERGED
 	trustExitCode = true
 	keepBackup = false
 [mergetool "splice"]
-    cmd = "/home/lnara002/software/vim/vim74/postinstall/bin/vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
+    cmd = "/home/lnara002/bin/vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
 	trustExitCode = true
 	keepBackup = false
 [mergetool "mymeld"]

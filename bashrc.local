@@ -35,7 +35,7 @@ alias lcache="cd $GITLOCALCACHE"
 alias cdw="cd $WSROOT"
 
 
-alias cscope='/home/lnara002/software/cscope/cscope-15.8a/postinstall/bin/cscope'
+alias cscope='/home/lnara002/bin/cscope'
 
 alias findf='percol --match-method=regex ../tags_f'
 alias finds='percol --match-method=regex ../tags_s'
@@ -50,6 +50,9 @@ alias findgd='percol --match-method=regex ../gtp_tags_d'
 export PATH=$PATH:$WINCYG/scripts
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export EDITOR=vim
+export GITHUB="https://lakshmankumar12@github.com/lakshmankumar12/"
+export GITLAB="https://lakshmankumar12@gitlab.com/lakshmankumar12/"
+export BITBUCKET="https://lakshmankumar12@bitbucket.org/lakshmankumar12/"
 
 ovcs()
 {
@@ -82,9 +85,27 @@ newcsc()
   egrep ';"[[:space:]](d|e)' tags > tags_d
   echo "done"
   echo -n "waiting for cscope($cscope_pid) to complete .. "
-  check_for_pid.sh $cscope_pid
+  check_for_pid $cscope_pid
   ovcs
   echo "done"
+}
+
+check_for_pid()
+{
+  if [ -z "$1" ] ; then
+    echo "supply pid"
+    return
+  fi
+
+  pid=$1
+  while [ 1 ] ; do
+    kill -s 0 $pid 2> /dev/null 
+    if [ $? -eq 0 ] ; then
+      sleep 2
+    else
+      break
+    fi
+  done
 }
 
 analy()
