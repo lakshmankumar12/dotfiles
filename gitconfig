@@ -55,7 +55,7 @@
 [difftool]
 	prompt = false
 [sr]
-	githelperver = a130cde8bff7f9188556dba5263cb7532229d7d9
+	githelperver = 9473ca293709f76bedbe6255fd45d84abd0d3488
 [remote "origin"]
 	fetch = +refs/notes/*:refs/notes/*
 [apply]

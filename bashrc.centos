@@ -77,8 +77,13 @@ queenhops () { cd bin/7xxx-hops/
 
 vi()
 {
-  LD_LIBRARY_PATH=/usr/local/lib /home/lnara002//bin/vim $*
+  /home/lnara002/bin/vim $*
 }
+vimdiff()
+{
+  /home/lnara002/bin/vimdiff $*
+}
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export EDITOR=/home/lnara002/bin/vim
 
 vicode()
@@ -149,11 +154,32 @@ listhw()
   list_testbeds.py - | grep MtnView | grep -i hardware | grep -i lte | sort -k 3,3 -k 2,2 | awk -vRESET='\033[0;0m' -vRED='\033[31m' -vBLUE='\033[34m' -vGREEN='\033[32m'  ' /INPROG/ {printf "%s",BLUE } /PAUSED/ {printf "%s",RED}  /IDLE/ {printf "%s",GREEN}   1 { print } END { printf "%s",RESET} '
 }
 
-mgtags()
+mgtags_old()
 {
   git tag | grep TiMOS-MG |  sed 's/-\([[:digit:]]\+\)/ - \1/' | \
     sed -n 's/\(TiMOS-MG_[[:digit:]]\+_0_[[:alpha:]]\)\([[:digit:]]\+\)/\1 \2/p' | \
     sort -n -k 2 -k 4 -r | tr -d ' '
 }
 
-
+mgtags()
+{
+  if [ -z "$1" ] ; then
+    pattern="^TiMOS-MG_0_0_I"
+    filter="_I"
+  elif [ $1 == "80S" ] ; then
+    pattern="^TiMOS-MG_8_0_S"
+    filter="_S"
+  elif [ $1 == "80B" ] ; then
+    pattern="^TiMOS-MG_8_0_B1"
+    filter="_B1"
+  elif [ $1 == "cust" ] ; then
+    pattern="^$2"
+    filter="$3"
+  else
+    echo "Unrecogized input"
+    echo "$0 [80S|80B|cust <pattern> <filter>]"
+    echo " (no-arg uses 00)"
+    return
+  fi
+  git tag | grep $pattern | sed "s/$filter/$filter /"  | sort -k 2 -n  | sed 's/ //' | less
+}
