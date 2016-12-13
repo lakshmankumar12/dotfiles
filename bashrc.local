@@ -281,12 +281,21 @@ testbd()
 
 vi()
 {
-  vim.nox-py2 $*
+  $HOME/bin/vim $*
 }
 
 nvim()
 {
   /home/lnara002/software/neovim/neovim/postinstall/bin/nvim $*
+}
+
+do_on_success()
+{
+  if [ $? -ne 0 ] ; then
+    echo "previous status was failure"
+    return
+  fi
+  $*
 }
 
 open_conver()
@@ -382,7 +391,7 @@ ftpane() {
   current_window=$(tmux display-message -p '#I')
   current_session=$(tmux display-message -p '#S')
 
-  target=$(echo "$panes" | grep -v "$current_pane" | /home/lnara002/github/fzf/bin/fzf-tmux -d 20% --exact --reverse --no-sort ) || return
+  target=$(echo "$panes" | grep -v "$current_pane" | /home/lnara002/bin/fzf-tmux -d 20% --exact --reverse --no-sort ) || return
 
   target_session=$(echo $target | awk 'BEGIN{FS=":"} {print$2}')
   target_window=$(echo $target | awk 'BEGIN{FS=":"} {print$3}')
