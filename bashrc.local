@@ -3,6 +3,7 @@ alias ls='ls --color -F'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
+alias gitroot='cd ./$(git rev-parse --show-cdup)'
 alias ttyrec='/home/lnara002/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='/home/lnara002/software/ttygif/ttygif'
 alias ttygif_concat='/home/lnara002/software/ttygif/concat.sh'
@@ -335,7 +336,7 @@ alias ltl=listtmuxlog
 dumptmuxpane()
 {
    if [ -z "$3" ] ; then
-      session="main"
+      session=""
    else
       session=$3
    fi
@@ -471,8 +472,8 @@ extractcovermp3()
 loaddisplay()
 {
    echo $DISPLAY > /tmp/last_display
-   DISP_FILE=/tmp/displayset
-   if [ -f "/tmp/displayset" ] ; then
+   DISP_FILE=~/.displayset
+   if [ -f $DISP_FILE ] ; then
      perl -pi -e 'chomp if eof' $DISP_FILE
      export DISPLAY=$(cat $DISP_FILE)
    fi
