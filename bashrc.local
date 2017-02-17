@@ -503,3 +503,10 @@ resetclipvm()
 if [ -e ~/.bashrc.centos ] ; then
   source ~/.bashrc.centos
 fi
+
+cdfzf()
+{
+  tgt=$(dirname $(fzf))
+  echo "switching to $tgt"
+  cd $tgt
+}
