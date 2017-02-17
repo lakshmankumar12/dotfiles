@@ -3,14 +3,13 @@ alias ls='ls --color -F'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
-alias gitroot='cd ./$(git rev-parse --show-cdup)'
+alias gr='cd ./$(git rev-parse --show-cdup)'
 alias ttyrec='/home/lnara002/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='/home/lnara002/software/ttygif/ttygif'
 alias ttygif_concat='/home/lnara002/software/ttygif/concat.sh'
 
 export WINCYG='/Users/lnara002/cygwin'
 export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'
-export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshman_kumar.narayanan@alcatel-lucent.com%2clakshman_kumar.narayanan@alcatel-lucent.com'
 export WINWS='/drive_c/home/lnara002/linux'
 export WINHOME='/drive_c/Users/lnara002'
 export WINDWN='/drive_c/Users/lnara002/Downloads'
@@ -18,13 +17,11 @@ export WINLK='/drive_c/Lakshman'
 export WINTMP='/drive_c/Lakshman/temp'
 export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
-export GITLOCALCACHE='/home/lnara002/.gitcache/panos.git'
 export WSROOT='/home/lnara002/ws'
 export GOPATH="$HOME/gopath"
 
 alias wincyg="cd $WINCYG"
 alias winnotes="cd $WINNOTES"
-alias pidgin="cd $PIDGIN"
 alias winws="cd $WINWS"
 alias winhome="cd $WINHOME"
 alias windwn="cd $WINDWN"
@@ -65,9 +62,9 @@ ovcs()
 
 
 newcsc()
-{ 
+{
   echo "Rebuilding cscope from cscope.files into tmpcsc"
-  if [ ! -f cscope.files ] ; then 
+  if [ ! -f cscope.files ] ; then
     echo "Huh .. There is no cscope.files"
     return 1
   fi
@@ -100,7 +97,7 @@ check_for_pid()
 
   pid=$1
   while [ 1 ] ; do
-    kill -s 0 $pid 2> /dev/null 
+    kill -s 0 $pid 2> /dev/null
     if [ $? -eq 0 ] ; then
       sleep 2
     else
@@ -116,7 +113,7 @@ analy()
 
 howlong()
 {
-  ps -o "%p %t" $1 
+  ps -o "%p %t" $1
 }
 
 mkf()
@@ -161,16 +158,16 @@ mkp()
 pc()
 {
   if [ -z "$testbed" ] ; then
-    echo "testbed is not set"; 
+    echo "testbed is not set";
     return
   fi
-  if [ -z "$TDISPLAY" ] ; then 
+  if [ -z "$TDISPLAY" ] ; then
     echo "TDISPLAY is not set";
     return ;
   fi
   echo "Sending to testbed: $testbed, TDISPLAY: $TDISPLAY .. xsel is:"
   xsel -b
-  xsel -b | ssh $testbed@$testbed "DISPLAY=$TDISPLAY" xclip 
+  xsel -b | ssh $testbed@$testbed "DISPLAY=$TDISPLAY" xclip
 }
 
 shareclip()
@@ -191,16 +188,16 @@ pgprog()
 {
   file=$(ps -ef | grep panosgrep | grep tmp | awk '{print $13}' | cut -c2-)
   if [ -z "$file" ] ; then echo "looks like no panosgrep is in progress" ; return ; fi
-  less $file 
+  less $file
 }
 
 calc()
-{ 
+{
   bc <<< "scale=2; $*"
 }
 
 dtsdir()
-{ 
+{
   if [ -z "$1" ]  ; then
     echo "supply DTS"
     return 1
@@ -225,43 +222,43 @@ check_sanity()
 }
 
 cdr()
-{ 
+{
   check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
   cd $CURRENT_PANOS
 }
 
 cdp()
-{ 
+{
   check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
   cd $CURRENT_PANOS/panos
 }
 
 cdpbinx()
-{ 
+{
   check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
   cd $CURRENT_PANOS/panos/bin/7xxx-i386
 }
 
 cdpbinx64()
-{ 
+{
   check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
   cd $CURRENT_PANOS/panos/bin/7xxx-x86_64
 }
 
 cdpchile()
-{ 
+{
   check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
   cd $CURRENT_PANOS/panos/bin/7xxx-chile
 }
 
 cdplg()
-{ 
+{
   check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
   cd $CURRENT_PANOS/panos/lte_gtp
 }
 
 cdpg()
-{ 
+{
   check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
   cd $CURRENT_PANOS/panos/gen
 }
@@ -456,7 +453,7 @@ rejigcovermp3()
 
 extractcovermp3()
 {
-  if [ -z "$1" ] ; then 
+  if [ -z "$1" ] ; then
     echo "supply mp3"
     return
   fi
@@ -480,3 +477,29 @@ loaddisplay()
 }
 loaddisplay
 
+removecolorandctrlm()
+{
+    if [ ! -f $1 ] ; then
+      echo "Supply a file name"
+      return
+    fi
+    sed -i -r -e 's:\x1B\[[0-9;]*[mK]::g' -e 's:\x0d::g' $1
+}
+
+resetclipvm()
+{
+  op=$(ps -ef | grep VBoxClient | grep clip)
+  lines=$(echo $op | wc -l)
+  if [ $lines -ne 1 ] ; then
+    echo "Got more than one line - $op"
+    return 1
+  fi
+  pid=$(echo $op | awk '{print $2}')
+  echo "killing pid: $pid, op:$op"
+  kill -9 $pid
+  echo "starting again"
+  /usr/bin/VBoxClient --clipboard
+}
+if [ -e ~/.bashrc.centos ] ; then
+  source ~/.bashrc.centos
+fi
