@@ -506,7 +506,7 @@ fi
 
 cdfzf()
 {
-  tgt=$(dirname $(fzf))
+  tgt=$(dirname "$(fzf)")
   echo "switching to $tgt"
-  cd $tgt
+  cd "$tgt"
 }
