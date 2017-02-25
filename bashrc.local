@@ -388,9 +388,24 @@ if [ -e ~/.bashrc.centos ] ; then
   source ~/.bashrc.centos
 fi
 
-cdfzf()
+fd()
 {
-  tgt=$(dirname "$(fzf)")
-  echo "switching to $tgt"
-  cd "$tgt"
+  local dir
+  # ./ is default, other find from $1
+  # path "*/\.*" -prune will filter out hidden dirs
+  # -o
+  dir=$(find -L ${1:-.} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf +m --exact) &&
+  cd "$dir"
+}
+
+fdg()
+{
+  a=./$(git root)
+  if [ $? -ne 0 ] ; then
+    echo "Trouble with git root"
+    return
+  fi
+  b=$(cd $a; pwd)
+  fd $b
 }
