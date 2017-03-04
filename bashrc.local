@@ -231,7 +231,7 @@ dumptmuxpane()
    else
       window=$1
    fi
-   tmux capture-pane -S- -t $session:$window
+   tmux capture-pane -eCJ -S- -t $session:$window
    tmux save-buffer $file
 }
 
