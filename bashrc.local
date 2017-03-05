@@ -447,7 +447,7 @@ makemp3()
 
 rejigcovermp3()
 {
-  \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 --remove-all-images
+  \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 --remove-images
   \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 -2 --add-image 'cover.jpg:FRONT_COVER'
 }
 
