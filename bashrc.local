@@ -405,6 +405,36 @@ ftpane() {
   tmux select-window -t $target_window
 }
 
+tmux_pane_title() {
+  if [ -z "$1" ]; then
+    echo "supply title"
+    return
+  fi
+  printf '\033]2;%s\033\\' $1
+}
+
+tmux_win_title() {
+  if [ -z "$1" ]; then
+    echo "supply title"
+    return
+  fi
+  printf '\033k%s\033\\' $1
+}
+
+tmux_set_fg_color() {
+  if [ -z "$1" ]; then
+    echo "supply a number from 0(default) to 2"
+    return
+  fi
+  value="default"
+  if [ $1 -eq "1" ]; then
+    value="fg=colour48"
+  elif [ $1 -eq "2" ]; then
+    value="fg=colour200"
+  fi
+  tmux select-pane -P $value
+}
+
 gotoNofifPane() {
   current_pane=$(tmux display-message -p '#I:#P')
   current_window=$(tmux display-message -p '#I')
