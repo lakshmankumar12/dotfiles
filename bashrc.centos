@@ -3,7 +3,8 @@ export PIDGIN='/drive_c/Users/lnara002/AppData/Roaming/.purple/logs/sipe/lakshma
 
 alias pidginold="cd $PIDGINOLD"
 alias pidgin="cd $PIDGIN"
-alias tmux='TERM=xterm-256color /home/lnara002/software/tmux/2.2-with-my-fix/postinstall/bin/tmux'
+# tmux is ~/bin/tmux by path, we just need the env var.
+alias tmux='TERM=xterm-256color tmux'
 alias altgit='/home/lnara002/software/git/git/postinstall/bin/git'
 debug_dirs=(lte_gtp lte_mscp lte_pmip lte_mip lte_cpm lte_mgmt lte_common)
 alias mkvm='mk i386 64'
@@ -312,5 +313,4 @@ pgprog()
   if [ -z "$file" ] ; then echo "looks like no panosgrep is in progress" ; return ; fi
   less $file
 }
-
 

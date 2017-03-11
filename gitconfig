@@ -13,13 +13,11 @@
     bot = "!git log --pretty=oneline | tail -n 1 | cut -f 1 -d\\ "
 	ci = !cd ${GIT_PREFIX:-.} && /usr/local/timostools/git.d/git-helper.sh ci
 	up = !/usr/local/timostools/git.d/git-helper.sh up
-	co = !/usr/local/timostools/git.d/git-helper.sh co
 	set-hooks = !/usr/local/timostools/git.d/git-helper.sh set-hooks
 	logg = !/usr/local/timostools/git.d/git-helper.sh logg
 	update-helper = "!cd /usr/local/timostools/git.d; git pull; /usr/local/timostools/git.d/git-helper.sh install /usr/local/timostools/git.d"
 	edit-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`"
 	add-unmerged = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
-	login = !/usr/local/timostools/git.d/git-helper.sh login
 	statusnewporcut = !/usr/bin/git status --porcelain | grep '^??' | cut -c4-
 	csetr = "!f() { /usr/bin/git fetch ; /usr/bin/git log HEAD..origin/$(/usr/bin/git rev-parse --abbrev-ref HEAD) ; } ; f"
 	resetbasetag = "! f() { git tag -d $1 ; git tag $1 $(git merge-base @{u} $(git symbolic-ref --short -q HEAD)) ; } ; if [ -z "$1" ] ; then tg=base ; else tg=$1 ; fi ; f $tg"
@@ -56,7 +54,7 @@
 [difftool]
 	prompt = false
 [sr]
-	githelperver = 8ca152235e01a1960e378141e14de93056226419
+	githelperver = 1f7b87de4192aed47118b8023bc18956d03c7216
 [remote "origin"]
 	fetch = +refs/notes/*:refs/notes/*
 [apply]
