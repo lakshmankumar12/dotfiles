@@ -314,3 +314,15 @@ pgprog()
   less $file
 }
 
+gfetch()
+{
+  unset https_proxy
+  DISPLAY= git fetch
+}
+
+gpush()
+{
+  unset https_proxy
+  DISPLAY= git push
+}
+
