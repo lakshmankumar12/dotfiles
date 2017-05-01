@@ -22,7 +22,7 @@ __git_files () {
 }
 
 #autojump
-[[ -s /home/lnara002/.autojump/etc/profile.d/autojump.sh ]] && source /home/lnara002/.autojump/etc/profile.d/autojump.sh
+[[ -s $HOME/.autojump/etc/profile.d/autojump.sh ]] && source $HOME/.autojump/etc/profile.d/autojump.sh
 autoload -U compinit && compinit -u
 
 split_to_arr()

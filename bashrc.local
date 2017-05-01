@@ -48,9 +48,9 @@ alias findgd='percol --match-method=regex ../gtp_tags_d'
 export PATH=$PATH:$WINCYG/scripts
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export EDITOR=vim
-export GITHUB="https://lakshmankumar12@github.com/lakshmankumar12"
-export GITLAB="https://lakshmankumar12@gitlab.com/lakshmankumar12"
-export BITBUCKET="https://lakshmankumar12@bitbucket.org/lakshmankumar12"
+export GITHUB="git@github.com:lakshmankumar12"
+export GITLAB="git@gitlab.com:lakshmankumar12"
+export BITBUCKET="git@bitbucket.org:lakshmankumar12"
 
 ovcs()
 {
