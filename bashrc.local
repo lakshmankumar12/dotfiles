@@ -33,7 +33,7 @@ alias lcache="cd $GITLOCALCACHE"
 alias cdw="cd $WSROOT"
 
 
-alias cscope='/home/lnara002/bin/cscope'
+alias cscope="$HOME/bin/cscope"
 
 alias findf='percol --match-method=regex ../tags_f'
 alias finds='percol --match-method=regex ../tags_s'
@@ -389,7 +389,7 @@ ftpane() {
   current_window=$(tmux display-message -p '#I')
   current_session=$(tmux display-message -p '#S')
 
-  target=$(echo "$panes" | grep -v "$current_pane" | /home/lnara002/bin/fzf-tmux -d 20% --exact --reverse --no-sort ) || return
+  target=$(echo "$panes" | grep -v "$current_pane" | fzf-tmux -d 20% --exact --reverse --no-sort ) || return
 
   target_session=$(echo $target | awk 'BEGIN{FS=":"} {print$2}')
   target_window=$(echo $target | awk 'BEGIN{FS=":"} {print$3}')
@@ -555,3 +555,31 @@ fdg()
   b=$(cd $a; pwd)
   fd $b
 }
+
+cmdsh2ndpart()
+{
+  FILE=/tmp/tmuxbuffer/resultcmdsh
+  DIR_PREFIX=$(dirname $FILE)
+  if [ -f $FILE ] ; then
+    :
+  else
+    #/usr/bin/inotifywait $DIR_PREFIX -e create -e moved_to | while read path action file; do : ; done
+    sleep 2
+  fi
+  if [ -s $FILE ] ; then
+    :
+  else
+    echo " " > $FILE
+  fi
+  perl -pi -e 's/^;#.*?;#\s*//;s/\s*;#.*$//;chomp if eof' $FILE
+}
+
+cmdsh()
+{
+  GREPPER_CMD=/home/lakshman_narayanan/bitbucket/aryaka-notes/grepper_commands
+  FILE=/tmp/tmuxbuffer/resultcmdsh
+  DIR_PREFIX=$(dirname $FILE)
+  rm -f /tmp/tmuxbuffer/resultcmdsh
+  cat $GREPPER_CMD | /home/lakshman_narayanan/bin/fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
+}
+
