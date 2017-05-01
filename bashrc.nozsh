@@ -1,0 +1,10 @@
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+[[ -s /home/lakshman_narayanan/.autojump/etc/profile.d/autojump.sh  ]] && source /home/lakshman_narayanan/.autojump/etc/profile.d/autojump.sh
+
+GIT_PROMPT_ONLY_IN_REPO=1
+GIT_PROMPT_THEME=Solarized
+#source ~/.bash-git-prompt/gitprompt.sh
+
+export PS1='[\u@\h \w]\$ '
+
