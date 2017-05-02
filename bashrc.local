@@ -18,6 +18,7 @@ export WINTMP='/drive_c/Lakshman/temp'
 export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
 export WSROOT='/home/lnara002/ws'
+export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
 export PYTHONPATH="$HOME/local/lib/python2.6/site-packages"
 
