@@ -4,4 +4,3 @@ then
     source ~/.bashrc.local
 fi
 
-export PATH=$PATH:$HOME/bin

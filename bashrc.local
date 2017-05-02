@@ -19,6 +19,9 @@ export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
 export WINGH='/drive_c/Users/lnara002/cygwin/github'
 export WSROOT='/home/lnara002/ws'
 export GOPATH="$HOME/gopath"
+export PYTHONPATH="$HOME/local/lib/python2.6/site-packages"
+
+export PATH=$HOME/bin:$PATH
 
 alias wincyg="cd $WINCYG"
 alias winnotes="cd $WINNOTES"
