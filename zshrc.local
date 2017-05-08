@@ -14,7 +14,7 @@ promptreset () {
 }
 
 setopt extendedglob
-emulate bash -c 'source ~/bashrc_for_zsh'
+emulate bash -c 'source ~/.bashrc_for_zsh'
 export DISABLE_AUTO_TITLE=true
 
 __git_files () {
