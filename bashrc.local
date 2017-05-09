@@ -9,6 +9,21 @@ alias ttygif='/home/lnara002/software/ttygif/ttygif'
 alias ttygif_concat='/home/lnara002/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
 
+#bless my typo
+alias snv=svn
+alias svnst="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | sort"
+alias snvst="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | sort"
+alias svnstm="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^M'"
+alias snvstm="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^M'"
+alias svnstx="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^X'"
+alias snvstx="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^X'"
+alias svnstq="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\?'"
+alias snvstq="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\?'"
+alias svnstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\~'"
+alias snvstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\~'"
+
+alias psme="ps -ef | grep '^521'"
+
 export WINCYG='/Users/lnara002/cygwin'
 export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'
 export WINWS='/drive_c/home/lnara002/linux'
