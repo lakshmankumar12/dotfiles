@@ -232,7 +232,18 @@ ftpane() {
   tmux select-window -t $target_window
 }
 
-tmux_pane_title() {
+tmux_win_title_get()
+{
+  tmux list-panes -s -F "#W|#{pane_id}" | grep --color=none "$TMUX_PANE" | cut -d\| -f 1
+}
+
+tmux_pane_title_get()
+{
+  tmux list-panes -s -F "#T|#{pane_id}" | grep --color=none "$TMUX_PANE" | cut -d\| -f 1
+}
+
+
+tmux_pane_title_set() {
   if [ -z "$1" ]; then
     echo "supply title"
     return
@@ -240,7 +251,7 @@ tmux_pane_title() {
   printf '\033]2;%s\033\\' $1
 }
 
-tmux_win_title() {
+tmux_win_title_set() {
   if [ -z "$1" ]; then
     echo "supply title"
     return
