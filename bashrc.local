@@ -594,12 +594,27 @@ cmdsh2ndpart()
   perl -pi -e 's/^;#.*?;#\s*//;s/\s*;#.*$//;chomp if eof' $FILE
 }
 
+macnotify()
+{
+  if [ -z "$1" ] ; then
+    echo "Supply message!"
+    return
+  fi
+  message=$1
+  if [ -z "$2" ] ; then
+    title "No Title Given"
+  else
+    title=$2
+  fi
+  osascript -e 'display notification "'"$message"'" with title "'"$title"'"'
+}
+
 cmdsh()
 {
-  GREPPER_CMD=/home/lakshman_narayanan/bitbucket/aryaka-notes/grepper_commands
+  GREPPER_CMD=$HOME/bitbucket/aryaka-notes/grepper_commands
   FILE=/tmp/tmuxbuffer/resultcmdsh
   DIR_PREFIX=$(dirname $FILE)
   rm -f /tmp/tmuxbuffer/resultcmdsh
-  cat $GREPPER_CMD | /home/lakshman_narayanan/bin/fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
+  cat $GREPPER_CMD | fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
 }
 
