@@ -1,4 +1,4 @@
-export EMAIL_ADDR=Lakshman_Kumar.Narayanan@alcatel-lucent.com
+export EMAIL_ADDR=lakshmankumar@gmail.com
 alias ls='ls --color -F'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
@@ -29,33 +29,6 @@ export GOPATH="$HOME/gopath"
 export PYTHONPATH="$HOME/local/lib/python2.6/site-packages"
 
 export PATH=$HOME/bin:$PATH
-
-alias wincyg="cd $WINCYG"
-alias winnotes="cd $WINNOTES"
-alias winws="cd $WINWS"
-alias winhome="cd $WINHOME"
-alias windwn="cd $WINDWN"
-alias winlk="cd $WINLK"
-alias wintmp="cd $WINTMP"
-alias winrs="cd $WINRS"
-alias wingh="cd $WINGH"
-alias lcache="cd $GITLOCALCACHE"
-alias cdw="cd $WSROOT"
-
-
-alias cscope="$HOME/bin/cscope"
-
-alias findf='percol --match-method=regex ../tags_f'
-alias finds='percol --match-method=regex ../tags_s'
-alias findm='percol --match-method=regex ../tags_m'
-alias findd='percol --match-method=regex ../tags_d'
-alias findgf='percol --match-method=regex ../gtp_tags_f'
-alias findgs='percol --match-method=regex ../gtp_tags_s'
-alias findgm='percol --match-method=regex ../gtp_tags_m'
-alias findgd='percol --match-method=regex ../gtp_tags_d'
-
-
-export PATH=$PATH:$WINCYG/scripts
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export EDITOR=vim
 export GITHUB="git@github.com:lakshmankumar12"
@@ -69,7 +42,6 @@ ovcs()
   mv tmpcsc.in cscope.in.out
   mv tmpcsc.po cscope.po.out
 }
-
 
 newcsc()
 {
@@ -126,153 +98,9 @@ howlong()
   ps -o "%p %t" $1
 }
 
-mkf()
-{
-  ps -ef | grep '\<mk\>' | grep -v egrep | sort -u -k6,6
-}
-
-mkp()
-{
-  if [ -n "$1" ] ; then
-    echo $1 > ~/.current_mk_progress_pid
-  fi
-  pid=$(cat ~/.current_mk_progress_pid)
-  kill -s 0 $pid 2> /dev/null
-  if [ $? -ne 0 ] ; then
-    echo "pid $pid isn't available"
-    return 1
-  fi
-  echo "pid is $pid"
-  ls -l /proc/$pid/cwd
-  pstree -p $pid
-  howlong $pid
-  pand=$(\ls -l /proc/$pid/cwd | awk '{print $11}')
-  tput setaf 4
-  echo "comments:"
-  tput sgr0
-  cat $pand/../comments
-  tput setaf 4
-  echo "log.txt progress:"
-  tput sgr0
-  wc $pand/log.txt
-  tput setaf 4
-  echo "db machine:"
-  tput sgr0
-  cat $pand/db2_user_cfg
-  tput setaf 4
-  echo "prefs file:"
-  tput sgr0
-  find $pand -name prefs.mk | parallel --no-notice 'echo {}; cat {}'
-}
-
-pc()
-{
-  if [ -z "$testbed" ] ; then
-    echo "testbed is not set";
-    return
-  fi
-  if [ -z "$TDISPLAY" ] ; then
-    echo "TDISPLAY is not set";
-    return ;
-  fi
-  echo "Sending to testbed: $testbed, TDISPLAY: $TDISPLAY .. xsel is:"
-  xsel -b
-  xsel -b | ssh $testbed@$testbed "DISPLAY=$TDISPLAY" xclip
-}
-
-shareclip()
-{
-   xsel -b > ~/chrome-Downloads/a.txt
-   unix2dos ~/chrome-Downloads/a.txt
-}
-
-inclip()
-{
-  dos2unix < ~/chrome-Downloads/clipboard.txt | xsel -i -b
-  dos2unix < ~/chrome-Downloads/clipboard.txt | xsel -i -p
-  dos2unix < ~/chrome-Downloads/clipboard.txt | xsel -i -s
-}
-
-
-pgprog()
-{
-  file=$(ps -ef | grep panosgrep | grep tmp | awk '{print $13}' | cut -c2-)
-  if [ -z "$file" ] ; then echo "looks like no panosgrep is in progress" ; return ; fi
-  less $file
-}
-
 calc()
 {
   bc <<< "scale=2; $*"
-}
-
-check_sanity()
-{
-  if [ -z "$CURRENT_PANOS" ]; then
-    echo "CURRENT_PANOS is not set. Do setr first"
-    return 1
-  fi
-  if [[ ! $(pwd) == *"$CURRENT_PANOS"* ]] ; then
-    echo "CURRENT_PANOS:$CURRENT_PANOS doesn't seem to be in pwd:$(pwd)"
-    return 1
-  fi
-  return 0
-}
-
-cdr()
-{
-  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
-  cd $CURRENT_PANOS
-}
-
-cdp()
-{
-  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
-  cd $CURRENT_PANOS/panos
-}
-
-cdpbinx()
-{
-  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
-  cd $CURRENT_PANOS/panos/bin/7xxx-i386
-}
-
-cdpbinx64()
-{
-  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
-  cd $CURRENT_PANOS/panos/bin/7xxx-x86_64
-}
-
-cdpchile()
-{
-  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
-  cd $CURRENT_PANOS/panos/bin/7xxx-chile
-}
-
-cdplg()
-{
-  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
-  cd $CURRENT_PANOS/panos/lte_gtp
-}
-
-cdpg()
-{
-  check_sanity; if [ $? -ne 0 ] ; then return 1 ; fi
-  cd $CURRENT_PANOS/panos/gen
-}
-
-testbd()
-{
-  if [ -z "$testbed" -a -z "$1" ] ; then
-    echo "no testbed is set"
-  fi
-  if [ -n "$1" ] ; then
-    echo "seting testbed to $1"
-    export testbed=$1
-  else
-    echo "using testbed $testbed"
-  fi
-  ssh -X $testbed@$testbed
 }
 
 vi()
@@ -283,6 +111,15 @@ vi()
 nvim()
 {
   $HOME/software/neovim/neovim/postinstall/bin/nvim $*
+}
+
+viewpdf()
+{
+  if [ -z "$1" ] ; then
+    echo "Supply pdf file"
+    return 1
+  fi
+  pdftotext -layout $1 - | vim -R -
 }
 
 do_on_success()
@@ -307,6 +144,7 @@ open_conver()
   htmltotext.py $1 | vim -R -
 }
 
+#all tmux stuff
 listtmuxpanes()
 {
   if [ -z "$1" ] ; then
@@ -348,15 +186,6 @@ dumptmuxpane()
    fi
    tmux capture-pane -eCJ -S- -t $session:$window
    tmux save-buffer $file
-}
-
-viewpdf()
-{
-  if [ -z "$1" ] ; then
-    echo "Supply pdf file"
-    return 1
-  fi
-  pdftotext -layout $1 - | vim -R -
 }
 
 tmuxatt()
@@ -449,6 +278,33 @@ gotoNofifPane() {
   tmux select-window -t $target_window
 }
 
+cmdsh()
+{
+  GREPPER_CMD=$HOME/bitbucket/aryaka-notes/grepper_commands
+  FILE=/tmp/tmuxbuffer/resultcmdsh
+  DIR_PREFIX=$(dirname $FILE)
+  rm -f /tmp/tmuxbuffer/resultcmdsh
+  cat $GREPPER_CMD | fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
+}
+
+cmdsh2ndpart()
+{
+  FILE=/tmp/tmuxbuffer/resultcmdsh
+  DIR_PREFIX=$(dirname $FILE)
+  if [ -f $FILE ] ; then
+    :
+  else
+    #/usr/bin/inotifywait $DIR_PREFIX -e create -e moved_to | while read path action file; do : ; done
+    sleep 2
+  fi
+  if [ -s $FILE ] ; then
+    :
+  else
+    echo " " > $FILE
+  fi
+  perl -pi -e 's/^;#.*?;#\s*//;s/\s*;#.*$//;chomp if eof' $FILE
+}
+
 
 # From https://gist.github.com/msabramo/746585#file-pyval-sh
 _pyval() {
@@ -464,6 +320,7 @@ _pyval() {
 }
 alias pyval='shopts="$SHELLOPTS"; set -f; _pyval'
 
+#mp3 stuff
 makemp3()
 {
    if [ -z "$1" -o -z "$2" ] ; then
@@ -554,24 +411,6 @@ fdg()
   fd $b
 }
 
-cmdsh2ndpart()
-{
-  FILE=/tmp/tmuxbuffer/resultcmdsh
-  DIR_PREFIX=$(dirname $FILE)
-  if [ -f $FILE ] ; then
-    :
-  else
-    #/usr/bin/inotifywait $DIR_PREFIX -e create -e moved_to | while read path action file; do : ; done
-    sleep 2
-  fi
-  if [ -s $FILE ] ; then
-    :
-  else
-    echo " " > $FILE
-  fi
-  perl -pi -e 's/^;#.*?;#\s*//;s/\s*;#.*$//;chomp if eof' $FILE
-}
-
 macnotify()
 {
   if [ -z "$1" ] ; then
@@ -585,14 +424,5 @@ macnotify()
     title=$2
   fi
   osascript -e 'display notification "'"$message"'" with title "'"$title"'"'
-}
-
-cmdsh()
-{
-  GREPPER_CMD=$HOME/bitbucket/aryaka-notes/grepper_commands
-  FILE=/tmp/tmuxbuffer/resultcmdsh
-  DIR_PREFIX=$(dirname $FILE)
-  rm -f /tmp/tmuxbuffer/resultcmdsh
-  cat $GREPPER_CMD | fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
 }
 
