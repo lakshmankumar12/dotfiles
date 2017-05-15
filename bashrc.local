@@ -4,9 +4,9 @@ alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
 alias gr='cd ./$(git rev-parse --show-cdup)'
-alias ttyrec='/home/lnara002/software/ttyrec/ttyrec/ttyrec'
-alias ttygif='/home/lnara002/software/ttygif/ttygif'
-alias ttygif_concat='/home/lnara002/software/ttygif/concat.sh'
+alias ttyrec='$HOME/software/ttyrec/ttyrec/ttyrec'
+alias ttygif='$HOME/software/ttygif/ttygif'
+alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
 
 #bless my typo
@@ -24,16 +24,6 @@ alias snvstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:
 
 alias psme="ps -ef | grep '^521'"
 
-export WINCYG='/Users/lnara002/cygwin'
-export WINNOTES='/Users/lnara002/cygwin/notes/git-tracks'
-export WINWS='/drive_c/home/lnara002/linux'
-export WINHOME='/drive_c/Users/lnara002'
-export WINDWN='/drive_c/Users/lnara002/Downloads'
-export WINLK='/drive_c/Lakshman'
-export WINTMP='/drive_c/Lakshman/temp'
-export WINRS='/drive_c/Users/lnara002/cygwin/repo-of-scripts'
-export WINGH='/drive_c/Users/lnara002/cygwin/github'
-export WSROOT='/home/lnara002/ws'
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
 export PYTHONPATH="$HOME/local/lib/python2.6/site-packages"
@@ -216,18 +206,6 @@ calc()
   bc <<< "scale=2; $*"
 }
 
-dtsdir()
-{
-  if [ -z "$1" ]  ; then
-    echo "supply DTS"
-    return 1
-  fi
-  if [ ! -d /home/lnara002/ws/dts/$1 ] ; then
-    mkdir /home/lnara002/ws/dts/$1
-  fi
-  cd /home/lnara002/ws/dts/$1
-}
-
 check_sanity()
 {
   if [ -z "$CURRENT_PANOS" ]; then
@@ -304,7 +282,7 @@ vi()
 
 nvim()
 {
-  /home/lnara002/software/neovim/neovim/postinstall/bin/nvim $*
+  $HOME/software/neovim/neovim/postinstall/bin/nvim $*
 }
 
 do_on_success()
@@ -396,7 +374,7 @@ tmuxrandchoose()
 {
   FILE=/tmp/chossepanetmux
   FILE2=/tmp/chossepanetmux2
-  tmux list-panes -a -F "#S | #I | #W | #P | #T" | /home/lnara002/github/fzf/bin/fzf-tmux -d 20% --exact --reverse --no-sort > $FILE
+  tmux list-panes -a -F "#S | #I | #W | #P | #T" | fzf-tmux -d 20% --exact --reverse --no-sort > $FILE
   session=$(cut -d\| -f 1 $FILE | sed -e 's/^ *//g;s/ *$//g')
   window=$(cut -d\| -f 2 $FILE | sed -e 's/^ *//g;s/ *$//g')
   echo -n "$session:$window" > $FILE2
