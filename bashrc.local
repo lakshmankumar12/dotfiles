@@ -105,7 +105,7 @@ calc()
 
 vi()
 {
-  $HOME/bin/vim $*
+  $HOME/bin/vim -u $HOME/.vimrc $*
 }
 
 nvim()
@@ -426,3 +426,7 @@ macnotify()
   osascript -e 'display notification "'"$message"'" with title "'"$title"'"'
 }
 
+ifaddr()
+{
+  ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[[:space:]]+inet / { print ifname " " $2  } ' | grep "$1"
+}
