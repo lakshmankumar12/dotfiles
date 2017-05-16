@@ -24,6 +24,10 @@ alias snvstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:
 
 alias psme="ps -ef | grep '^521'"
 
+alias tnew="$HOME/gitlab/aryaka-scripts/setup.py -s -i"
+alias tkill="$HOME/gitlab/aryaka-scripts/setup.py -k -i"
+alias tkillx="$HOME/gitlab/aryaka-scripts/setup.py -k -i -x"
+
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
 export PYTHONPATH="$HOME/local/lib/python2.6/site-packages"
