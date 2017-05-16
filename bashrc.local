@@ -238,14 +238,15 @@ ftpane() {
 
 tmux_win_title_get()
 {
-  tmux list-panes -s -F "#W|#{pane_id}" | grep --color=none "$TMUX_PANE" | cut -d\| -f 1
+  #tmux list-panes -s -F "#W|#{pane_id}" | grep --color=none "$TMUX_PANE" | cut -d\| -f 1
+  echo $(tmux display-message -p '#W')
 }
 
 tmux_pane_title_get()
 {
-  tmux list-panes -s -F "#T|#{pane_id}" | grep --color=none "$TMUX_PANE" | cut -d\| -f 1
+  #tmux list-panes -s -F "#T|#{pane_id}" | grep --color=none "$TMUX_PANE" | cut -d\| -f 1
+  echo $(tmux display-message -p '#T')
 }
-
 
 tmux_pane_title_set() {
   if [ -z "$1" ]; then
@@ -318,6 +319,11 @@ cmdsh2ndpart()
     echo " " > $FILE
   fi
   perl -pi -e 's/^;#.*?;#\s*//;s/\s*;#.*$//;chomp if eof' $FILE
+}
+
+tmuxsendhereanddate () {
+  date=$(date)
+  tmux send-keys "  HERE:  $date" "C-m" "C-m" "C-m"
 }
 
 

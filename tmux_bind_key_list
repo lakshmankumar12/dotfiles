@@ -1,5 +1,7 @@
+Search: KEY BINDINGS in man page
+
 a  -- (MY MAP) send prefix                     A -- rename window
-b  --
+b  -- (MY MAP) goto notifpane
 c  -- create new window
 d  -- detach                                   D -- choose to detach
 e  -- (MY MAP) switch-client -l
@@ -10,15 +12,15 @@ i  -- (MY MAP) stop logging                    I -- start logging
 j  -- (MY MAP) tab down                        J -- join pane
 k  -- (MY MAP) tab up
 l  -- (MY MAP) tab right
-m                                              M -- move pane
+m  -- mark a window                            M -- move pane
 n  -- next window
-o                                              O -- sanitize pane
+o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
 p  -- prev window
 q  -- show pane numbers
 r  -- reload conf
 s  -- switch-session                           S -- swap windows
 t  -- (MY MAP) choose any pane
-u
+u  -- (MY MAP) send a mark(while log-scrol)
 v
 w  -- switch-window
 x  -- kill pane
