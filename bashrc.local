@@ -8,6 +8,7 @@ alias ttyrec='$HOME/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='$HOME/software/ttygif/ttygif'
 alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
+alias man='TERM=xterm man'
 
 #bless my typo
 alias snv=svn
