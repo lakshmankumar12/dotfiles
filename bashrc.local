@@ -323,7 +323,7 @@ cmdsh2ndpart()
 
 tmuxsendhereanddate () {
   date=$(date)
-  tmux send-keys "  HERE:  $date" "C-m" "C-m" "C-m"
+  tmux send-keys "C-m" "C-m" "  HERE:  $date" "C-m" "C-m"
 }
 
 
