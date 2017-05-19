@@ -9,6 +9,8 @@ alias ttygif='$HOME/software/ttygif/ttygif'
 alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
+alias grt='cd ./$(git root) ; export GITROOT=$(pwd)'
+alias recfg='. ~/.zshrc'
 
 #bless my typo
 alias snv=svn
@@ -284,7 +286,7 @@ gotoNofifPane() {
   current_window=$(tmux display-message -p '#I')
   current_session=$(tmux display-message -p '#S')
 
-  target_session="aux"
+  target_session="test"
   target_window="0"
   target_pane="0"
 
@@ -451,4 +453,35 @@ macnotify()
 ifaddr()
 {
   ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[  ]+inet / { print ifname " " $2  } ' | grep "$1"
+}
+
+
+#ary .. stuff
+go () {
+  if [ -z "$GITROOT" ] ; then
+    grt
+  fi
+  if [ -n "$1" ] ; then
+     choice="$1"
+  else
+     choice="."
+  fi
+  cd $GITROOT
+  cd $(cat .branch_name)
+  case $choice in
+    ar)
+      cd build.el6/ace2/anap_root
+      ;;
+    ai)
+      cd build.el6/anap/install
+      ;;
+    pi)
+      cd build.el6/pop/install
+      ;;
+    gr)
+      cd ../
+      ;;
+    *)
+      cd $choice
+  esac
 }

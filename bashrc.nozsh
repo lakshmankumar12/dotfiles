@@ -10,3 +10,5 @@ eval $(dircolors ~/software/dircolors-solarized/dircolors.ansi-dark )
 
 export PS1='[\u@\h \w]\$ '
 
+unalias recfg
+alias recfg='. ~/.bashrc'
