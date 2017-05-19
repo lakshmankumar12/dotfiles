@@ -450,5 +450,5 @@ macnotify()
 
 ifaddr()
 {
-  ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[[:space:]]+inet / { print ifname " " $2  } ' | grep "$1"
+  ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[  ]+inet / { print ifname " " $2  } ' | grep "$1"
 }
