@@ -3,13 +3,12 @@ alias ls='ls --color -F'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
-alias gr='cd ./$(git rev-parse --show-cdup)'
+alias gr='cd ./$(git rev-parse --show-cdup) ; export GITROOT=$(pwd)'
 alias ttyrec='$HOME/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='$HOME/software/ttygif/ttygif'
 alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
-alias grt='cd ./$(git root) ; export GITROOT=$(pwd)'
 alias recfg='. ~/.zshrc'
 
 #bless my typo
@@ -457,9 +456,24 @@ ifaddr()
 
 
 #ary .. stuff
+setw() {
+  shiftclone.py
+  if [ -f "$HOME/.shift_clone_result" ] ; then
+    export GITROOT="$(cat $HOME/.shift_clone_result)"
+    cd "$GITROOT"
+  fi
+}
+
+
 go () {
   if [ -z "$GITROOT" ] ; then
-    grt
+    gr
+    echo "Note: GITROOT was unset. Its now: $GITROOT"
+  else
+    if [[ $(pwd) != *"$GITROOT"* ]] ; then
+      echo "pwd:$(pwd) doesn't contain GITROOT: $GITROOT"
+      return
+    fi
   fi
   if [ -n "$1" ] ; then
      choice="$1"
@@ -485,3 +499,8 @@ go () {
       cd $choice
   esac
 }
+
+gcsvninfo () {
+  git commit -am "'""svn update: $(svn log -q -l 1 | grep -v -- '^------')""'"
+}
+alias gcsnvinfo=gcsvninfo
