@@ -21,11 +21,11 @@ r  -- reload conf
 s  -- switch-session                           S -- swap windows
 t  -- (MY MAP) choose any pane
 u  -- (MY MAP) send a mark(while log-scrol)
-v
+v  -- split and cdtmuxclip
 w  -- switch-window
 x  -- kill pane
 y  -- ^r for testbeds
-z
+z  -- zoom
 
 ,  -- rename
 [  -- copy-mode

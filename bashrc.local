@@ -10,6 +10,7 @@ alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
 alias recfg='. ~/.zshrc'
+alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
 
 #bless my typo
 alias snv=svn
@@ -328,6 +329,16 @@ tmuxsendhereanddate () {
   tmux send-keys "C-m" "C-m" "  HERE:  $date" "C-m" "C-m"
 }
 
+#cd to the contents in tmux clipboard
+cdtmuxclip () {
+  tmuxclip=$(tmux saveb -)
+  if [ -d $tmuxclip ] ; then
+    cd $tmuxclip
+  else
+    echo "tmux clip doesn't seem to be a valid dir. Set a valid dir and cdtmuxclip again"
+  fi
+}
+
 
 # From https://gist.github.com/msabramo/746585#file-pyval-sh
 _pyval() {
@@ -491,6 +502,9 @@ go () {
       ;;
     pi)
       cd build.el6/pop/install
+      ;;
+    b)
+      cd build.el6
       ;;
     gr)
       cd ../
