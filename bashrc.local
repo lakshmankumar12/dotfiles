@@ -546,6 +546,18 @@ gcsvninfo () {
 }
 alias gcsnvinfo=gcsvninfo
 
+sshvpndoc() {
+  port=$(docker port for-vpn | grep '22/tcp' | grep -o ':.*$' | tr -d :)
+  echo "Port is $port"
+  ssh -X -p $port lakshman@localhost
+}
+
+sshdevdoc() {
+  port=$(docker port devbox | grep '22/tcp' | grep -o ':.*$' | tr -d :)
+  echo "Port is $port"
+  ssh -X -p $port lakshman@localhost
+}
+
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
   . ~/.bashrc.aryaka.centos.sh
 fi
