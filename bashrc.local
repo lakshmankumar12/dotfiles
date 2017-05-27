@@ -27,9 +27,9 @@ alias snvstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:
 
 alias psme="ps -ef | grep '^521'"
 
-alias tnew="$HOME/gitlab/aryaka-scripts/setup.py -s -i"
-alias tkill="$HOME/gitlab/aryaka-scripts/setup.py -k -i"
-alias tkillx="$HOME/gitlab/aryaka-scripts/setup.py -k -i -x"
+alias tnew="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -s -i"
+alias tkill="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i"
+alias tkillx="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i -x"
 
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
@@ -508,6 +508,15 @@ go () {
       ;;
     gr)
       cd ../
+      ;;
+    am)
+      cd acehw/src/acemon
+      ;;
+    ah)
+      cd acehw
+      ;;
+    pns)
+      cd pns_ni
       ;;
     *)
       cd $choice
