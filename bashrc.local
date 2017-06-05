@@ -527,3 +527,7 @@ gcsvninfo () {
   git commit -am "'""svn update: $(svn log -q -l 1 | grep -v -- '^------')""'"
 }
 alias gcsnvinfo=gcsvninfo
+
+if [ -f .bashrc.aryaka.centos.sh ] ; then
+  . .bashrc.aryaka.centos.sh
+fi
