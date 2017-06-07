@@ -469,20 +469,20 @@ ifaddr()
 #ary .. stuff
 setw() {
   shiftclone.py
-  if [ -f "$HOME/.shift_clone_result" ] ; then
-    export GITROOT="$(cat $HOME/.shift_clone_result)"
-    cd "$GITROOT"
+  if [ "$?" -eq "0" -a -f "$HOME/.shift_clone_result" ] ; then
+    export SVNGITROOT="$(cat $HOME/.shift_clone_result)"
+    cd "$SVNGITROOT"
   fi
 }
 
 
 go () {
-  if [ -z "$GITROOT" ] ; then
+  if [ -z "$SVNGITROOT" ] ; then
     gr
-    echo "Note: GITROOT was unset. Its now: $GITROOT"
+    echo "Note: SVNGITROOT was unset. Its now: $SVNGITROOT"
   else
-    if [[ $(pwd) != *"$GITROOT"* ]] ; then
-      echo "pwd:$(pwd) doesn't contain GITROOT: $GITROOT"
+    if [[ $(pwd) != *"$SVNGITROOT"* ]] ; then
+      echo "pwd:$(pwd) doesn't contain SVNGITROOT: $SVNGITROOT"
       return
     fi
   fi
@@ -491,7 +491,7 @@ go () {
   else
      choice="."
   fi
-  cd $GITROOT
+  cd $SVNGITROOT
   cd $(cat .branch_name)
   case $choice in
     ar)
@@ -528,6 +528,6 @@ gcsvninfo () {
 }
 alias gcsnvinfo=gcsvninfo
 
-if [ -f .bashrc.aryaka.centos.sh ] ; then
-  . .bashrc.aryaka.centos.sh
+if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
+  . ~/.bashrc.aryaka.centos.sh
 fi

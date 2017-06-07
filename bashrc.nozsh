@@ -4,11 +4,12 @@
 
 GIT_PROMPT_ONLY_IN_REPO=1
 GIT_PROMPT_THEME=Solarized
+export PS1='[\u@\h \w]\$ '
+
 source ~/.bash-git-prompt/gitprompt.sh
 
 eval $(dircolors ~/software/dircolors-solarized/dircolors.ansi-dark )
 
-export PS1='[\u@\h \w]\$ '
 
 unalias recfg
 alias recfg='. ~/.bashrc'
