@@ -9,10 +9,24 @@ alias gwsi='cd $HOME/ws/git-dir-for-svn/git_import'
 
 alias mil3='cd $HOME/ws/il3-scripts/il3_work_repo/il3/'
 alias mil3b='cd $HOME/ws/il3-scripts/il3_work_repo/il3/bin'
-alias mil3x='cd $HOME/ws/il3-scripts/il3_work_repo/il3/xml'
+alias mil3x='cd $HOME/ws/il3-scripts/il3_work_repo/il3/xml.tim'
 
 alias il3='cd /usr/local/il3/'
 alias il3x='cd /usr/local/il3/xml'
 alias il3b='cd /usr/local/il3/bin'
 
-
+function nightly() {
+  curr_host=$(hostname)
+  if [[ $curr_host != *"antares"*  ]] ; then
+    echo "Not in antares .. ssh antares first"
+    return
+  fi
+  if [ -z "$1" ] ; then
+    repo="r180"
+  else
+    repo=$1
+  fi
+  cd /usr/antares2/nightly.el6
+  export SVNGITROOT=$(pwd)
+  export SVNBRANCH=$repo
+}

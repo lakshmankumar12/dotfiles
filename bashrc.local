@@ -478,8 +478,9 @@ setw() {
 
 go () {
   if [ -z "$SVNGITROOT" ] ; then
+    echo "SVNGITROOT not set.. Trying to guess by git root"
     gr
-    echo "Note: SVNGITROOT was unset. Its now: $SVNGITROOT"
+    echo "Its now: $SVNGITROOT"
   else
     if [[ $(pwd) != *"$SVNGITROOT"* ]] ; then
       echo "pwd:$(pwd) doesn't contain SVNGITROOT: $SVNGITROOT"
@@ -492,7 +493,14 @@ go () {
      choice="."
   fi
   cd $SVNGITROOT
-  cd $(cat .branch_name)
+  if [ -f .branch_name ] ; then
+    cd $(cat .branch_name)
+  elif [ -n "$SVNBRANCH" ] ; then
+    cd "$SVNBRANCH"
+  else
+    echo "Neigher .branch_name nor SVNBRANCH is set"
+    return
+  fi
   case $choice in
     ar)
       cd build.el6/ace2/anap_root
