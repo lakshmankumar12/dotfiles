@@ -112,12 +112,17 @@ calc()
 
 vi()
 {
-  $HOME/bin/vim -u $HOME/.vimrc $*
+  if [ -n "$NVIM_LISTEN_ADDRESS" ] ; then
+    nvim_edit $@
+  else
+    #$HOME/bin/vim -u $HOME/.vimrc $*
+    $HOME/bin/nvim $@
+  fi
 }
 
 nvim()
 {
-  $HOME/software/neovim/neovim/postinstall/bin/nvim $*
+  $HOME/bin/nvim $@
 }
 
 viewpdf()
@@ -430,7 +435,7 @@ fd()
   # path "*/\.*" -prune will filter out hidden dirs
   # -o
   dir=$(find -L ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m --exact) &&
+                  -o -type d -print 2> /dev/null | fzf --no-sort +m --exact) &&
   cd "$dir"
 }
 
@@ -443,6 +448,11 @@ fdg()
   fi
   b=$(cd $a; pwd)
   fd $b
+}
+
+lspwd()
+{
+  \ls -1 $@ | awk -v pwd=$(pwd) ' { print pwd "/" $0 }'
 }
 
 macnotify()

@@ -30,3 +30,11 @@ function nightly() {
   export SVNGITROOT=$(pwd)
   export SVNBRANCH=$repo
 }
+
+rpmname() {
+  \ls -rt | grep -v symbols | tail -n 1
+}
+
+rpmver() {
+  rpm -q -i -p $(\ls -rt | tail -n 1 ) | grep Version | awk ' { print $3 } '
+}
