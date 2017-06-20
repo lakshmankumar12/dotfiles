@@ -1,6 +1,5 @@
 alias python27="$HOME/install/python27/bin/python2.7"
 alias python2.7="$HOME/install/python27/bin/python2.7"
-export PYTHONPATH="$HOME/local/lib/python2.6/site-packages:$HOME/install/python27/lib/python2.7/site-packages"
 export PERL5LIB="$HOME/install/perl/lib"
 
 alias gwsa='cd $HOME/ws/git-dir-for-svn/git_asn'
@@ -15,6 +14,7 @@ alias il3='cd /usr/local/il3/'
 alias il3x='cd /usr/local/il3/xml'
 alias il3b='cd /usr/local/il3/bin'
 
+alias gcomm='git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)"'
 function nightly() {
   curr_host=$(hostname)
   if [[ $curr_host != *"antares"*  ]] ; then

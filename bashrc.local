@@ -33,7 +33,6 @@ alias tkillx="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i -x"
 
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
-export PYTHONPATH="$HOME/local/lib/python2.6/site-packages"
 
 export PATH=$HOME/bin:$PATH
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
