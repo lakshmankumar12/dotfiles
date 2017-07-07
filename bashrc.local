@@ -9,7 +9,6 @@ alias ttygif='$HOME/software/ttygif/ttygif'
 alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
-alias recfg='. ~/.zshrc'
 alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
 
 #bless my typo
@@ -40,6 +39,12 @@ export EDITOR=vim
 export GITHUB="git@github.com:lakshmankumar12"
 export GITLAB="git@gitlab.com:lakshmankumar12"
 export BITBUCKET="git@bitbucket.org:lakshmankumar12"
+
+recfg() {
+  . ~/.zshrc
+  export PATH=$(echo $PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
+  export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
+}
 
 ovcs()
 {
@@ -309,6 +314,7 @@ gotoNofifPane() {
 cmdsh()
 {
   GREPPER_CMD=$HOME/bitbucket/aryaka-notes/grepper_commands
+  mkdir -p /tmp/tmuxbuffer
   FILE=/tmp/tmuxbuffer/resultcmdsh
   DIR_PREFIX=$(dirname $FILE)
   rm -f /tmp/tmuxbuffer/resultcmdsh

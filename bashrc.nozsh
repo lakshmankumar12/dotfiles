@@ -11,5 +11,8 @@ source ~/.bash-git-prompt/gitprompt.sh
 eval $(dircolors ~/software/dircolors-solarized/dircolors.ansi-dark )
 
 
-unalias recfg
-alias recfg='. ~/.bashrc'
+recfg() {
+  . ~/.bashrc
+  export PATH=$(echo $PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
+  export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
+}
