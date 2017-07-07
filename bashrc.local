@@ -33,18 +33,21 @@ alias tkillx="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i -x"
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
 
-export PATH=$HOME/bin:$PATH
+export RTAGS_WRAP_PATH=/Users/lakshman.narayanan/software/rtags/installb/wrap
+
+export PATH=$RTAGS_WRAP_PATH:$HOME/bin:$PATH
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export EDITOR=vim
 export GITHUB="git@github.com:lakshmankumar12"
 export GITLAB="git@gitlab.com:lakshmankumar12"
 export BITBUCKET="git@bitbucket.org:lakshmankumar12"
 
-recfg() {
-  . ~/.zshrc
+recfg_fn()
+{
   export PATH=$(echo $PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
   export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
 }
+alias recfg='. ~/.zshrc ; recfg_fn'
 
 ovcs()
 {
