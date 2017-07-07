@@ -96,7 +96,12 @@ check_for_pid()
 
 analy()
 {
-  cat /proc/$1/cmdline | tr '\0' '\n'
+    if [ ! -d /proc/$1 ] ; then 
+        echo "process $1 has no proc/$1 dir"
+        return
+    fi
+    cat /proc/$1/cmdline | tr '\0' '\n'
+    ls -l /proc/$1/cwd
 }
 
 howlong()
@@ -473,77 +478,6 @@ ifaddr()
 {
   ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[  ]+inet / { print ifname " " $2  } ' | grep "$1"
 }
-
-
-#ary .. stuff
-setw() {
-  shiftclone.py
-  if [ "$?" -eq "0" -a -f "$HOME/.shift_clone_result" ] ; then
-    export SVNGITROOT="$(cat $HOME/.shift_clone_result)"
-    cd "$SVNGITROOT"
-  fi
-}
-
-
-go () {
-  if [ -z "$SVNGITROOT" ] ; then
-    echo "SVNGITROOT not set.. Trying to guess by git root"
-    gr
-    echo "Its now: $SVNGITROOT"
-  else
-    if [[ $(pwd) != *"$SVNGITROOT"* ]] ; then
-      echo "pwd:$(pwd) doesn't contain SVNGITROOT: $SVNGITROOT"
-      return
-    fi
-  fi
-  if [ -n "$1" ] ; then
-     choice="$1"
-  else
-     choice="."
-  fi
-  cd $SVNGITROOT
-  if [ -f .branch_name ] ; then
-    cd $(cat .branch_name)
-  elif [ -n "$SVNBRANCH" ] ; then
-    cd "$SVNBRANCH"
-  else
-    echo "Neigher .branch_name nor SVNBRANCH is set"
-    return
-  fi
-  case $choice in
-    ar)
-      cd build.el6/ace2/anap_root
-      ;;
-    ai)
-      cd build.el6/anap/install
-      ;;
-    pi)
-      cd build.el6/pop/install
-      ;;
-    b)
-      cd build.el6
-      ;;
-    gr)
-      cd ../
-      ;;
-    am)
-      cd acehw/src/acemon
-      ;;
-    ah)
-      cd acehw
-      ;;
-    pns)
-      cd pns_ni
-      ;;
-    *)
-      cd $choice
-  esac
-}
-
-gcsvninfo () {
-  git commit -am "'""svn update: $(svn log -q -l 1 | grep -v -- '^------')""'"
-}
-alias gcsnvinfo=gcsvninfo
 
 sshvpndoc() {
   port=$(docker port for-vpn | grep '22/tcp' | grep -o ':.*$' | tr -d :)
