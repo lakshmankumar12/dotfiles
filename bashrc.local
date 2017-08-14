@@ -42,6 +42,8 @@ export GITHUB="git@github.com:lakshmankumar12"
 export GITLAB="git@gitlab.com:lakshmankumar12"
 export BITBUCKET="git@bitbucket.org:lakshmankumar12"
 
+export LESS="$LESS -R -F"
+
 recfg_fn()
 {
   export PATH=$(echo $PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
@@ -127,14 +129,14 @@ vi()
   if [ -n "$NVIM_LISTEN_ADDRESS" ] ; then
     nvim_edit $@
   else
-    #$HOME/bin/vim -u $HOME/.vimrc $*
-    $HOME/bin/nvim $@
+    #$HOME/bin/vim -u $HOME/.vimrc "$@"
+    $HOME/bin/nvim "$@"
   fi
 }
 
 nvim()
 {
-  $HOME/bin/nvim $@
+  $HOME/bin/nvim "$@"
 }
 
 viewpdf()
@@ -152,7 +154,7 @@ do_on_success()
     echo "previous status was failure"
     return
   fi
-  $*
+  "$@"
 }
 
 open_conver()
@@ -192,24 +194,24 @@ alias ltl=listtmuxlog
 
 dumptmuxpane()
 {
-   if [ -z "$3" ] ; then
-      session=""
-   else
-      session=$3
-   fi
-   if [ -z "$2" ] ; then
-      file="log.txt"
-   else
-      file=$2
-   fi
-   if [ -z "$1" ] ; then
-      echo "Supply window-name"
-      echo "Usage: $0 <window> [<filename> [<session>]]"
-   else
-      window=$1
-   fi
-   tmux capture-pane -eCJ -S- -t $session:$window
-   tmux save-buffer $file
+    if [ -z "$1" -o "$1" = "-h" -o "$1" = "--help" ] ; then
+        echo "Supply window-name"
+        echo "Usage: dumptmuxpane <window> [<filename> [<session>]]"
+        return
+    fi
+    if [ -z "$3" ] ; then
+       session=""
+    else
+       session=$3
+    fi
+    if [ -z "$2" ] ; then
+       file="log.txt"
+    else
+       file=$2
+    fi
+    window=$1
+    tmux capture-pane -eCJ -S- -t $session:$window
+    tmux save-buffer $file
 }
 
 tmuxatt()
@@ -441,6 +443,19 @@ if [ -e ~/.bashrc.centos ] ; then
   source ~/.bashrc.centos
 fi
 
+fdfile()
+{
+    local file=$(fzf)
+    if [ -n "$file" ] ; then
+        dir=$(dirname $file)
+        if [ -d "$dir"  ] ; then
+            cd $dir
+            echo "$file"
+            ls $(basename $file)
+        fi
+    fi
+}
+
 fd()
 {
   local dir
@@ -498,6 +513,10 @@ sshdevdoc() {
   port=$(docker port devbox | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
   ssh -X -p $port lakshman@localhost
+}
+
+prompt_prompt_msg() {
+    echo -n "${PR_MSG}"
 }
 
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then

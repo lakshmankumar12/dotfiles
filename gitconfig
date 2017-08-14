@@ -16,7 +16,7 @@
 	mytags = tag -l 'lakshman*'
 	newfiles = ls-files --others --exclude-standard
 	reflogd = reflog --date=relative
-	diffno = diff --name-only
+	dno = diff --name-only
 	root = rev-parse --show-cdup
 [diff]
 	tool = meld

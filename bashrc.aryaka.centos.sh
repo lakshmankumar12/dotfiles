@@ -15,11 +15,27 @@ alias il3='cd /usr/local/il3/'
 alias il3x='cd /usr/local/il3/xml'
 alias il3b='cd /usr/local/il3/bin'
 
+export MYIL3=/home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/xml.tim/
+export TIMIL3=/home/tpandre/il3.xml/
+
 mkall()
 {
   go
   nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized 2>&1 | tee make_op
 }
+
+mkanap()
+{
+  go
+  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release RELEASE=optimized 2>&1 | tee make_op
+}
+
+
+mkplain()
+{
+  nohup make J=8 PLATFORM=ace2 2>&1 | wrap_make_error.py /tmp/errors
+}
+
 export PATH="$HOME/install/rtags/rtags-2.10-install/wrap-bin:$PATH"
 
 alias gcomm='git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)"'
@@ -52,6 +68,9 @@ setw() {
   if [ "$?" -eq "0" -a -f "$HOME/.shift_clone_result" ] ; then
     export SVNGITROOT="$(cat $HOME/.shift_clone_result)"
     cd "$SVNGITROOT"
+  fi
+  if [ -n "$1" ] ; then
+    go
   fi
 }
 
@@ -113,3 +132,11 @@ go () {
       cd $choice
   esac
 }
+
+listallpty()
+{
+    a=(01 02 03 04)
+    for i in ${a[@]} ; do listtmuxpanes "$i-" ; done | sort -t\| -k5
+}
+
+alias reset_to='$HOME/bin/update_tag.py -r'
