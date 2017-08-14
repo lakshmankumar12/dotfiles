@@ -127,7 +127,7 @@ calc()
 vi()
 {
   if [ -n "$NVIM_LISTEN_ADDRESS" ] ; then
-    nvim_edit $@
+    nvim_edit "$@"
   else
     #$HOME/bin/vim -u $HOME/.vimrc "$@"
     $HOME/bin/nvim "$@"
@@ -496,6 +496,28 @@ macnotify()
     title=$2
   fi
   osascript -e 'display notification "'"$message"'" with title "'"$title"'"'
+}
+
+unprotect_pdf_owner_pass()
+{
+    ownerpass=$1
+    lockedpdf=$2
+    unlockedpdf=$3
+    if [ -z "$ownerpass" -o -z "$lockedpdf" -o -z "$unlockedpdf" ]; then
+        echo "Usage unprotect_pdf_owner_pass <owner-pass> <lockedpdf> <unlockedpdf>"
+    fi
+    pdftk $lockedpdf input_pw $ownerpass cat output $unlockedpdf
+}
+
+unprotect_pdf_user_pass()
+{
+    userpass=$1
+    lockedpdf=$2
+    unlockedpdf=$3
+    if [ -z "$userpass" -o -z "$lockedpdf" -o -z "$unlockedpdf" ]; then
+        echo "Usage unprotect_pdf_user_pass <user-pass> <lockedpdf> <unlockedpdf>"
+    fi
+    qpdf --password=$userpass --decrypt $lockedpdf $unlockedpdf
 }
 
 ifaddr()
