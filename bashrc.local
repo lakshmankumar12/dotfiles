@@ -525,6 +525,13 @@ ifaddr()
   ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[  ]+inet / { print ifname " " $2  } ' | grep "$1"
 }
 
+startdevdocInMac() {
+    #docker run -p 51413:51413 -p 5143:51413/udp -p 9091:9091 -P --rm --name devbox --hostname DevBox --privileged -e DISPLAY=$DISPLAY -u lakshman -v /dev:/dev -v  /tmp/.X11-unix:/tmp/.X11-unix:ro -v $HOME:/var/shared -v /Volumes:/mnt -v $HOME/.Xauthority:/home/lakshman/.Xauthority -v $(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname):$(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname) -t -i lakshmankumar/my-dev-bo
+    #VOLUMES="-v /dev:/dev -v $HOME:/var/shared -v /Volumes:/mnt -v $HOME/.Xauthority:/home/lakshman/.Xauthority -v $(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname):$(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname) "
+    VOLUMES="-v /dev:/dev -v $HOME:/var/shared -v /Volumes:/mnt "
+    docker run -P --rm --name devbox --hostname DevBox --privileged -e DISPLAY=$DISPLAY $VOLUMES -u lakshman -t -i lakshmankumar/my-dev-box
+}
+
 sshvpndoc() {
   port=$(docker port for-vpn | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
@@ -535,6 +542,26 @@ sshdevdoc() {
   port=$(docker port devbox | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
   ssh -X -p $port lakshman@localhost
+}
+
+setup_prompt_msg() {
+    found=""
+    for i in "${POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[@]}" ; do
+        if [ "$i" == "prompt_msg" ] ; then
+            found="yes"
+            break
+        fi
+    done
+    if [ "$found" == "yes" ] ; then
+        echo "prompt_msg is already in POWERLEVEL9K_LEFT_PROMPT_ELEMENTS. PR_MSG is ${PR_MSG}"
+        return
+    fi
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=(prompt_msg)
+    if [ -n "$1" ] ; then
+        export PR_MSG="$1"
+    else
+        echo "Ensure to have PR_MSG set. Its now : ${PR_MSG}"
+    fi
 }
 
 prompt_prompt_msg() {
