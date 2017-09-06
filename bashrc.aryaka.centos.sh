@@ -18,22 +18,42 @@ alias il3b='cd /usr/local/il3/bin'
 export MYIL3=/home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/xml.tim/
 export TIMIL3=/home/tpandre/il3.xml/
 
+getnexthotfix()
+{
+    HOTFIXNEXT=$HOME/.hotfixnext
+    if [ ! -f "${HOTFIXNEXT}" ] ; then
+        echo 0 > ${HOTFIXNEXT}
+    fi
+    old=$(cat ${HOTFIXNEXT})
+    new=$(expr $old + 1)
+    echo $new > ${HOTFIXNEXT}
+    echo -n $new
+}
+
 mkall()
 {
   go
-  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized 2>&1 | tee make_op
+  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized HOTFIX=LAKSHMAN_$(getnexthotfix) 2>&1 > make_op &
+  pid=$!
+  echo -e "You can \ntail -f $(pwd)/make_op\n to watch progress. make pid is $pid"
+  python27 ~/bin/make_progress.py $(pwd)/make_op $(basename $(pwd)) $pid
 }
 
 mkanap()
 {
   go
-  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release RELEASE=optimized 2>&1 | tee make_op
+  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release RELEASE=optimized HOTFIX=LAKSHMAN_$(getnexthotfix) 2>&1 | tee make_op
 }
 
 
 mkplain()
 {
   nohup make J=8 PLATFORM=ace2 2>&1 | wrap_make_error.py /tmp/errors
+}
+
+mkplainpop()
+{
+  nohup make J=8 PLATFORM=pop 2>&1 | wrap_make_error.py /tmp/errors
 }
 
 export PATH="$HOME/install/rtags/rtags-2.10-install/wrap-bin:$PATH"

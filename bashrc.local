@@ -170,6 +170,56 @@ open_conver()
   htmltotext.py $1 | vim -R -
 }
 
+function echo_color() {
+    local in_color="$1"
+    local msg="$2"
+    local pat256=0
+    case $in_color in
+        black)
+            use_color=30
+            ;;
+        red)
+            use_color=31
+            ;;
+        green)
+            use_color=32
+            ;;
+        yellow)
+            use_color=33
+            ;;
+        blue)
+            use_color=34
+            ;;
+        magenta)
+            use_color=35
+            ;;
+        cyan)
+            use_color=36
+            ;;
+        white)
+            use_color=37
+            ;;
+        color[0-9]*)
+            use_color=${in_color##color}
+            if [ $use_color -lt 0 ] || [ $use_color -gt 256 ] ; then
+                echo "color value out of range (0-256): $in_color"
+                return
+            fi
+            pat256=1
+            ;;
+        * )
+            echo "Unknown color"
+            return
+            ;;
+    esac
+    if [[ $pat256 -eq 1 ]] ; then
+        color_msg='\033[38;5;'"${use_color}"'m'
+    else
+        color_msg='\033[0;'"${use_color}"'m'
+    fi
+    echo -e "${color_msg}${msg}"'\033[0;0m'
+}
+
 #all tmux stuff
 listtmuxpanes()
 {
