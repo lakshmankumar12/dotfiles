@@ -42,7 +42,7 @@ export GITHUB="git@github.com:lakshmankumar12"
 export GITLAB="git@gitlab.com:lakshmankumar12"
 export BITBUCKET="git@bitbucket.org:lakshmankumar12"
 
-export LESS="$LESS -R -F"
+#export LESS="$LESS -R -F"
 
 recfg_fn()
 {
@@ -218,6 +218,12 @@ function echo_color() {
         color_msg='\033[0;'"${use_color}"'m'
     fi
     echo -e "${color_msg}${msg}"'\033[0;0m'
+}
+
+function echo_lines() {
+    for i in "$@" ; do
+        echo $i
+    done
 }
 
 #all tmux stuff
@@ -436,7 +442,7 @@ makemp3()
 
 rejigcovermp3()
 {
-  \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 --remove-images
+  \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 --remove-all-images
   \ls *.mp3 | tr '\n' '\0' | xargs -0 -n 1 eyeD3 -2 --add-image 'cover.jpg:FRONT_COVER'
 }
 

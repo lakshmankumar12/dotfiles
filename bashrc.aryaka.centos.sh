@@ -33,7 +33,15 @@ getnexthotfix()
 mkall()
 {
   go
-  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized HOTFIX=LAKSHMAN_$(getnexthotfix) 2>&1 > make_op &
+  if [ -n "$1" ] && [ "$1" = "--new" ] ; then
+    hotfix_string=LAKSHMAN_$(getnexthotfix)
+    echo "${hotfix_string}" > ../.hotfix_string
+    echo "Using NEW hotfix_string:$hotfix_string"
+    shift 1
+  else
+      echo "Using existing hotfix_string:$(cat ../.hotfix_string)"
+  fi
+  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized HOTFIX=$(cat ../.hotfix_string) 2>&1 > make_op &
   pid=$!
   echo -e "You can \ntail -f $(pwd)/make_op\n to watch progress. make pid is $pid"
   python27 ~/bin/make_progress.py $(pwd)/make_op $(basename $(pwd)) $pid
