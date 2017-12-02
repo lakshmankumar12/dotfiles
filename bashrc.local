@@ -279,6 +279,10 @@ tmuxatt()
   fi
   export TERM=screen-256color-bce
   tmux -2 attach -d -t $session
+  if [ $? -ne 0 ] ; then
+      echo "Got a failure code.. list all sessions"
+      tmux list-session
+  fi
 }
 
 tmuxrandchoose()

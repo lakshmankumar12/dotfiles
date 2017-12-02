@@ -22,7 +22,7 @@ s  -- switch-session                           S -- swap windows
 t  -- (MY MAP) choose any pane
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- split and cdtmuxclip
-w  -- switch-window
+w  -- (MY MAP) choose-tree -u (overridden:switch-window)
 x  -- kill pane
 y  -- ^r for testbeds
 z  -- zoom

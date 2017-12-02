@@ -18,6 +18,15 @@ alias il3b='cd /usr/local/il3/bin'
 export MYIL3=/home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/xml.tim/
 export TIMIL3=/home/tpandre/il3.xml/
 
+#blue-ish
+export ETANCOLOR=colour202
+#light-blue-ish
+export ECLIENTCOLOR=colour88
+#orange-ish
+export WTANCOLOR=colour105
+#reddish
+export WCLIENTCOLOR=colour38
+
 getnexthotfix()
 {
     HOTFIXNEXT=$HOME/.hotfixnext
@@ -39,7 +48,11 @@ mkall()
     echo "Using NEW hotfix_string:$hotfix_string"
     shift 1
   else
-      echo "Using existing hotfix_string:$(cat ../.hotfix_string)"
+    if [ ! -f ../.hotfix_string  ] ; then
+      echo "No ../.gitfix_string .. Do a --new mkall"
+      return
+    fi
+    echo "Using existing hotfix_string:$(cat ../.hotfix_string)"
   fi
   nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized HOTFIX=$(cat ../.hotfix_string) 2>&1 > make_op &
   pid=$!
@@ -66,7 +79,7 @@ mkplainpop()
 
 export PATH="$HOME/install/rtags/rtags-2.10-install/wrap-bin:$PATH"
 
-alias gcomm='git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)"'
+alias gcomm='if [ -z "$(svn diff)" ]; then git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)" ; else echo "svn diff isnt empty" ; fi'
 function nightly() {
   curr_host=$(hostname)
   if [[ $curr_host != *"antares"*  ]] ; then
@@ -168,3 +181,9 @@ listallpty()
 }
 
 alias reset_to='$HOME/bin/update_tag.py -r'
+
+tmuxcolorset()
+{
+    tmux set-window-option -t $1 window-status-bg $2
+    tmux set-window-option -t $1 window-status-fg black
+}
