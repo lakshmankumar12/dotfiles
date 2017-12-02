@@ -589,7 +589,17 @@ startdevdocInMac() {
     #docker run -p 51413:51413 -p 5143:51413/udp -p 9091:9091 -P --rm --name devbox --hostname DevBox --privileged -e DISPLAY=$DISPLAY -u lakshman -v /dev:/dev -v  /tmp/.X11-unix:/tmp/.X11-unix:ro -v $HOME:/var/shared -v /Volumes:/mnt -v $HOME/.Xauthority:/home/lakshman/.Xauthority -v $(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname):$(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname) -t -i lakshmankumar/my-dev-bo
     #VOLUMES="-v /dev:/dev -v $HOME:/var/shared -v /Volumes:/mnt -v $HOME/.Xauthority:/home/lakshman/.Xauthority -v $(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname):$(echo $DISPLAY  | awk -F: '{print $1}' | xargs dirname) "
     VOLUMES="-v /dev:/dev -v $HOME:/var/shared -v /Volumes:/mnt "
-    docker run -P --rm --name devbox --hostname DevBox --privileged -e DISPLAY=$DISPLAY $VOLUMES -u lakshman -t -i lakshmankumar/my-dev-box
+    docker run -P -p 51413:51413 -p 5143:51413/udp --rm --name devbox --hostname DevBox --privileged $VOLUMES -u lakshman -t -i lakshmankumar/my-dev-box
+}
+
+startvpndocInMac() {
+    VOLUMES="-v $HOME:/var/shared "
+    docker run -P --rm --name for-vpn --hostname ForVpn --privileged $VOLUMES -u lakshman -t -i lakshmankumar/my-dev-box
+}
+
+startdeldocInMac() {
+    VOLUMES="-v $HOME:/var/shared "
+    docker run -P --rm --name todel --hostname ToDel --privileged $VOLUMES -u lakshman -t -i lakshmankumar/my-dev-box
 }
 
 sshvpndoc() {
@@ -602,6 +612,10 @@ sshdevdoc() {
   port=$(docker port devbox | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
   ssh -X -p $port lakshman@localhost
+}
+
+sshspiderman() {
+    ssh lakshman_narayanan@172.18.14.1
 }
 
 setup_prompt_msg() {
