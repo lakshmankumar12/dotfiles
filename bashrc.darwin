@@ -27,3 +27,12 @@ function cdf() {
   cd "$(pfd)"
 }
 
+#overrides for mac
+alias ls='gls --color -F'
+export SHELL=/usr/local/bin/zsh
+
+ifaddr()
+{
+    ip addr show | gawk ' /^[^[:space:]]/ { ifname=$1 } /inet / { print ifname " " $2  } '
+}
+
