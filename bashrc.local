@@ -645,3 +645,7 @@ prompt_prompt_msg() {
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
   . ~/.bashrc.aryaka.centos.sh
 fi
+
+if [ "$(uname)x" == "Darwinx" ] ; then
+  . ~/.bashrc.darwin
+fi
