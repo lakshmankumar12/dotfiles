@@ -652,6 +652,14 @@ showpath() {
     echo $PATH | tr ':' '\n'
 }
 
+alert() {
+    if [ -z "$1" ] ; then
+        echo "Supply message"
+        return
+    fi
+    echo -n "$1" | nc -4u -w1 $(cat ~/.mymacip) 25020
+}
+
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
   . ~/.bashrc.aryaka.centos.sh
 fi
