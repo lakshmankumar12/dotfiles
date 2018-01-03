@@ -657,7 +657,17 @@ alert() {
         echo "Supply message"
         return
     fi
-    echo -n "$1" | nc -4u -w1 $(cat ~/.mymacip) 25020
+    echo -n "$*" | nc -4u -w1 $(cat ~/.mymacip) 25020
+}
+
+alert_on_pid() {
+    if [ -z "$1" -o -z "$2" ] ; then
+        echo "Supply pid, message"
+        return
+    fi
+    check_for_pid $1
+    shift
+    alert "$*"
 }
 
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
