@@ -670,6 +670,15 @@ alert_on_pid() {
     alert "$*"
 }
 
+ssh_host_clear() {
+    if [ -z "$1" ] ; then
+        echo "Supply the line number"
+        return
+    fi
+    echo "Erasing line $1 from ~/.ssh/known_hosts"
+    sed -i -e "${1}d" ~/.ssh/known_hosts
+}
+
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
   . ~/.bashrc.aryaka.centos.sh
 fi
