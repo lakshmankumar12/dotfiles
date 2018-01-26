@@ -21,7 +21,7 @@ r  -- reload conf
 s  -- switch-session                           S -- swap windows
 t  -- (MY MAP) choose any pane
 u  -- (MY MAP) send a mark(while log-scrol)
-v  -- split and cdtmuxclip
+v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
 w  -- (MY MAP) choose-tree -u (overridden:switch-window)   W - choose window
 x  -- kill pane
 y  -- ^r for testbeds
@@ -30,3 +30,5 @@ z  -- zoom
 ,  -- rename
 [  -- copy-mode
 ]  -- paste
+"  -- horizontal split
+|  -- (MY MAP) vertical split

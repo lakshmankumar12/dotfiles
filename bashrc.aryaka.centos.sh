@@ -3,6 +3,11 @@ alias python2.7="$HOME/install/python27/bin/python2.7"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/install/clang/local/lib:$HOME/install/clang/local/lib.hide:$HOME/install/mosh/mosh_build/lib"
 export PERL5LIB="$HOME/install/perl/lib"
 
+host=$(hostname)
+if [ "$host" == "mforge3.corp.aryaka.com" ] ; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/home/lakshman_narayanan/missing_libs
+fi
+
 alias gwsa='cd $HOME/ws/git-dir-for-svn/git_asn'
 alias gwss='cd $HOME/ws/git-dir-for-svn/git_static/il3'
 alias gwsi='cd $HOME/ws/git-dir-for-svn/git_import'
@@ -14,6 +19,10 @@ alias mil3x='cd $HOME/ws/il3-scripts/il3_work_repo/il3/xml.tim'
 alias il3='cd /usr/local/il3/'
 alias il3x='cd /usr/local/il3/xml'
 alias il3b='cd /usr/local/il3/bin'
+
+alias m3w='cd /usr/home/lakshman_narayanan/mforge3_ws'
+alias m3h='cd /usr/home/lakshman_narayanan/'
+alias m3k='cd /usr/home/lakshman_narayanan/rpmbuild.anap_kernel'
 
 export MYIL3=/home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/xml.tim/
 export TIMIL3=/home/tpandre/il3.xml/
@@ -80,6 +89,20 @@ mkplainpop()
 export PATH="$HOME/install/rtags/rtags-2.10-install/wrap-bin:$PATH"
 
 alias gcomm='if [ -z "$(svn diff)" ]; then git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)" ; else echo "svn diff isnt empty" ; fi'
+
+function gcomm() {
+    if [ -n "$(svn diff)" ]; then
+        echo "svn diff isnt empty"
+        return;
+    fi
+    if [ -n "$(git newfiles)" ]; then
+        echo "some new files"
+        git newfiles
+        return;
+    fi
+    git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)"
+}
+
 function nightly() {
   curr_host=$(hostname)
   if [[ $curr_host != *"antares"*  ]] ; then
@@ -163,11 +186,23 @@ go () {
     ah)
       cd acehw
       ;;
+    ac)
+      cd acehw/acecore
+      ;;
+    ak)
+      cd acehw/acecore/kernel
+      ;;
     pns)
       cd pns_ni
       ;;
     cs)
       cd control/schema
+      ;;
+    3p)
+      cd patches/kernel-3.10.0-693
+      ;;
+    2p)
+      cd patches/kernel-2.6.32-431.11.2.el6
       ;;
     *)
       cd $choice

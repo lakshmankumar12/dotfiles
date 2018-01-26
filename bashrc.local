@@ -104,6 +104,28 @@ check_for_pid()
   done
 }
 
+track_time_pid()
+{
+  if [ -z "$1" ] ; then
+    echo "supply pid"
+    return
+  fi
+
+  pid=$1
+  echo "Time is now $(date)"
+  ps -eo pid,lstart | grep $pid
+  while [ 1 ] ; do
+    kill -s 0 $pid 2> /dev/null
+    if [ $? -eq 0 ] ; then
+      sleep 2
+    else
+      date
+      break
+    fi
+  done
+}
+
+
 analy()
 {
     if [ ! -d /proc/$1 ] ; then 
@@ -668,6 +690,19 @@ alert_on_pid() {
     check_for_pid $1
     shift
     alert "$*"
+}
+
+ping_check() {
+    if [ -z "$1" ] ; then
+        echo "Provide machine/ip to ping"
+        return
+    fi
+    while [ 1 ] ; do
+        ping -c 1 $1
+        if [ $? -eq 0 ]; then
+            break;
+        fi
+    done
 }
 
 ssh_host_clear() {
