@@ -2,7 +2,7 @@ Search: KEY BINDINGS in man page
 
 a  -- (MY MAP) send prefix                     A -- rename window
 b  -- (MY MAP) goto notifpane
-c  -- create new window
+c  -- create new window                        C -- current-code
 d  -- detach                                   D -- choose to detach
 e  -- (MY MAP) switch-client -l
 f  -- find window
@@ -11,20 +11,20 @@ h  -- (MY MAP) tab left
 i  -- (MY MAP) stop logging                    I -- start logging
 j  -- (MY MAP) tab down                        J -- join pane
 k  -- (MY MAP) tab up
-l  -- (MY MAP) tab right
+l  -- (MY MAP) tab right                       L -- gotoLaunchpad
 m  -- mark a window                            M -- move pane
-n  -- next window
+n  -- next window                              N -- gotoNotes
 o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
 p  -- prev window
 q  -- show pane numbers
 r  -- reload conf
 s  -- switch-session                           S -- swap windows
-t  -- (MY MAP) choose any pane
+t  -- (MY MAP) choose any pane                 T -- current-test
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
 w  -- (MY MAP) choose-tree -u (overridden:switch-window)   W - choose window
-x  -- kill pane
-y  -- ^r for testbeds
+x  -- kill pane                                X -- gotoIL3X
+y  -- ^r from grepper_commands                 Y - kill lines and do same as y
 z  -- zoom
 
 ,  -- rename

@@ -388,20 +388,43 @@ tmux_set_fg_color() {
   tmux select-pane -P $value
 }
 
+gotoTmuxPane() {
+    target_session="$1"
+    target_window="$2"
+    target_pane="$3"
+
+    current_pane=$(tmux display-message -p '#I:#P')
+    current_window=$(tmux display-message -p '#I')
+    current_session=$(tmux display-message -p '#S')
+    if [[ $current_session != $target_session ]]; then
+      tmux switch-client -t $target_session
+    fi
+
+    tmux select-window -t "${target_session}:${target_window}.${target_pane}"
+}
+
 gotoNofifPane() {
-  current_pane=$(tmux display-message -p '#I:#P')
-  current_window=$(tmux display-message -p '#I')
-  current_session=$(tmux display-message -p '#S')
+    gotoTmuxPane test 0 0
+}
 
-  target_session="test"
-  target_window="0"
-  target_pane="0"
+gotoLaunchPad() {
+    gotoTmuxPane 01-scripts 7 0
+}
 
-  if [[ $current_session != $target_session ]]; then
-    tmux switch-client -t $target_session
-  fi
-  tmux select-pane -t ${target_window}.${target_pane} &&
-  tmux select-window -t $target_window
+gotoNotes() {
+    gotoTmuxPane 01-scripts 5 0
+}
+
+gotoIL3X() {
+    gotoTmuxPane 01-scripts 6 0
+}
+
+gotoCurrentCode() {
+    gotoTmuxPane 02-code 0 0
+}
+
+gotoCurrentTest() {
+    gotoTmuxPane 03-jira 2 0
 }
 
 cmdsh()
@@ -445,6 +468,10 @@ cdtmuxclip () {
   else
     echo "tmux clip doesn't seem to be a valid dir. Set a valid dir and cdtmuxclip again"
   fi
+}
+
+tmuxserv() {
+    ps -ef | grep tmux | grep '\?' | awk '{print $2}'
 }
 
 

@@ -119,8 +119,17 @@ function nightly() {
   export SVNBRANCH=$repo
 }
 
+function svnsafeup() {
+    svndiff=$(svn diff)
+    if [ -n "$svndiff" ] ; then
+        echo "svndiff is not empty.. bailing out"
+        return
+    fi
+    svn up
+}
+
 rpmname() {
-  \ls -rt | grep -v symbols | tail -n 1
+  \ls -rt *.rpm* | grep -v symbols | tail -n 1
 }
 
 rpmver() {
