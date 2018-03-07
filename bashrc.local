@@ -427,6 +427,10 @@ gotoCurrentTest() {
     gotoTmuxPane 03-jira 2 0
 }
 
+gotoCurrentExecution() {
+    gotoTmuxPane 04-test 2 0
+}
+
 cmdsh()
 {
   GREPPER_CMD=$HOME/bitbucket/aryaka-notes/grepper_commands
@@ -707,6 +711,18 @@ alert() {
         return
     fi
     echo -n "$*" | nc -4u -w1 $(cat ~/.mymacip) 25020
+}
+
+tmuxcliptomac() {
+    tmux show-buffer | ssh lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip) pbcopy
+    a=$(tmux show-buffer)
+    l=$(tmux show-buffer | wc -l)
+    if [[ $l -le 3 ]] ; then
+        echo "Your clip is setup with:"
+        echo "$a"
+    else
+        echo "Loaded $l lines in clip"
+    fi
 }
 
 alert_on_pid() {

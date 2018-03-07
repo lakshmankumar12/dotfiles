@@ -4,7 +4,7 @@ a  -- (MY MAP) send prefix                     A -- rename window
 b  -- (MY MAP) goto notifpane
 c  -- create new window                        C -- current-code
 d  -- detach                                   D -- choose to detach
-e  -- (MY MAP) switch-client -l
+e  -- (MY MAP) switch-client -l                E -- first test window
 f  -- find window
 g  -- (MY MAP) attach-session with detach
 h  -- (MY MAP) tab left

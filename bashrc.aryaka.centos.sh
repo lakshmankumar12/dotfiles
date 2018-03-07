@@ -120,6 +120,10 @@ function nightly() {
 }
 
 function svnsafeup() {
+    if [ ! -d acehw ]; then
+        echo "Please run this from svn root"
+        return
+    fi
     svndiff=$(svn diff)
     if [ -n "$svndiff" ] ; then
         echo "svndiff is not empty.. bailing out"
