@@ -758,14 +758,14 @@ ssh_host_clear() {
 }
 
 shows() {
-    column -s\` -t listened_songs
+    column -s\` -t listened_songs | tail -n 30
 }
 
 getlyrp() {
     song_info=$(wap)
-    title=$(echo $song_info | grep 'Title:' | cut -c10-)
-    artist=$(echo $song_info | grep 'Artist:' | cut -c10-)
-    getlyr $title $artist
+    title=$(echo "$song_info" | grep 'Title:' | cut -c10-)
+    artist=$(echo "$song_info" | grep 'Artist:' | cut -c10-)
+    getlyr "$title" "$artist"
 }
 
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
@@ -776,3 +776,6 @@ if [ "$(uname)x" == "Darwinx" ] ; then
   . ~/.bashrc.darwin
 fi
 
+if [ "$(hostname)x" == "DevBox" ] ; then
+  . ~/.bashrc.devbox
+fi
