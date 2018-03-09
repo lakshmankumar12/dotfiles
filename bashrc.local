@@ -757,6 +757,17 @@ ssh_host_clear() {
     sed -i -e "${1}d" ~/.ssh/known_hosts
 }
 
+shows() {
+    column -s\` -t listened_songs
+}
+
+getlyrp() {
+    song_info=$(wap)
+    title=$(echo $song_info | grep 'Title:' | cut -c10-)
+    artist=$(echo $song_info | grep 'Artist:' | cut -c10-)
+    getlyr $title $artist
+}
+
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
   . ~/.bashrc.aryaka.centos.sh
 fi
@@ -764,3 +775,4 @@ fi
 if [ "$(uname)x" == "Darwinx" ] ; then
   . ~/.bashrc.darwin
 fi
+
