@@ -7,6 +7,7 @@
 	lsm = ls-files --modified
 	export = "!f() { /usr/bin/git show --pretty=format: $1 ; } ; f "
 	logol = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n20
+	logoln = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate
 	logoln100 = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n100
 	supercommitpatch = "!f() { patch -p1 -i $1 ; if [ $? -ne 0 ] ; then echo \"patching failed\" ; return 1 ; fi ; chmod +w $(git ls-files --modified) ; /usr/bin/git add $(/usr/bin/git ls-files --modified) ; /usr/bin/git commit -m \"$2\" ; } ; f "
 	statusporcut = !/usr/bin/git status --porcelain | cut -c4-
