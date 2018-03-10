@@ -768,6 +768,14 @@ getlyrp() {
     getlyr "$title" "$artist"
 }
 
+isknownsong() {
+    if [ -z "$1" ] ; then
+        echo "supply grep material"
+        return
+    fi
+    grep -i "$1" current_list listened_songs
+}
+
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
   . ~/.bashrc.aryaka.centos.sh
 fi
