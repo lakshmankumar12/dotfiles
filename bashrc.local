@@ -761,11 +761,23 @@ shows() {
     column -s\` -t listened_songs | tail -n 30
 }
 
+wapp() {
+    song_info=$(wap)
+    title=$(echo "$song_info" | grep 'Title:' | cut -c10-)
+    artist=$(echo "$song_info" | grep 'Artist:' | cut -c10-)
+    album=$(echo "$song_info" | grep 'Album:' | cut -c10-)
+}
+
 getlyrp() {
     song_info=$(wap)
     title=$(echo "$song_info" | grep 'Title:' | cut -c10-)
     artist=$(echo "$song_info" | grep 'Artist:' | cut -c10-)
     getlyr "$title" "$artist"
+}
+
+collect() {
+    song_info=$(wap)
+    echo "$song_info" | collect_song_detail_to_db.py "$@"
 }
 
 isknownsong() {
@@ -784,6 +796,6 @@ if [ "$(uname)x" == "Darwinx" ] ; then
   . ~/.bashrc.darwin
 fi
 
-if [ "$(hostname)x" == "DevBox" ] ; then
+if [ "$(hostname)x" == "DevBoxx" ] ; then
   . ~/.bashrc.devbox
 fi
