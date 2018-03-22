@@ -652,25 +652,43 @@ get_rate_if()
     else
         intf="eth0"
     fi
-    if [ -n "$2" ] ; then
-        sec=$2
-    else
-        sec=1
-    fi
     while [ 1  ] ; do
         ifconfig $intf | grep 'RX bytes' ;
-        sleep $sec;
-    done  | awk -v sec=$sec '{
+        sleep 1;
+    done  | awk 'BEGIN { sec = -1; }{
+                sec += 1;
+
                 rx_bytes=$2 ; gsub(/bytes:/,"",rx_bytes);
                 tx_bytes=$6 ; gsub(/bytes:/,"",tx_bytes);
-                rx_diff= (rx_bytes - rx_bytes_prev); rx_bytes_prev = rx_bytes;
-                tx_diff= (tx_bytes - tx_bytes_prev); tx_bytes_prev = tx_bytes;
-                rx_diff_rate = (rx_diff * 8) / (sec * 1000000) ;
-                tx_diff_rate = (tx_diff * 8) / (sec * 1000000) ;
+
+                rx_1s_diff= (rx_bytes - rx_bytes_prev); rx_bytes_prev = rx_bytes;
+                tx_1s_diff= (tx_bytes - tx_bytes_prev); tx_bytes_prev = tx_bytes;
+
+                if (sec == 0) {
+                    next;
+                }
+
+                rx_5s_diff += rx_1s_diff; tx_5s_diff += tx_1s_diff;
+                rx_15s_diff += rx_1s_diff; tx_15s_diff += tx_1s_diff;
+
+                if (sec % 5 == 0) {
+                    rx_5s_rate = (rx_5s_diff * 8) / (5*1000000);
+                    tx_5s_rate = (tx_5s_diff * 8) / (5*1000000);
+                    rx_5s_diff = 0; tx_5s_diff = 0;
+                }
+                if (sec % 15 == 0) {
+                    rx_15s_rate = (rx_15s_diff * 8) / (15*1000000);
+                    tx_15s_rate = (tx_15s_diff * 8) / (15*1000000);
+                    rx_15s_diff = 0; tx_15s_diff = 0;
+                }
+                rx_diff_rate = (rx_1s_diff * 8) / (1000000) ;
+                tx_diff_rate = (tx_1s_diff * 8) / (1000000) ;
                 cmd="date"
                 cmd | getline time
                 close (cmd)
-                printf "%s: rx: %d rx_rate: %.3f Mbps tx: %d tx_rate: %.3f Mbps\n", time, rx_bytes, rx_diff_rate, tx_bytes, tx_diff_rate }'
+                printf "%s(%d): rx: %d rx_rate: %.3f/%.3f/%.3f Mbps tx: %d tx_rate: %.3f/%.3f/%.3f Mbps\n", time, sec, \
+                             rx_bytes, rx_diff_rate, rx_5s_rate, rx_15s_rate, \
+                             tx_bytes, tx_diff_rate, tx_5s_rate, tx_15s_rate }'
 }
 
 
