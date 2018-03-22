@@ -132,6 +132,19 @@ function svnsafeup() {
     svn up
 }
 
+
+function svnsafecommit() {
+    if [ ! -d acehw ]; then
+        echo "Please run this from svn root"
+        return
+    fi
+    if [ -z "$1"  ] ; then
+        echo "Supply commit message"
+        return
+    fi
+    svn commit -m "$1"
+}
+
 rpmname() {
   \ls -rt *.rpm* | grep -v symbols | tail -n 1
 }
