@@ -142,6 +142,14 @@ function svnsafecommit() {
         echo "Supply commit message"
         return
     fi
+    echo "Your commit message:"
+    echo "$1"
+    echo "---"
+    read "yn?Continue?"
+    case $yn in
+        [Yy]* ) ;;
+        * ) echo "Aborting.." ; return ;;
+    esac
     svn commit -m "$1"
 }
 

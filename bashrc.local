@@ -23,6 +23,8 @@ alias svnstq="svn status  | grep -v 'status on external item' | grep -E -v '^[[:
 alias snvstq="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\?'"
 alias svnstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\~'"
 alias snvstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\~'"
+alias svnstc="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^C'"
+alias snvstc="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^C'"
 
 alias psme="ps -ef | grep '^521'"
 
@@ -403,8 +405,8 @@ gotoTmuxPane() {
     tmux select-window -t "${target_session}:${target_window}.${target_pane}"
 }
 
-gotoNofifPane() {
-    gotoTmuxPane test 0 0
+gotoMusicPane() {
+    gotoTmuxPane mac-main 14 0
 }
 
 gotoLaunchPad() {
@@ -428,7 +430,7 @@ gotoCurrentTest() {
 }
 
 gotoCurrentExecution() {
-    gotoTmuxPane 04-test 2 0
+    gotoTmuxPane 04-test 0 0
 }
 
 cmdsh()

@@ -1,7 +1,7 @@
 Search: KEY BINDINGS in man page
 
 a  -- (MY MAP) send prefix                     A -- rename window
-b  -- (MY MAP) goto notifpane
+b  --
 c  -- create new window                        C -- current-code
 d  -- detach                                   D -- choose to detach
 e  -- (MY MAP) switch-client -l                E -- first test window
@@ -15,7 +15,7 @@ l  -- (MY MAP) tab right                       L -- gotoLaunchpad
 m  -- mark a window                            M -- move pane
 n  -- next window                              N -- gotoNotes
 o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
-p  -- prev window
+p  -- prev window                              P -- music pane
 q  -- show pane numbers
 r  -- reload conf
 s  -- switch-session                           S -- swap windows
