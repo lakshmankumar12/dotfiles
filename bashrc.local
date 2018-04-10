@@ -846,7 +846,7 @@ isknownsong() {
         echo "supply grep material"
         return
     fi
-    grep -i "$1" current_list listened_songs
+    grep -i "$1" current_list listened_songs*
 }
 
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
