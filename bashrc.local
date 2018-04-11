@@ -148,6 +148,17 @@ calc()
   bc <<< "scale=2; $*"
 }
 
+catc ()
+{
+    if [ -z "$1" ]; then
+        col_count=80
+    else
+        col_count=$1
+        shift
+    fi
+    awk -v cols=$col_count '{printf "%.*s\n",cols,$0}' "$@"
+}
+
 vi()
 {
   if [ -n "$NVIM_LISTEN_ADDRESS" ] ; then
@@ -839,6 +850,16 @@ getlyrp() {
 collect() {
     song_info=$(wap)
     echo "$song_info" | collect_song_detail_to_db.py "$@"
+}
+
+extract_sng_info() {
+    name="$1"
+    name=$(basename "$name")
+    name=${name%.*}
+    export title=$(echo $name | awk -F- '{gsub(/^ +/,"",$1); print $1}')
+    export artist=$(echo $name | awk -F- '{gsub(/^ +/,"",$2); print $2}')
+    export album=$(echo $name | awk -F- '{gsub(/^ +/,"",$3); print $3}')
+    echo -e "title:$title\nartist:$artist\nalbum:$album"
 }
 
 isknownsong() {

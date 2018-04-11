@@ -1,7 +1,7 @@
 
 alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 alias vlcnv='/Applications/VLC.app/Contents/MacOS/VLC --no-video'
-
+alias dn='cd ~/Downloads'
 
 #Copied from oh-my-zsh/plugins/osx/osx.plugin.zsh
 
@@ -40,6 +40,39 @@ ifaddr()
     ip addr show | gawk ' /^[^[:space:]]/ { ifname=$1 } /inet / { print ifname " " $2  } '
 }
 
+fzf2dirs()
+{
+    ainternal=$(find "$1" "$2" -type f | fzf --exact)
+    export s="$ainternal"
+}
+
+fzfbooks()
+{
+    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/books"
+    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/books"
+    fzf2dirs "$dir1" "$dir2"
+}
+
+fzfsongs()
+{
+    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs"
+    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs"
+    fzf2dirs "$dir1" "$dir2"
+}
+
+fzfinst()
+{
+    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs/Instrumentals"
+    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs/Instrumentals"
+    fzf2dirs "$dir1" "$dir2"
+}
+
+fzfeng()
+{
+    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs/English Collection"
+    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs/English"
+    fzf2dirs "$dir1" "$dir2"
+}
 
 # source: https://hacksformacs.wordpress.com/2015/08/20/setting-iterm2-tab-and-window-titles/
 set_iterm_name() {
