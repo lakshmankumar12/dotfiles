@@ -169,6 +169,8 @@ vi()
   fi
 }
 
+alias vsh='vi -c "terminal" -c "startinsert"'
+
 nvim()
 {
   $HOME/bin/nvim "$@"

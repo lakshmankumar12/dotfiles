@@ -1,3 +1,5 @@
 alias wap='ssh lakshman.narayanan@docker.for.mac.localhost wap'
 alias collect='ssh lakshman.narayanan@docker.for.mac.localhost wap | ~/host/github/quick-utility-scripts/collect_song_detail_to_db.py'
 alias dn='cd /home/lakshman/host/Downloads'
+
+export PATH="$PATH:/home/lakshman/.local/bin"

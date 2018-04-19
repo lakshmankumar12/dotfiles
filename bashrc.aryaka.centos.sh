@@ -119,6 +119,32 @@ function nightly() {
   export SVNBRANCH=$repo
 }
 
+function archive() {
+    if [ -z "$1" ]; then
+        echo "usage: archive <branch> <anap|pop> [<number,def:latest]"
+        return
+    fi
+    branch=$1
+    shift
+    if [ -z "$1" ]; then
+        echo "usage: archive <branch> <anap|pop> [<number,def:latest]"
+        return
+    fi
+    where=$1
+    shift
+    if [ -z "$1" ]; then
+        dir=latest
+    else
+        dir=$1
+    fi
+    dest="/home/build/release/archive/$branch/el6_builds/$dir/$where/install"
+    if [ ! -d $dest ] ; then
+        echo "Dir $dest doesn't exist"
+        return
+    fi
+    cd $dest
+}
+
 function svnsafeup() {
     if [ ! -d acehw ]; then
         echo "Please run this from svn root"
@@ -256,3 +282,8 @@ tmuxcolorset()
     tmux set-window-option -t $1 window-status-bg $2
     tmux set-window-option -t $1 window-status-fg black
 }
+
+gotoMusicPane() {
+    gotoTmuxPane 01-scripts 8 0
+}
+
