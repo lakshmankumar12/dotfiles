@@ -43,6 +43,7 @@ ifaddr()
 fzf2dirs()
 {
     ainternal=$(find "$1" "$2" -type f | fzf --exact)
+    export d=`dirname "$s"`
     export s="$ainternal"
 }
 
@@ -71,6 +72,13 @@ fzfeng()
 {
     dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs/English Collection"
     dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs/English"
+    fzf2dirs "$dir1" "$dir2"
+}
+
+fzfcloud()
+{
+    dir1="/Users/lakshman.narayanan/Google Drive"
+    dir2="/Users/lakshman.narayanan/Dropbox"
     fzf2dirs "$dir1" "$dir2"
 }
 
