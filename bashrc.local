@@ -843,7 +843,16 @@ wapp() {
 }
 
 getlyrp() {
-    song_info=$(wap)
+    if [ -z "$1" ] ; then
+        song_info=$(wap)
+    else
+        if [ "x$1" = "xsp" ] ; then
+            song_info=$(wapp)
+        else
+            echo "Unknown $1 .. nothing or sp"
+            return
+        fi
+    fi
     title=$(echo "$song_info" | grep 'Title:' | cut -c10-)
     artist=$(echo "$song_info" | grep 'Artist:' | cut -c10-)
     getlyr "$title" "$artist"
