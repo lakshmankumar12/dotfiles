@@ -847,7 +847,7 @@ getlyrp() {
         song_info=$(wap)
     else
         if [ "x$1" = "xsp" ] ; then
-            song_info=$(wapp)
+            song_info=$(wasp)
         else
             echo "Unknown $1 .. nothing or sp"
             return
