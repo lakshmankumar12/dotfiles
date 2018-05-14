@@ -78,12 +78,12 @@ mkanap()
 
 mkplain()
 {
-  nohup make J=8 PLATFORM=ace2 2>&1 | wrap_make_error.py /tmp/errors
+  nohup make J=8 PLATFORM=ace2 RELEASE=noopt 2>&1 | wrap_make_error.py /tmp/errors
 }
 
 mkplainpop()
 {
-  nohup make J=8 PLATFORM=pop 2>&1 | wrap_make_error.py /tmp/errors
+  nohup make J=8 PLATFORM=pop RELEASE=noopt 2>&1 | wrap_make_error.py /tmp/errors
 }
 
 export PATH="$HOME/install/rtags/rtags-2.10-install/wrap-bin:$PATH"
@@ -237,11 +237,17 @@ go () {
     b)
       cd build.el6
       ;;
+    bab)
+      cd build.el6/ace2/bin
+      ;;
     gr)
       cd ../
       ;;
     am)
       cd acehw/src/acemon
+      ;;
+    rse)
+      cd acehw/src/rse
       ;;
     ah)
       cd acehw
