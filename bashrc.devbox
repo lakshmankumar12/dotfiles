@@ -1,4 +1,5 @@
-alias wap='ssh lakshman.narayanan@docker.for.mac.localhost wap'
+alias wap='cat /tmp/curr_wap'
+alias wapo='echo "$(ssh lakshman.narayanan@docker.for.mac.localhost wap)" | tee /tmp/curr_wap'
 alias was='ssh lakshman.narayanan@docker.for.mac.localhost was'
 alias wasp='ssh lakshman.narayanan@docker.for.mac.localhost wasp'
 alias collect='ssh lakshman.narayanan@docker.for.mac.localhost wap | ~/host/github/quick-utility-scripts/collect_song_detail_to_db.py'

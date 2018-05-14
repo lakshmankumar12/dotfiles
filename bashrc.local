@@ -837,9 +837,10 @@ shows() {
 
 wapp() {
     song_info=$(wap)
-    title=$(echo "$song_info" | grep 'Title:' | cut -c10-)
-    artist=$(echo "$song_info" | grep 'Artist:' | cut -c10-)
-    album=$(echo "$song_info" | grep 'Album:' | cut -c10-)
+    title=$(echo "$song_info" | grep 'Title:' | cut -c15-)
+    artist=$(echo "$song_info" | grep 'Artist:' | cut -c15-)
+    album=$(echo "$song_info" | grep 'Album:' | cut -c15-)
+    artUrl=$(echo "$song_info" | grep 'ArtUrl:' | cut -c15-)
 }
 
 getlyrp() {
@@ -878,7 +879,15 @@ isknownsong() {
         echo "supply grep material"
         return
     fi
-    grep -i "$1" current_list listened_songs*
+    grep -i "$1" current_list pandoraScrobble.txt scrob-Track/*
+}
+
+isknownsaavn() {
+    if [ -z "$1" ] ; then
+        echo "supply grep material"
+        return
+    fi
+    grep -i "$*" $(cat Categories.txt | tr '\n' ' ')
 }
 
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
