@@ -75,6 +75,12 @@ mkanap()
   nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release RELEASE=optimized HOTFIX=LAKSHMAN_$(getnexthotfix) 2>&1 | tee make_op
 }
 
+mkrpm()
+{
+  go ah
+  make J=8 ANAPS=ace2 SYMBOLS_RPM=true anap-release  HOTFIX=$(cat ../../.hotfix_string)
+}
+
 
 mkplain()
 {
@@ -215,64 +221,65 @@ go () {
   else
      choice="."
   fi
-  cd $SVNGITROOT
-  if [ -f .branch_name ] ; then
-    cd $(cat .branch_name)
-  elif [ -n "$SVNBRANCH" ] ; then
-    cd "$SVNBRANCH"
+  tgt_dir="$SVNGITROOT"
+  if [ -f "${tgt_dir}/.branch_name" ] ; then
+    tgt_dir="${tgt_dir}/$(cat ${tgt_dir}/.branch_name)"
+  elif [ -n "${tgt_dir}/$SVNBRANCH" ] ; then
+    tgt_dir="${tgt_dir}/$SVNBRANCH"
   else
-    echo "Neigher .branch_name nor SVNBRANCH is set"
+    echo "Neither .branch_name nor SVNBRANCH is set"
     return
   fi
   case $choice in
     ar)
-      cd build.el6/ace2/anap_root
+      tgt_dir="${tgt_dir}/build.el6/ace2/anap_root"
       ;;
     ai)
-      cd build.el6/anap/install
+      tgt_dir="${tgt_dir}/build.el6/anap/install"
       ;;
     pi)
-      cd build.el6/pop/install
+      tgt_dir="${tgt_dir}/build.el6/pop/install"
       ;;
     b)
-      cd build.el6
+      tgt_dir="${tgt_dir}/build.el6"
       ;;
     bab)
-      cd build.el6/ace2/bin
+      tgt_dir="${tgt_dir}/build.el6/ace2/bin"
       ;;
     gr)
-      cd ../
+      tgt_dir="${tgt_dir}/../"
       ;;
     am)
-      cd acehw/src/acemon
+      tgt_dir="${tgt_dir}/acehw/src/acemon"
       ;;
     rse)
-      cd acehw/src/rse
+      tgt_dir="${tgt_dir}/acehw/src/rse"
       ;;
     ah)
-      cd acehw
+      tgt_dir="${tgt_dir}/acehw"
       ;;
     ac)
-      cd acehw/acecore
+      tgt_dir="${tgt_dir}/acehw/acecore"
       ;;
     ak)
-      cd acehw/acecore/kernel
+      tgt_dir="${tgt_dir}/acehw/acecore/kernel"
       ;;
     pns)
-      cd pns_ni
+      tgt_dir="${tgt_dir}/pns_ni"
       ;;
     cs)
-      cd control/schema
+      tgt_dir="${tgt_dir}/control/schema"
       ;;
     3p)
-      cd patches/kernel-3.10.0-693
+      tgt_dir="${tgt_dir}/patches/kernel-3.10.0-693"
       ;;
     2p)
-      cd patches/kernel-2.6.32-431.11.2.el6
+      tgt_dir="${tgt_dir}/patches/kernel-2.6.32-431.11.2.el6"
       ;;
     *)
-      cd $choice
+      tgt_dir="${tgt_dir}/$choice"
   esac
+  cd "$tgt_dir"
 }
 
 listallpty()
@@ -293,3 +300,35 @@ gotoMusicPane() {
     gotoTmuxPane 01-scripts 8 0
 }
 
+loadThisBuildNpop() {
+    if [ -z "$NUM" ]; then
+        echo "Please set NUM"
+        return
+    fi
+    if [ -z "$ANAP" ] ; then
+        echo "Please set ANAP"
+        return
+    fi
+    p=$(pwd)
+    base1=$(basename $p)
+    if [ "$base1" != "install" ]; then
+        echo "We dont seem to be in install folder. Base:$base1"
+        return
+    fi
+    p=$(dirname $p)
+    base2=$(basename $p)
+    if [ "$base2" != "pop" ]; then
+        echo "We dont seem to be in pop/install folder. Base:$base2/$base1"
+        return
+    fi
+    /usr/local/il3/bin/il3setver -v $(rpmver) -n ${NUM}
+    a=("ntan" "npan")
+    for i in ${a[@]} ; do
+        il3ssh $i rpm -ivh --nodeps --force $(pwd)/$(rpmname)
+    done
+    il3ssh ntan /home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/bin/il3update_for_ntan
+    echo "Updated in ntan"
+    sleep 2
+    cd ../../anap/install
+    /usr/local/il3/bin/aceupgrade -l $(rpmname) ${ANAP}
+}

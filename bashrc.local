@@ -143,6 +143,11 @@ howlong()
   ps -o "%p %t" $1
 }
 
+pgrp()
+{
+    ps -fp $(pgrep "$1" | tr '\n' ',')
+}
+
 calc()
 {
   bc <<< "scale=2; $*"
