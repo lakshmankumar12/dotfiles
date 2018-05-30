@@ -2,6 +2,8 @@
 alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 alias vlcnv='/Applications/VLC.app/Contents/MacOS/VLC --no-video'
 alias dn='cd ~/Downloads'
+alias dns='cd ~/Downloads/songs-download'
+alias dnse='cd ~/Downloads/songs-download/English'
 
 #Copied from oh-my-zsh/plugins/osx/osx.plugin.zsh
 

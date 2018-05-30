@@ -146,8 +146,13 @@ howlong()
 pgrp()
 {
     pids=$(pgrep -if "$1" | tr '\n' ',')
+    shift
     if [ -n "$pids" ]; then
-        ps -fp $pids
+        if [ -n "$*" ] ; then
+            ps "$@" -fp $pids
+        else
+            ps -fp $pids
+        fi
     fi
 }
 
