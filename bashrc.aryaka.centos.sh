@@ -58,12 +58,25 @@ mkall()
     shift 1
   else
     if [ ! -f ../.hotfix_string  ] ; then
-      echo "No ../.gitfix_string .. Do a --new mkall"
+      echo "No ../.hotfix_string .. Do a --new mkall"
       return
     fi
     echo "Using existing hotfix_string:$(cat ../.hotfix_string)"
   fi
-  nohup make J=8 ANAPS=ace2 SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized HOTFIX=$(cat ../.hotfix_string) 2>&1 > make_op &
+  if [ -n "$ANAPS_SET" ] ; then
+      echo_color red "Hey you have externaly set ANAPS to $ANAPS_SET. So using that"
+      ANAPS_IN=$ANAP_SET
+  else
+      ANAPS_IN=ace2
+  fi
+  if [ -n "$BUILDINFO_SET" ] ; then
+      echo_color green "You have externally set BUILDINFO_SET"
+      BUILDINFO_IN=build
+  else
+      echo "Skipping build info"
+      BUILDINFO_IN=skip
+  fi
+  nohup make J=8 ANAPS=$ANAPS_IN SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized BUILDINFO=$BUILDINFO_IN HOTFIX=$(cat ../.hotfix_string) 2>&1 > make_op &
   pid=$!
   echo -e "You can \ntail -f $(pwd)/make_op\n to watch progress. make pid is $pid"
   python27 ~/bin/make_progress.py $(pwd)/make_op $(basename $(pwd)) $pid
@@ -78,7 +91,13 @@ mkanap()
 mkrpm()
 {
   go ah
-  make J=8 ANAPS=ace2 SYMBOLS_RPM=true anap-release  HOTFIX=$(cat ../../.hotfix_string)
+  if [ -n "$1" ] ; then
+      echo "Making without symbols"
+      sym=false
+  else
+      sym=true
+  fi
+  make J=8 ANAPS=ace2 SYMBOLS_RPM=$sym anap-release  HOTFIX=$(cat ../../.hotfix_string)
 }
 
 
@@ -94,9 +113,13 @@ mkplainpop()
 
 export PATH="$HOME/install/rtags/rtags-2.10-install/wrap-bin:$PATH"
 
-alias gcomm='if [ -z "$(svn diff)" ]; then git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)" ; else echo "svn diff isnt empty" ; fi'
+#alias gcomm='if [ -z "$(svn diff)" ]; then git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)" ; else echo "svn diff isnt empty" ; fi'
 
 function gcomm() {
+    if [ ! -d "acehw" ]; then
+        echo "Please run this from svn root"
+        return
+    fi
     if [ -n "$(svn diff)" ]; then
         echo "svn diff isnt empty"
         return;
@@ -123,6 +146,20 @@ function nightly() {
   cd /usr/antares2/nightly.el6
   export SVNGITROOT=$(pwd)
   export SVNBRANCH=$repo
+}
+
+function archiveroot() {
+    if [ -z "$1" ]; then
+        echo "usage: archiveroot <branch>"
+        return
+    fi
+    branch=$1
+    dest="/home/build/release/archive/$branch/el6_builds"
+    if [ ! -d $dest ] ; then
+        echo "Dir $dest doesn't exist"
+        return
+    fi
+    cd $dest
 }
 
 function archive() {
@@ -329,6 +366,36 @@ loadThisBuildNpop() {
     il3ssh ntan /home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/bin/il3update_for_ntan
     echo "Updated in ntan"
     sleep 2
+    cd ../../anap/install
+    /usr/local/il3/bin/aceupgrade -l $(rpmname) ${ANAP}
+}
+
+
+loadThisBuildEWPop()
+{
+    if [ -z "$NUM" ]; then
+        echo "Please set NUM"
+        return
+    fi
+    if [ -z "$ANAP" ] ; then
+        echo "Please set ANAP"
+        return
+    fi
+    p=$(pwd)
+    base1=$(basename $p)
+    if [ "$base1" != "install" ]; then
+        echo "We dont seem to be in install folder. Base:$base1"
+        return
+    fi
+    p=$(dirname $p)
+    base2=$(basename $p)
+    if [ "$base2" != "pop" ]; then
+        echo "We dont seem to be in pop/install folder. Base:$base2/$base1"
+        return
+    fi
+    /usr/local/il3/bin/il3setver -v $(rpmver) -n ${NUM}
+    /usr/local/il3/bin/il3insrpm $(rpmname)
+    /usr/local/il3/bin/il3push
     cd ../../anap/install
     /usr/local/il3/bin/aceupgrade -l $(rpmname) ${ANAP}
 }
