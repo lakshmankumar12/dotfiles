@@ -45,8 +45,27 @@ ifaddr()
 fzf2dirs()
 {
     ainternal=$(find "$1" "$2" -type f | fzf --exact)
-    export d=`dirname "$s"`
     export s="$ainternal"
+    export d=`dirname "$s"`
+}
+
+cdd()
+{
+    if [ -z "$d" ] ; then
+        echo "d is not set"
+        return
+    fi
+    cd "$d"
+}
+
+opens()
+{
+    if [ -z "$s" ] ; then 
+        echo "s is not set"
+        return
+    fi
+    echo "opening $s"
+    open "$s"
 }
 
 fzfbooks()
