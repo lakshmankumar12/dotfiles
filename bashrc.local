@@ -320,6 +320,14 @@ dumptmuxpane()
     tmux save-buffer $file
 }
 
+getLogFromPane()
+{
+    dumptmuxpane $1 log $2
+    number=$(grep -n HERE log | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
+    sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' log
+    vi log
+}
+
 tmuxatt()
 {
   if [ -z "$1" ] ; then
@@ -892,7 +900,7 @@ isknownsong() {
         echo "supply grep material"
         return
     fi
-    grep -i "$1" current_list pandoraScrobble.txt scrob-Track/*
+    grep -i -n "$1" current_list pandoraScrobble.txt scrob-Track/*
 }
 
 isknownsaavn() {

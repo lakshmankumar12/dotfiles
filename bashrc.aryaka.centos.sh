@@ -27,6 +27,8 @@ alias m3k='cd /usr/home/lakshman_narayanan/rpmbuild.anap_kernel'
 export MYIL3=/home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/xml.tim/
 export TIMIL3=/home/tpandre/il3.xml/
 
+alias t='cd $HOME/jira/TEMP'
+
 #blue-ish
 export ETANCOLOR=colour202
 #light-blue-ish
@@ -81,6 +83,9 @@ mkall()
   echo -e "You can \ntail -f $(pwd)/make_op\n to watch progress. make pid is $pid"
   python27 ~/bin/make_progress.py $(pwd)/make_op $(basename $(pwd)) $pid
 }
+alias mkalln='BUILDINFO_SET=build mkall --new'
+alias mkallo='BUILDINFO_SET= mkall'
+alias mkalle='BUILDINFO_SET=build mkall'
 
 mkanap()
 {
@@ -132,7 +137,7 @@ function gcomm() {
     git commit -am "$(/home/lakshman_narayanan/gitlab/aryaka-new-clone/get_svn_commit_info.py)"
 }
 
-function nightly() {
+function timnightly() {
   curr_host=$(hostname)
   if [[ $curr_host != *"antares"*  ]] ; then
     echo "Not in antares .. ssh antares first"
@@ -143,9 +148,17 @@ function nightly() {
   else
     repo=$1
   fi
-  cd /usr/antares2/nightly.el6
+  cd /usr/home/tpandre/asn/nightly
   export SVNGITROOT=$(pwd)
   export SVNBRANCH=$repo
+}
+
+function nly() {
+    python27 /home/lakshman_narayanan/gitlab/aryaka-scripts/gotoReleaseFolder.py $@
+    if [ $? -eq 0 ] ; then
+        cd $(cat ~/tmp/nightly_choice)
+        ls
+    fi
 }
 
 function archiveroot() {
@@ -169,14 +182,19 @@ function archive() {
     fi
     branch=$1
     shift
+    if [ "$branch" == "ask" ] ; then
+        branch=$(\ls -t /home/build/release/archive | fzf-tmux --exact)
+    fi
     if [ -z "$1" ]; then
-        echo "usage: archive <branch> <anap|pop> [<number,def:latest]"
+        archiveroot $branch
         return
     fi
     where=$1
     shift
     if [ -z "$1" ]; then
         dir=latest
+    elif [ "$1" == "ask" ]; then
+        dir=$(\ls -t /home/build/release/archive/$branch/el6_builds | fzf-tmux --exact)
     else
         dir=$1
     fi
@@ -282,6 +300,15 @@ go () {
       ;;
     bab)
       tgt_dir="${tgt_dir}/build.el6/ace2/bin"
+      ;;
+    bao)
+      tgt_dir="${tgt_dir}/build.el6/ace2/obj"
+      ;;
+    bpb)
+      tgt_dir="${tgt_dir}/build.el6/pop/bin"
+      ;;
+    bpo)
+      tgt_dir="${tgt_dir}/build.el6/pop/obj"
       ;;
     gr)
       tgt_dir="${tgt_dir}/../"
