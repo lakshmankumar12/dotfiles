@@ -885,6 +885,22 @@ collect() {
     echo "$song_info" | collect_song_detail_to_db.py "$@"
 }
 
+fzf2dirs()
+{
+    ainternal=$(find "$1" "$2" -type f | fzf --exact)
+    export s="$ainternal"
+    export d=`dirname "$s"`
+}
+
+cdd()
+{
+    if [ -z "$d" ] ; then
+        echo "d is not set"
+        return
+    fi
+    cd "$d"
+}
+
 extract_sng_info() {
     name="$1"
     name=$(basename "$name")

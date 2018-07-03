@@ -42,22 +42,6 @@ ifaddr()
     ip addr show | gawk ' /^[^[:space:]]/ { ifname=$1 } /inet / { print ifname " " $2  } '
 }
 
-fzf2dirs()
-{
-    ainternal=$(find "$1" "$2" -type f | fzf --exact)
-    export s="$ainternal"
-    export d=`dirname "$s"`
-}
-
-cdd()
-{
-    if [ -z "$d" ] ; then
-        echo "d is not set"
-        return
-    fi
-    cd "$d"
-}
-
 opens()
 {
     if [ -z "$s" ] ; then 

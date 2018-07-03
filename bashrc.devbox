@@ -8,3 +8,11 @@ alias dns='cd /home/lakshman/host/Downloads/songs-download'
 alias dnse='cd /home/lakshman/host/Downloads/songs-download/English'
 
 export PATH="$PATH:/home/lakshman/.local/bin"
+
+
+fzfcloud()
+{
+    dir1="/home/lakshman/host/Google Drive"
+    dir2="/home/lakshman/host/Dropbox"
+    fzf2dirs "$dir1" "$dir2"
+}
