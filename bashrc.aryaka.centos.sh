@@ -27,6 +27,8 @@ alias m3k='cd /usr/home/lakshman_narayanan/rpmbuild.anap_kernel'
 export MYIL3=/home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/xml.tim/
 export TIMIL3=/home/tpandre/il3.xml/
 
+alias issh='TERM=xterm /home/lakshman_narayanan/gitlab/aryaka-scripts/dirty_anap_ssh.sh'
+
 alias t='cd $HOME/jira/TEMP'
 
 #blue-ish
@@ -104,6 +106,7 @@ mkrpm()
   fi
   make J=8 ANAPS=ace2 SYMBOLS_RPM=$sym anap-release  HOTFIX=$(cat ../../.hotfix_string)
 }
+alias mkrpmn="mkrpm nosym"
 
 
 mkplain()
@@ -160,6 +163,9 @@ function nly() {
         ls
     fi
 }
+alias nlyl="nly --latest"
+alias nlya="nly --anap"
+alias nlyal="nly --anap --latest"
 
 function archiveroot() {
     if [ -z "$1" ]; then
