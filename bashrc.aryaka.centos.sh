@@ -235,6 +235,12 @@ function svnsafecommit() {
         echo "Supply commit message"
         return
     fi
+    if [ -n "$(git newfiles)" ] ; then
+        echo "There are new files: $(git newfiles). Please svn add them first"
+        return
+    fi
+    echo "Files to be commited:"
+    svndiffjustfiles
     echo "Your commit message:"
     echo "$1"
     echo "---"
@@ -391,6 +397,17 @@ loadThisBuildNpop() {
         echo "We dont seem to be in pop/install folder. Base:$base2/$base1"
         return
     fi
+    if [ ! -d ../../anap/install ] ; then
+        echo "There doesn't seem to be a anap install folder "
+        return
+    fi
+    cd ../../anap/install
+    if [ ! -f $(rpmname) ] ; then
+        echo "Couldn't spot ../../anap/install/$(rpmname)"
+        cd ../../pop/install
+        return;
+    fi
+    cd ../../pop/install
     /usr/local/il3/bin/il3setver -v $(rpmver) -n ${NUM}
     a=("ntan" "npan")
     for i in ${a[@]} ; do
@@ -401,6 +418,7 @@ loadThisBuildNpop() {
     sleep 2
     cd ../../anap/install
     /usr/local/il3/bin/aceupgrade -l $(rpmname) ${ANAP}
+    cd ../../pop/install
 }
 
 
