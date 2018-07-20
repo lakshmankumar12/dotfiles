@@ -467,6 +467,10 @@ gotoCurrentExecution() {
     gotoTmuxPane 04-test 0 0
 }
 
+gotoJiraList() {
+    gotoTmuxPane 03-jira 0 0
+}
+
 cmdsh()
 {
   GREPPER_CMD=$HOME/bitbucket/aryaka-notes/grepper_commands
