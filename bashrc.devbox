@@ -16,3 +16,9 @@ fzfcloud()
     dir2="/home/lakshman/host/Dropbox"
     fzf2dirs "$dir1" "$dir2"
 }
+
+pupd()
+{
+    ssh lakshman.narayanan@docker.for.mac.localhost scrobbleUpdate
+    tail /home/lakshman/host/Downloads/songs-download/English/pandoraScrobble.txt
+}

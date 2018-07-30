@@ -87,6 +87,14 @@ fzfcloud()
     fzf2dirs "$dir1" "$dir2"
 }
 
+scrobbleUpdate()
+{
+    pid=$(pgrep -f scrobble)
+    if [ -n "$pid" ]; then
+        kill -USR1 $pid
+    fi
+}
+
 # source: https://hacksformacs.wordpress.com/2015/08/20/setting-iterm2-tab-and-window-titles/
 set_iterm_name() {
   mode=$1 ; shift
@@ -95,3 +103,10 @@ set_iterm_name() {
 iterm_both () { set_iterm_name 0 $@; }
 iterm_tab () { set_iterm_name 1 $@; }
 iterm_window () { set_iterm_name 2 $@; }
+
+qs() {
+    if [ -z "$s" ]; then
+        "echo var s is not set"
+    fi
+    quickplay.py "$s"
+}

@@ -452,7 +452,7 @@ gotoTmuxPane() {
 }
 
 gotoMusicPane() {
-    gotoTmuxPane mac-main 14 0
+    gotoTmuxPane second 0 0
 }
 
 gotoNotes() {
@@ -932,7 +932,7 @@ isknownsong() {
         echo "supply grep material"
         return
     fi
-    grep -i -n "$1" current_list pandoraScrobble.txt scrob-Track/*
+    grep -i -n "$1" current_list pandoraScrobble.txt scrob-Track/* Lookout.txt
 }
 
 isknownsaavn() {
