@@ -54,7 +54,9 @@ getnexthotfix()
 
 mkall()
 {
-  go
+  if [ ! -d acehw ] ; then
+      echo "Please run from svn root"
+  fi
   if [ -n "$1" ] && [ "$1" = "--new" ] ; then
     hotfix_string=LAKSHMAN_$(getnexthotfix)
     echo "${hotfix_string}" > ../.hotfix_string

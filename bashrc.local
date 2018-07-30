@@ -31,6 +31,18 @@ alias psme="ps -ef | grep '^521'"
 alias tnew="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -s -i"
 alias tkill="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i"
 alias tkillx="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i -x"
+function anapwin() {
+    if [ -z "$1" ]; then
+        echo "Supply anap"
+        return
+    fi
+    if [ -n "$2" ] ; then
+        title=$2
+    else
+        title="anapXX"
+    fi
+    $HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -s "$1" default "$title"
+}
 
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
@@ -443,15 +455,15 @@ gotoMusicPane() {
     gotoTmuxPane mac-main 14 0
 }
 
-gotoLaunchPad() {
-    gotoTmuxPane 01-scripts 7 0
-}
-
 gotoNotes() {
-    gotoTmuxPane 01-scripts 5 0
+    gotoTmuxPane 01-scripts 4 0
 }
 
 gotoIL3X() {
+    gotoTmuxPane 01-scripts 5 0
+}
+
+gotoLaunchPad() {
     gotoTmuxPane 01-scripts 6 0
 }
 
@@ -459,16 +471,16 @@ gotoCurrentCode() {
     gotoTmuxPane 02-code 0 0
 }
 
+gotoJiraList() {
+    gotoTmuxPane 03-jira 0 0
+}
+
 gotoCurrentTest() {
-    gotoTmuxPane 03-jira 2 0
+    gotoTmuxPane 03-jira 1 0
 }
 
 gotoCurrentExecution() {
     gotoTmuxPane 04-test 0 0
-}
-
-gotoJiraList() {
-    gotoTmuxPane 03-jira 0 0
 }
 
 cmdsh()
