@@ -29,7 +29,11 @@ export TIMIL3=/home/tpandre/il3.xml/
 
 alias issh='TERM=xterm /home/lakshman_narayanan/gitlab/aryaka-scripts/dirty_anap_ssh.sh'
 
-alias t='cd $HOME/jira/TEMP'
+alias t='cd $HOME/jira/TEMP ; ls -lrt'
+alias bk='cd $HOME/backup ; ls -lrt'
+alias ft='cd $HOME/jira/FEATURES ; ls'
+alias feat='cd $HOME/jira/FEATURES ; ls'
+alias tp='cd $HOME/tmp ; ls -lrt'
 
 #blue-ish
 export ETANCOLOR=colour202
@@ -56,6 +60,7 @@ mkall()
 {
   if [ ! -d acehw ] ; then
       echo "Please run from svn root"
+      return
   fi
   if [ -n "$1" ] && [ "$1" = "--new" ] ; then
     hotfix_string=LAKSHMAN_$(getnexthotfix)
@@ -82,13 +87,21 @@ mkall()
       echo "Skipping build info"
       BUILDINFO_IN=skip
   fi
-  nohup make J=8 ANAPS=$ANAPS_IN SYMBOLS_RPM=false anap-release pop pop-release RELEASE=optimized BUILDINFO=$BUILDINFO_IN HOTFIX=$(cat ../.hotfix_string) 2>&1 > make_op &
+  if [ -n "$SKIP_POP" ] ; then
+      echo_color red "You have chosen to skip pop"
+      POP_TARGET=()
+  else
+      POP_TARGET=(pop pop-release)
+      echo supplying "${POP_TARGET[@]}"
+  fi
+  nohup make J=8 ANAPS=$ANAPS_IN SYMBOLS_RPM=false anap-release "${POP_TARGET[@]}" RELEASE=optimized BUILDINFO=$BUILDINFO_IN HOTFIX=$(cat ../.hotfix_string) 2>&1 > make_op &
   pid=$!
   echo -e "You can \ntail -f $(pwd)/make_op\n to watch progress. make pid is $pid"
   python27 ~/bin/make_progress.py $(pwd)/make_op $(basename $(pwd)) $pid
 }
 alias mkalln='BUILDINFO_SET=build mkall --new'
 alias mkallo='BUILDINFO_SET= mkall'
+alias mkalloa='BUILDINFO_SET= SKIP_POP=1 mkall'
 alias mkalle='BUILDINFO_SET=build mkall'
 
 mkanap()
@@ -100,15 +113,16 @@ mkanap()
 mkrpm()
 {
   go ah
-  if [ -n "$1" ] ; then
+  if [[ "$1" = "sym" ]] ; then
+      echo "Making with symbols"
+      sym=true
+  else
       echo "Making without symbols"
       sym=false
-  else
-      sym=true
   fi
   make J=8 ANAPS=ace2 SYMBOLS_RPM=$sym anap-release  HOTFIX=$(cat ../../.hotfix_string)
 }
-alias mkrpmn="mkrpm nosym"
+alias mkrpms="mkrpm sym"
 
 
 mkplain()
@@ -166,6 +180,7 @@ function nly() {
     fi
 }
 alias nlyl="nly --latest"
+alias nlyb="nly --brfolder"
 alias nlya="nly --anap"
 alias nlyal="nly --anap --latest"
 
@@ -229,7 +244,9 @@ function svnsafeup() {
 
 
 function svnsafecommit() {
-    if [ ! -d acehw ]; then
+    if [ -d acehw  -o -d rump  ] ; then
+        /bin/true
+    else
         echo "Please run this from svn root"
         return
     fi
@@ -260,6 +277,11 @@ rpmname() {
 
 rpmver() {
   rpm -q -i -p $(\ls -rt | tail -n 1 ) | grep Version | awk ' { print $3 } '
+}
+
+setwthis() {
+    export SVNGITROOT="$(pwd)"
+    echo "SVNGITROOT set to $(pwd)"
 }
 
 setw() {
@@ -324,6 +346,30 @@ go () {
     bpo)
       tgt_dir="${tgt_dir}/build.el6/pop/obj"
       ;;
+    ar7)
+      tgt_dir="${tgt_dir}/build.el7/ace2/anap_root"
+      ;;
+    ai7)
+      tgt_dir="${tgt_dir}/build.el7/anap/install"
+      ;;
+    pi7)
+      tgt_dir="${tgt_dir}/build.el7/pop/install"
+      ;;
+    b7)
+      tgt_dir="${tgt_dir}/build.el7"
+      ;;
+    bab7)
+      tgt_dir="${tgt_dir}/build.el7/ace2/bin"
+      ;;
+    bao7)
+      tgt_dir="${tgt_dir}/build.el7/ace2/obj"
+      ;;
+    bpb7)
+      tgt_dir="${tgt_dir}/build.el7/pop/bin"
+      ;;
+    bpo7)
+      tgt_dir="${tgt_dir}/build.el7/pop/obj"
+      ;;
     gr)
       tgt_dir="${tgt_dir}/../"
       ;;
@@ -360,10 +406,28 @@ go () {
   cd "$tgt_dir"
 }
 
+scpbinfileanap()
+{
+    if [ -z "$ANAP" ]; then
+        echo "set ANAP first"
+        return 1
+    fi
+    if [ -z "$1" ]; then
+        echo "supply bin to scp"
+        return 1
+    fi
+    echo "scping to ANAP: $ANAP"
+    ( go bab ; /usr/local/il3/bin/il3scp "$1"  ${ANAP}:/tmp )
+}
+
+alias scprse='scpbinfileanap rse'
+alias scpam='scpbinfileanap acemon'
+alias scppns='scpbinfileanap pns_ni'
+
 listallpty()
 {
     a=(01 02 03 04)
-    for i in ${a[@]} ; do listtmuxpanes "$i-" ; done | sort -t\| -k5
+    for i in ${a[@]} ; do listtmuxpanes "$i-" ; done | sort -t\| -k6
 }
 
 alias reset_to='$HOME/bin/update_tag.py -r'
@@ -375,7 +439,8 @@ tmuxcolorset()
 }
 
 gotoMusicPane() {
-    gotoTmuxPane 01-scripts 8 0
+    #we will over-ride this to ary-scripts
+    gotoTmuxPane 01-scripts 3 0
 }
 
 loadThisBuildNpop() {
@@ -387,6 +452,7 @@ loadThisBuildNpop() {
         echo "Please set ANAP"
         return
     fi
+    echo "Using NUM: $NUM and ANAP: $ANAP"
     p=$(pwd)
     base1=$(basename $p)
     if [ "$base1" != "install" ]; then
@@ -422,6 +488,7 @@ loadThisBuildNpop() {
     /usr/local/il3/bin/aceupgrade -l $(rpmname) ${ANAP}
     cd ../../pop/install
 }
+alias lbnpop=loadThisBuildNpop
 
 
 loadThisBuildEWPop()
@@ -434,6 +501,7 @@ loadThisBuildEWPop()
         echo "Please set ANAP"
         return
     fi
+    echo "Using NUM: $NUM and ANAP: $ANAP"
     p=$(pwd)
     base1=$(basename $p)
     if [ "$base1" != "install" ]; then
@@ -451,4 +519,82 @@ loadThisBuildEWPop()
     /usr/local/il3/bin/il3push
     cd ../../anap/install
     /usr/local/il3/bin/aceupgrade -l $(rpmname) ${ANAP}
+}
+
+anapload()
+{
+    if [ -n "$ANAP" ] ; then
+        echo "Using ANAP: $ANAP"
+        ( go ai && /usr/local/il3/bin/aceupgrade -l $(rpmname) ${ANAP} )
+    else
+        echo "Set ANAP"
+    fi
+}
+alias loadanap=anapload
+
+svnlogauthor()
+{
+    if [ -z "$1" ] ; then
+        echo "Please supply username"
+        return
+    fi
+    author=$1
+    shift
+    svn log "$@" | sed -n '/'"$author"'/,/-----$/ p'
+}
+
+svnlogme()
+{
+    svnlogauthor "lakshman" $@
+}
+
+getAceLogFromAnap()
+{
+    if [ -z "$ANAP" ] ; then
+        echo "Set ANAP"
+        return
+    else
+        echo "Using ANAP: $ANAP"
+    fi
+    il3scp $ANAP:/var/log/ace.log log
+    number=$(grep -n 'rsyslogd.*start' log | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
+    sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' log
+    vi log
+}
+
+getRseLogFromAnap()
+{
+    if [ -z "$ANAP" ] ; then
+        echo "Set ANAP"
+        return
+    else
+        echo "Using ANAP: $ANAP"
+    fi
+    il3scp $ANAP:/var/aryaka/nexus/rse/rse.log log
+    vi log
+}
+
+
+getLatestCrashFileFromAnap()
+{
+    if [ -z "$ANAP" ] ; then
+        echo "Set ANAP"
+        return
+    else
+        echo "Using ANAP: $ANAP"
+    fi
+    file=$(il3ssh $ANAP ls -1rt '/var/core/*.gz' | tail -n 1 | sed 's/\r//')
+    if [[ $file = *"gz"*  ]] ; then
+        echo "Extracting: $file"
+    else
+        echo "Not finding a .gz file in anap:$ANAP"
+        return 1
+    fi
+    il3scp $ANAP:${file} .
+    file=$(basename ${file})
+    tar xf ${file}
+    dir=$(tar tf ${file} | head -n 1)
+    echo "File: ${file}, dir: ${dir}"
+    cd $dir
+    ls
 }

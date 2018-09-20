@@ -1,7 +1,7 @@
 Search: KEY BINDINGS in man page
 
 a  -- (MY MAP) send prefix                     A -- rename window
-b  --
+b  --                                          B -- nightly/backup
 c  -- create new window                        C -- current-code
 d  -- detach                                   D -- choose to detach
 e  -- (MY MAP) switch-client -l                E -- first test window
