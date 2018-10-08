@@ -406,12 +406,20 @@ go () {
   cd "$tgt_dir"
 }
 
-scpbinfileanap()
+scpfileanapfromgr()
 {
-    if [ -z "$ANAP" ]; then
-        echo "set ANAP first"
+    evalVariablePresence ANAP verbose || return 1
+    if [ -z "$1" ]; then
+        echo "supply bin to scp"
         return 1
     fi
+    echo "scping to ANAP: $ANAP"
+    ( go .. ; /usr/local/il3/bin/il3scp "$1"  ${ANAP}:/tmp )
+}
+
+scpbinfileanap()
+{
+    evalVariablePresence ANAP verbose || return 1
     if [ -z "$1" ]; then
         echo "supply bin to scp"
         return 1
@@ -423,6 +431,22 @@ scpbinfileanap()
 alias scprse='scpbinfileanap rse'
 alias scpam='scpbinfileanap acemon'
 alias scppns='scpbinfileanap pns_ni'
+
+scpschemafileanap()
+{
+    evalVariablePresence ANAP verbose || return 1
+    if [ -z "$1" ]; then
+        echo "supply schema to scp"
+        return 1
+    fi
+    echo "scping to ANAP: $ANAP"
+    ( go control/schema ; /usr/local/il3/bin/il3scp "$1"  ${ANAP}:/tmp )
+}
+
+alias scprc='scpschemafileanap config_schema.xml'
+alias scpdprm='scpschemafileanap dprm_config_schema.xml'
+alias scpstatic='scpschemafileanap static_routing_config_schema.xml'
+
 
 listallpty()
 {
@@ -550,12 +574,7 @@ svnlogme()
 
 getAceLogFromAnap()
 {
-    if [ -z "$ANAP" ] ; then
-        echo "Set ANAP"
-        return
-    else
-        echo "Using ANAP: $ANAP"
-    fi
+    evalVariablePresence ANAP verbose || return 1
     il3scp $ANAP:/var/log/ace.log log
     number=$(grep -n 'rsyslogd.*start' log | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
     sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' log
@@ -564,16 +583,17 @@ getAceLogFromAnap()
 
 getRseLogFromAnap()
 {
-    if [ -z "$ANAP" ] ; then
-        echo "Set ANAP"
-        return
-    else
-        echo "Using ANAP: $ANAP"
-    fi
+    evalVariablePresence ANAP verbose || return 1
     il3scp $ANAP:/var/aryaka/nexus/rse/rse.log log
     vi log
 }
 
+getPnsLogFromAnap()
+{
+    evalVariablePresence ANAP verbose || return 1
+    il3scp $ANAP:/var/aryaka/nexus/pns_ni/pns.log log
+    vi log
+}
 
 getLatestCrashFileFromAnap()
 {
@@ -598,3 +618,4 @@ getLatestCrashFileFromAnap()
     cd $dir
     ls
 }
+

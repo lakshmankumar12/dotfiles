@@ -10,6 +10,7 @@ alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
 alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
+alias tmuxcopy="tr -d '\n' | tmux loadb -"
 
 #bless my typo
 alias snv=svn
@@ -965,6 +966,27 @@ isknownsaavn() {
         return
     fi
     grep -i "$*" $(cat Categories.txt | tr '\n' ' ')
+}
+
+evalVariablePresence()
+{
+    # Usage: evalVariablePresence YOUR_VAR_TO_CHECK [verbose]
+    toCheck=$1
+    shift
+    if [ -n "$1" -a "$1" = "verbose" ] ; then
+        debug="yes"
+        shift
+    else
+        debug="no"
+    fi
+    if [ -n "${(P)toCheck}" ] ; then
+        if [ "x$debug" = "xyes" ] ; then
+            echo "${toCheck} is set to ${(P)toCheck}"
+        fi
+        return 0
+    fi
+    echo "${toCheck} is unset"
+    return 1
 }
 
 if [ -f ~/.bashrc.aryaka.centos.sh ] ; then
