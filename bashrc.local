@@ -788,13 +788,19 @@ startdeldocInMac() {
 sshvpndoc() {
   port=$(docker port for-vpn | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
-  ssh -X -p $port lakshman@localhost
+  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $port lakshman@localhost
 }
 
 sshdevdoc() {
   port=$(docker port devbox | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
-  ssh -X -p $port lakshman@localhost
+  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $port lakshman@localhost
+}
+
+sshdeldoc() {
+  port=$(docker port todel | grep '22/tcp' | grep -o ':.*$' | tr -d :)
+  echo "Port is $port"
+  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $port lakshman@localhost
 }
 
 sshspiderman() {
@@ -916,7 +922,12 @@ collect() {
 
 fzf2dirs()
 {
+    unset s
+    unset d
     ainternal=$(find "$1" "$2" -type f | fzf --exact)
+    if [ -z "$ainternal" ] ; then
+        return 1
+    fi
     export s="$ainternal"
     export d=`dirname "$s"`
 }

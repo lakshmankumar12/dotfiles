@@ -20,5 +20,6 @@ fzfcloud()
 pupd()
 {
     ssh lakshman.narayanan@docker.for.mac.localhost scrobbleUpdate
+    echo "Signalled .. sleeping 2s" ; sleep 2
     tail /home/lakshman/host/Downloads/songs-download/English/pandoraScrobble.txt
 }
