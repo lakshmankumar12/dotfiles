@@ -841,20 +841,24 @@ alert() {
         echo "Supply message"
         return
     fi
-    echo -n "$*" | nc -4u -w1 $(cat ~/.mymacip) 25020
+    echo -n "$*" | nc -4 -w1 $(cat ~/.mymacip) 25020
+}
+
+to_mac_clip() {
+    toSet=$(cat)
+    l=$(echo "$toSet" | wc -l)
+    echo -n "$toSet" | ssh -p $(cat /home/lakshman_narayanan/.mymacport) lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip) pbcopy
+    if [[ $l -le 3 ]] ; then
+        echo "Your clip is setup with: $toSet"
+    else
+        echo "Your clip is setup with $l lines"
+    fi
 }
 
 tmuxcliptomac() {
-    tmux show-buffer | ssh lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip) pbcopy
-    a=$(tmux show-buffer)
-    l=$(tmux show-buffer | wc -l)
-    if [[ $l -le 3 ]] ; then
-        echo "Your clip is setup with:"
-        echo "$a"
-    else
-        echo "Loaded $l lines in clip"
-    fi
+    tmux show-buffer | to_mac_clip
 }
+alias ttc=tmuxcliptomac
 
 alert_on_pid() {
     if [ -z "$1" -o -z "$2" ] ; then
@@ -1000,3 +1004,9 @@ fi
 if [ "$(hostname)x" == "DevBoxx" ] ; then
   . ~/.bashrc.devbox
 fi
+
+delink () { tmpfile="$1$(date)"; cp -a "$1" "$tmpfile"; mv "$tmpfile" "$1"; }
+
+pcol() {
+    awk -v col=$1 ' { print $col }'
+}

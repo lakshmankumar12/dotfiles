@@ -127,12 +127,12 @@ alias mkrpms="mkrpm sym"
 
 mkplain()
 {
-  nohup make J=8 PLATFORM=ace2 RELEASE=noopt 2>&1 | wrap_make_error.py /tmp/errors
+  nohup make J=8 PLATFORM=ace2 RELEASE=noopt 2>&1 | wrap_make_error.py ~/tmp/errors
 }
 
 mkplainpop()
 {
-  nohup make J=8 PLATFORM=pop RELEASE=noopt 2>&1 | wrap_make_error.py /tmp/errors
+  nohup make J=8 PLATFORM=pop RELEASE=noopt 2>&1 | wrap_make_error.py ~/tmp/errors
 }
 
 export PATH="$HOME/install/rtags/rtags-2.10-install/wrap-bin:$PATH"
@@ -237,6 +237,11 @@ function svnsafeup() {
     svndiff=$(svn diff)
     if [ -n "$svndiff" ] ; then
         echo "svndiff is not empty.. bailing out"
+        return
+    fi
+    svndiff=$(cd import ; svn diff)
+    if [ -n "$svndiff" ] ; then
+        echo "import svndiff is not empty.. bailing out"
         return
     fi
     svn up
@@ -373,6 +378,12 @@ go () {
     gr)
       tgt_dir="${tgt_dir}/../"
       ;;
+    asn)
+      tgt_dir="${tgt_dir}/acehw/system/opt/aryaka/asn/bin"
+      ;;
+    bin)
+      tgt_dir="${tgt_dir}/acehw/system/opt/aryaka/asn/bin"
+      ;;
     am)
       tgt_dir="${tgt_dir}/acehw/src/acemon"
       ;;
@@ -441,6 +452,17 @@ scpschemafileanap()
     fi
     echo "scping to ANAP: $ANAP"
     ( go control/schema ; /usr/local/il3/bin/il3scp "$1"  ${ANAP}:/tmp )
+}
+
+scpsourcebinfileanap()
+{
+    evalVariablePresence ANAP verbose || return 1
+    if [ -z "$1" ]; then
+        echo "supply bin to scp"
+        return 1
+    fi
+    echo "scping to ANAP: $ANAP"
+    ( go bin ; /usr/local/il3/bin/il3scp "$1"  ${ANAP}:/tmp )
 }
 
 alias scprc='scpschemafileanap config_schema.xml'
@@ -619,3 +641,17 @@ getLatestCrashFileFromAnap()
     ls
 }
 
+scpfrommac()
+{
+    scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $(cat /home/lakshman_narayanan/.mymacport) lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip):"'"$1"'" .
+}
+
+scpfrommacdn()
+{
+    scpfrommac /Users/lakshman.narayanan/Downloads/"'"$1"'"
+}
+
+scptomac()
+{
+    scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $(cat /home/lakshman_narayanan/.mymacport) "$@" lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip):/Users/lakshman.narayanan/Downloads/
+}
