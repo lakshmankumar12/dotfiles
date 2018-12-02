@@ -402,7 +402,7 @@ go () {
     pns)
       tgt_dir="${tgt_dir}/pns_ni"
       ;;
-    cs)
+    sch)
       tgt_dir="${tgt_dir}/control/schema"
       ;;
     3p)

@@ -624,9 +624,6 @@ resetclipvm()
   echo "starting again"
   /usr/bin/VBoxClient --clipboard
 }
-if [ -e ~/.bashrc.centos ] ; then
-  source ~/.bashrc.centos
-fi
 
 fdfile()
 {
@@ -855,10 +852,19 @@ to_mac_clip() {
     fi
 }
 
+check_clip() {
+    echo "## check_clip at $(date)" | to_mac_clip
+    echo "You can check your clip by pasting"
+}
+
 tmuxcliptomac() {
     tmux show-buffer | to_mac_clip
 }
 alias ttc=tmuxcliptomac
+
+from_mac_clip() {
+    ssh -p $(cat /home/lakshman_narayanan/.mymacport) lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip) pbpaste
+}
 
 alert_on_pid() {
     if [ -z "$1" -o -z "$2" ] ; then
