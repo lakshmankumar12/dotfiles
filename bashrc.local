@@ -662,7 +662,7 @@ fdg()
 
 lspwd()
 {
-  \ls -1 $@ | awk -v pwd=$(pwd) ' { print pwd "/" $0 }'
+  \ls -1 "$@" | awk -v pwd="$(pwd)" ' { print pwd "/" $0 }'
 }
 
 macnotify()
@@ -799,6 +799,10 @@ sshdeldoc() {
   port=$(docker port todel | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
   ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $port lakshman@localhost
+}
+
+sshspvm1() {
+  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.18.14.11
 }
 
 sshspiderman() {
@@ -1009,6 +1013,10 @@ fi
 
 if [ "$(hostname)x" == "DevBoxx" ] ; then
   . ~/.bashrc.devbox
+fi
+
+if [ -f ~/.bashrc.private.sh ] ; then
+  . ~/.bashrc.private.sh
 fi
 
 delink () { tmpfile="$1$(date)"; cp -a "$1" "$tmpfile"; mv "$tmpfile" "$1"; }
