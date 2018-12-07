@@ -498,6 +498,13 @@ loadThisBuildNpop() {
         echo "Please set ANAP"
         return
     fi
+    if [ "$1" == "sp" ] ; then
+        echo "Skipping pop install"
+        skip_pop_install="yes"
+        shift
+    else
+        skip_pop_install="no"
+    fi
     echo "Using NUM: $NUM and ANAP: $ANAP"
     p=$(pwd)
     base1=$(basename $p)
@@ -524,9 +531,11 @@ loadThisBuildNpop() {
     cd ../../pop/install
     /usr/local/il3/bin/il3setver -v $(rpmver) -n ${NUM}
     a=("ntan" "npan")
-    for i in ${a[@]} ; do
-        il3ssh $i rpm -ivh --nodeps --force $(pwd)/$(rpmname)
-    done
+    if [ "$skip_pop_install" != "yes" ] ; then
+        for i in ${a[@]} ; do
+            il3ssh $i rpm -ivh --nodeps --force $(pwd)/$(rpmname)
+        done
+    fi
     il3ssh ntan /home/lakshman_narayanan/ws/il3-scripts/il3_work_repo/il3/bin/il3update_for_ntan
     echo "Updated in ntan"
     sleep 2
