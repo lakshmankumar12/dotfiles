@@ -11,6 +11,7 @@ alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
 alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
 alias tmuxcopy="tr -d '\n' | tmux loadb -"
+alias ft='$HOME/github/vimfiles/open_first_tab.py'
 
 #bless my typo
 alias snv=svn
@@ -60,6 +61,9 @@ export GITLAB="git@gitlab.com:lakshmankumar12"
 export BITBUCKET="git@bitbucket.org:lakshmankumar12"
 
 #export LESS="$LESS -R -F"
+
+export NVIM_SWAP="$HOME/.local/share/nvim/swap"
+alias lsnvimswap="ls $NVIM_SWAP"
 
 recfg_fn()
 {
@@ -848,7 +852,7 @@ alert() {
 to_mac_clip() {
     toSet=$(cat)
     l=$(echo "$toSet" | wc -l)
-    echo -n "$toSet" | ssh -p $(cat /home/lakshman_narayanan/.mymacport) lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip) pbcopy
+    echo -n "$toSet" | ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $(cat /home/lakshman_narayanan/.mymacport) $(cat /home/lakshman_narayanan/.mymacusername)@$(cat /home/lakshman_narayanan/.mymacip) pbcopy
     if [[ $l -le 3 ]] ; then
         echo "Your clip is setup with: $toSet"
     else
@@ -857,8 +861,18 @@ to_mac_clip() {
 }
 
 check_clip() {
+    echo "user: $(cat $HOME/.mymacusername) port: $(cat $HOME/.mymacport) ip: $(cat $HOME/.mymacip)"
     echo "## check_clip at $(date)" | to_mac_clip
     echo "You can check your clip by pasting"
+}
+
+clip_username() {
+    user="lakshman.narayanan"
+    if [ "$1" == "vpn" ] ; then
+        user="lakshman"
+    fi
+    echo "setting to $user"
+    echo "$user" > $HOME/.mymacusername
 }
 
 tmuxcliptomac() {

@@ -31,7 +31,6 @@ alias issh='TERM=xterm /home/lakshman_narayanan/gitlab/aryaka-scripts/dirty_anap
 
 alias t='cd $HOME/jira/TEMP ; ls -lrt'
 alias bk='cd $HOME/backup ; ls -lrt'
-alias ft='cd $HOME/jira/FEATURES ; ls'
 alias feat='cd $HOME/jira/FEATURES ; ls'
 alias tp='cd $HOME/tmp ; ls -lrt'
 
@@ -436,7 +435,12 @@ scpbinfileanap()
         return 1
     fi
     echo "scping to ANAP: $ANAP"
-    ( go bab ; /usr/local/il3/bin/il3scp "$1"  ${ANAP}:/tmp )
+    version=$(uname -r | grep -o 'el.')
+    location=bab
+    if [ "$version" == "el7" ] ; then
+        location=bab7
+    fi
+    ( go $location ; /usr/local/il3/bin/il3scp "$1"  ${ANAP}:/tmp )
 }
 
 alias scprse='scpbinfileanap rse'
@@ -489,6 +493,34 @@ gotoMusicPane() {
     gotoTmuxPane 01-scripts 3 0
 }
 
+doesRpmExistInPopMachine() {
+    popIp=$1
+    rpmVer=$2
+    isAnap=$3
+    if [ -n "${isAnap}" ]; then
+        path=/var/aryaka/software/anap
+    else
+        path=/opt/aryaka/asn/
+    fi
+    il3ssh ${popIp} ls -d ${path}/${rpmVer} 2>&1 > /dev/null
+    return $?
+}
+
+checkpoprpm() {
+    a=$(pwd)
+    go pi
+    doesRpmExistInPopMachine ntan $(rpmver)
+    ntan=$?
+    doesRpmExistInPopMachine npan $(rpmver)
+    npan=$?
+    if [[ $ntan -eq 0 && $npan -eq 0 ]] ; then
+        return 0
+    else
+        echo "Ntan: $ntan, Npan: $npan"
+        return 1
+    fi
+}
+
 loadThisBuildNpop() {
     if [ -z "$NUM" ]; then
         echo "Please set NUM"
@@ -502,8 +534,15 @@ loadThisBuildNpop() {
         echo "Skipping pop install"
         skip_pop_install="yes"
         shift
-    else
+    elif [ "$1" == "mp" ] ; then
         skip_pop_install="no"
+        shift
+    else
+        if [ checkpoprpm ] ; then
+            skip_pop_install="yes"
+        else
+            skip_pop_install="no"
+        fi
     fi
     echo "Using NUM: $NUM and ANAP: $ANAP"
     p=$(pwd)
@@ -664,3 +703,40 @@ scptomac()
 {
     scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $(cat /home/lakshman_narayanan/.mymacport) "$@" lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip):/Users/lakshman.narayanan/Downloads/
 }
+
+getnxip()
+{
+    if [ -z "$1" ] ; then
+        echo "supply which file to load"
+        return
+    fi
+    fileToLoad="$1"
+    shift
+    if [ -z "$1" ] ; then
+        echo "Supply nexus"
+        return
+    fi
+    nexus="$1"
+    (   source $fileToLoad ;
+        if [ -z "${machines[$nexus]}" ] ; then
+            if [ -z "${machines[${nexus}_A]}" ] ; then
+                echo "Nexus not found"
+            else
+                echo ${machines[${nexus}_A]}
+            fi
+        else
+            echo ${machines[$nexus]}
+        fi
+    )
+}
+
+innxip()
+{
+    getnxip /home/lakshman_narayanan/bitbucket/aryaka-notes/india_machines "$@"
+}
+
+usnxip()
+{
+    getnxip /home/lakshman_narayanan/bitbucket/aryaka-notes/us_machines "$@"
+}
+

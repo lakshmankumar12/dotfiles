@@ -32,3 +32,12 @@ z  -- zoom
 ]  -- paste
 "  -- horizontal split
 |  -- (MY MAP) vertical split
+
+
+SIZES
+----
+C-S-up        resize-up
+C-S-down      resize-down
+C-S-left      resize-left
+C-S-right     resize-right
+V             even-horizontal
