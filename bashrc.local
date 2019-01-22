@@ -809,6 +809,11 @@ sshspvm1() {
   ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.18.14.11
 }
 
+sshspvm2() {
+  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.18.14.12
+}
+
+
 sshspiderman() {
     ssh lakshman_narayanan@172.18.14.1
 }
@@ -993,8 +998,10 @@ isknownsaavn() {
         echo "supply grep material"
         return
     fi
-    grep -i "$*" $(cat Categories.txt | tr '\n' ' ')
+    (cd /Users/lakshman.narayanan/Downloads/songs-download/JUST-PLAYLISTS-TEXT/saavnscrobbles ;
+        grep -i -E "\b$*\b" $(cat Categories.txt | tr '\n' ' ') )
 }
+alias saavnIsKnown=isknownsaavn
 
 evalVariablePresence()
 {
