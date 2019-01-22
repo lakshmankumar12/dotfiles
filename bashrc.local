@@ -857,7 +857,7 @@ alert() {
 to_mac_clip() {
     toSet=$(cat)
     l=$(echo "$toSet" | wc -l)
-    echo -n "$toSet" | ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $(cat /home/lakshman_narayanan/.mymacport) $(cat /home/lakshman_narayanan/.mymacusername)@$(cat /home/lakshman_narayanan/.mymacip) pbcopy
+    echo -n "$toSet" | ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $(cat $HOME/.mymacport) $(cat $HOME/.mymacusername)@$(cat $HOME/.mymacip) pbcopy
     if [[ $l -le 3 ]] ; then
         echo "Your clip is setup with: $toSet"
     else
