@@ -15,38 +15,31 @@ alias ft='$HOME/github/vimfiles/open_first_tab.py'
 
 #bless my typo
 alias snv=svn
-alias svnst="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | sort"
-alias snvst="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | sort"
-alias svnstm="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^M'"
-alias snvstm="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^M'"
-alias svnstx="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^X'"
-alias snvstx="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^X'"
-alias svnstq="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\?'"
-alias snvstq="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\?'"
-alias svnstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\~'"
-alias snvstt="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^\~'"
-alias svnstc="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^C'"
-alias snvstc="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^C'"
-alias svnstcf="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^C' | awk '{print \$2}' | head -n 1"
-alias snvstcf="svn status  | grep -v 'status on external item' | grep -E -v '^[[:space:]]*$' | grep '^C' | awk '{print \$2}' | head -n 1"
+
+alias svnstm="svn status | awk '/^M/ { print \$2 }'"
+alias svnstx="svn status | awk '/^X/ { print \$2 }'"
+alias svnstq="svn status | awk '/^\?/ { print \$2 }'"
+alias svnstt="svn status | awk '/^\~/ { print \$2 }'"
+alias svnstc="svn status | awk '/^C/ { print \$2 }'"
+
+svnst() {
+    svn status | awk ' BEGIN { m="" ; c = "" ; q = "" ; r="" ; allelse = "" }
+        /^M/  { m = m "\n" $2 ; next }
+        /^C/  { c = c "\n" $2 ; next }
+        /^\?/ { q = q "\n" $2 ; next }
+        /^\~/ { r = r "\n" $2 ; next }
+        /^X/  { next }
+        /^$/  { next }
+        /^Performing/ { next }
+        1    { allelse = allelse "\n" $0 }
+        END  { if (length(m) != 0)       { printf "Modified: \n------------%s\n",m } ;
+               if (length(c) != 0)       { printf "Conflict: \n------------%s\n",c } ;
+               if (length(q) != 0)       { printf "Untracked:\n------------%s\n",q } ;
+               if (length(r) != 0)       { printf "Replaced: \n------------%s\n",r } ;
+               if (length(allelse) != 0) { printf "All Else: \n------------%s\n",allelse } }'
+}
 
 alias psme="ps -ef | grep '^521'"
-
-alias tnew="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -s -i"
-alias tkill="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i"
-alias tkillx="$HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -k -i -x"
-function anapwin() {
-    if [ -z "$1" ]; then
-        echo "Supply anap"
-        return
-    fi
-    if [ -n "$2" ] ; then
-        title=$2
-    else
-        title="anapXX"
-    fi
-    $HOME/gitlab/aryaka-scripts/setup_tmux_windows.py -s "$1" default "$title"
-}
 
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
@@ -1044,4 +1037,8 @@ delink () { tmpfile="$1$(date)"; cp -a "$1" "$tmpfile"; mv "$tmpfile" "$1"; }
 
 pcol() {
     awk -v col=$1 ' { print $col }'
+}
+
+errecho() {
+    2>&1 echo "$@"
 }

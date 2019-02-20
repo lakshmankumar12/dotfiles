@@ -15,9 +15,9 @@ l  -- (MY MAP) tab right                       L -- gotoLaunchpad
 m  -- mark a window                            M -- move pane
 n  -- next window                              N -- gotoNotes
 o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
-p  -- prev window                              P -- music pane
+p  -- prev window                              P -- music pane/ary-scripts pane
 q  -- show pane numbers
-r  -- reload conf
+r  -- reload conf                              R -- jira-list-pane
 s  -- switch-session                           S -- swap windows
 t  -- (MY MAP) choose any pane                 T -- current-test
 u  -- (MY MAP) send a mark(while log-scrol)
@@ -40,4 +40,18 @@ C-S-up        resize-up
 C-S-down      resize-down
 C-S-left      resize-left
 C-S-right     resize-right
-V             even-horizontal
+V             even-horizontal i.e keep panes vertically split
+H             even-vertical   i.e keep panes horizontally split
+
+
+HOTKEY Panes
+-----------
+                               mnemonic
+C - code                       C for code
+E - first test window          E for execute
+L - launch                     L for launch
+N - notes                      N for notes
+P - music pane                 <none .. only free letter>
+    scripts
+R - jira-list                  R for jiRa
+T - first test jira window     T for test
