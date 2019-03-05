@@ -42,6 +42,13 @@ C-S-left      resize-left
 C-S-right     resize-right
 V             even-horizontal i.e keep panes vertically split
 H             even-vertical   i.e keep panes horizontally split
+<space>       cycle-between present layouts.
+
+MOVE pange
+---------
+
+{             To previous position
+}             To next position
 
 
 HOTKEY Panes

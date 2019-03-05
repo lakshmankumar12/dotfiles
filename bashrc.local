@@ -23,20 +23,23 @@ alias svnstt="svn status | awk '/^\~/ { print \$2 }'"
 alias svnstc="svn status | awk '/^C/ { print \$2 }'"
 
 svnst() {
-    svn status | awk ' BEGIN { m="" ; c = "" ; q = "" ; r="" ; allelse = "" }
+    svn status | awk ' BEGIN { m="" ; c = "" ; q = "" ; r="" ; allelse = "" ; prop_set }
+        /^Performing/ { next }
+        /^.[^[:space:]]/ { prop_set = prop_set "\n" $2 }
         /^M/  { m = m "\n" $2 ; next }
         /^C/  { c = c "\n" $2 ; next }
         /^\?/ { q = q "\n" $2 ; next }
         /^\~/ { r = r "\n" $2 ; next }
         /^X/  { next }
+        /^ /  { next }
         /^$/  { next }
-        /^Performing/ { next }
-        1    { allelse = allelse "\n" $0 }
-        END  { if (length(m) != 0)       { printf "Modified: \n------------%s\n",m } ;
-               if (length(c) != 0)       { printf "Conflict: \n------------%s\n",c } ;
-               if (length(q) != 0)       { printf "Untracked:\n------------%s\n",q } ;
-               if (length(r) != 0)       { printf "Replaced: \n------------%s\n",r } ;
-               if (length(allelse) != 0) { printf "All Else: \n------------%s\n",allelse } }'
+        1    { allelse = allelse "\n" $2 }
+        END  { if (length(m) != 0)       { printf "### MODIFIED:%s\n",m } ;
+               if (length(c) != 0)       { printf "### CONFLICT:%s\n",c } ;
+               if (length(q) != 0)       { printf "### UNTRACKED:%s\n",q } ;
+               if (length(r) != 0)       { printf "### REPLACED:%s\n",r } ;
+               if (length(prop_set) != 0){ printf "### PROPERTY SET(!):%s\n",prop_set } ;
+               if (length(allelse) != 0) { printf "### ALL ELSE:%s\n",allelse } }'
 }
 
 alias psme="ps -ef | grep '^521'"

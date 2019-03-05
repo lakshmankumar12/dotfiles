@@ -30,7 +30,7 @@
 	tool = diffconflicts
 	renameLimit = 25000
 [mergetool "diffconflicts"]
-	cmd = diffconflicts $HOME/bin/vim $BASE $LOCAL $REMOTE $MERGED
+	cmd = diffconflicts $HOME/bin/nvim $BASE $LOCAL $REMOTE $MERGED
 	trustExitCode = true
 	keepBackup = false
 [mergetool "splice"]
