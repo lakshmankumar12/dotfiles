@@ -49,8 +49,24 @@ export GOPATH="$HOME/gopath"
 
 export RTAGS_WRAP_PATH=/Users/lakshman.narayanan/software/rtags/installb/wrap
 
-export PATH=$RTAGS_WRAP_PATH:$HOME/bin:$PATH
+hostspecific=""
+hn=$(hostname)
+case $hn in
+    mforge3*)
+    hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/m3_overrides
+    ;;
+esac
+
+#rev-order
+export PATH=$HOME/bin:$PATH
+if [ -n "$hostspecific" ]; then
+export PATH=$hostspecific:$PATH
+fi
+export PATH=$RTAGS_WRAP_PATH:$PATH
+
+#regular order
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+
 export EDITOR=vim
 export GITHUB="git@github.com:lakshmankumar12"
 export GITLAB="git@gitlab.com:lakshmankumar12"
