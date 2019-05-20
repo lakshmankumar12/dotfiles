@@ -817,12 +817,17 @@ sshdeldoc() {
   ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $port lakshman@localhost
 }
 
+sshmachine() {
+  mc="$1"
+  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${mc}
+}
+
 sshspvm1() {
-  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.18.14.11
+  sshmachine 172.18.14.11
 }
 
 sshspvm2() {
-  ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.18.14.12
+  sshmachine 172.18.14.12
 }
 
 
