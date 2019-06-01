@@ -85,3 +85,4 @@ setopt HIST_SAVE_NO_DUPS
 
 unset PYTHONPATH
 
+prune_paths

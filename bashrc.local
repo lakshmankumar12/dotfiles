@@ -30,6 +30,7 @@ svnst() {
         /^C/  { c = c "\n" $2 ; next }
         /^\?/ { q = q "\n" $2 ; next }
         /^\~/ { r = r "\n" $2 ; next }
+        /^\!/ { d = d "\n" $2 ; next }
         /^X/  { next }
         /^ /  { next }
         /^$/  { next }
@@ -38,6 +39,7 @@ svnst() {
                if (length(c) != 0)       { printf "### CONFLICT:%s\n",c } ;
                if (length(q) != 0)       { printf "### UNTRACKED:%s\n",q } ;
                if (length(r) != 0)       { printf "### REPLACED:%s\n",r } ;
+               if (length(d) != 0)       { printf "### DELETED:%s\n",d } ;
                if (length(prop_set) != 0){ printf "### PROPERTY SET(!):%s\n",prop_set } ;
                if (length(allelse) != 0) { printf "### ALL ELSE:%s\n",allelse } }'
 }
@@ -52,6 +54,9 @@ export RTAGS_WRAP_PATH=/Users/lakshman.narayanan/software/rtags/installb/wrap
 hostspecific=""
 hn=$(hostname)
 case $hn in
+    mforge2*)
+    hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/m2_overrides
+    ;;
     mforge3*)
     hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/m3_overrides
     ;;
@@ -77,12 +82,12 @@ export BITBUCKET="git@bitbucket.org:lakshmankumar12"
 export NVIM_SWAP="$HOME/.local/share/nvim/swap"
 alias lsnvimswap="ls $NVIM_SWAP"
 
-recfg_fn()
+prune_paths()
 {
   export PATH=$(echo $PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
   export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | tr ':' '\n'  | awk '!x[$0]++' | tr '\n' ':')
 }
-alias recfg='. ~/.zshrc ; recfg_fn'
+alias recfg='. ~/.zshrc ; prune_paths'
 
 ovcs()
 {
@@ -209,16 +214,11 @@ vi()
     nvim_edit "$@"
   else
     #$HOME/bin/vim -u $HOME/.vimrc "$@"
-    $HOME/bin/nvim "$@"
+    nvim "$@"
   fi
 }
 
 alias vsh='vi -c "terminal" -c "startinsert"'
-
-nvim()
-{
-  $HOME/bin/nvim "$@"
-}
 
 viewpdf()
 {
@@ -510,7 +510,7 @@ gotoCurrentTest() {
 }
 
 gotoCurrentExecution() {
-    gotoTmuxPane 04-test 0 0
+    gotoTmuxPane 04-test 1 0
 }
 
 cmdsh()
