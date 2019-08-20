@@ -21,6 +21,7 @@ alias svnstx="svn status | awk '/^X/ { print \$2 }'"
 alias svnstq="svn status | awk '/^\?/ { print \$2 }'"
 alias svnstt="svn status | awk '/^\~/ { print \$2 }'"
 alias svnstc="svn status | awk '/^C/ { print \$2 }'"
+alias svnstd="svn status | awk '/^!/ { print \$2 }'"
 
 svnst() {
     svn status | awk ' BEGIN { m="" ; c = "" ; q = "" ; r="" ; allelse = "" ; prop_set }
@@ -342,7 +343,7 @@ dumptmuxpane()
        session=$3
     fi
     if [ -z "$2" ] ; then
-       file="log.txt"
+       file="$(pwd)/log.txt"
     else
        file=$2
     fi
@@ -360,10 +361,11 @@ getAllLogFromPane()
 
 getLogFromPane()
 {
-    dumptmuxpane $1 log $2
-    number=$(grep -n HERE log | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
-    sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' log
-    vi log
+    file=$(pwd)/log
+    dumptmuxpane $1 $file $2
+    number=$(grep -n HERE $file | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
+    sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' $file
+    vi $file
 }
 
 tmuxatt()

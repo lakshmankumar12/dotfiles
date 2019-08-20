@@ -5,7 +5,7 @@ b  --                                          B -- nightly/backup
 c  -- create new window                        C -- current-code
 d  -- detach                                   D -- choose to detach
 e  -- (MY MAP) switch-client -l                E -- first test window
-f  -- find window
+f  -- (MY MAP) find-windows (name/title)       F -- (MY MAP) find-windows (name, title, content)
 g  -- (MY MAP) attach-session with detach
 h  -- (MY MAP) tab left
 i  -- (MY MAP) stop logging                    I -- start logging
@@ -22,10 +22,11 @@ s  -- switch-session                           S -- swap windows
 t  -- (MY MAP) choose any pane                 T -- current-test
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
-w  -- (MY MAP) choose-tree -u (overridden:switch-window)   W - choose window
+w  -- (MY MAP) choose-tree -u (overridden:switch-window)
+                                               W --
 x  -- kill pane                                X -- gotoIL3X
 y  -- ^r from grepper_commands                 Y - kill lines and do same as y
-z  -- zoom
+z  -- zoom                                     Z -- transfer current buffer to a named bufer
 
 ,  -- rename
 [  -- copy-mode
