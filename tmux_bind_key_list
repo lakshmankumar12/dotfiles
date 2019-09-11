@@ -18,11 +18,11 @@ o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
 p  -- prev window                              P -- music pane/ary-scripts pane
 q  -- show pane numbers
 r  -- reload conf                              R -- jira-list-pane
-s  -- switch-session                           S -- swap windows
+s  -- switch-session (with window listing)     S -- swap windows
 t  -- (MY MAP) choose any pane                 T -- current-test
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
-w  -- (MY MAP) choose-tree -u (overridden:switch-window)
+w  -- (MY MAP) switch-session (just sess list)
                                                W --
 x  -- kill pane                                X -- gotoIL3X
 y  -- ^r from grepper_commands                 Y - kill lines and do same as y
