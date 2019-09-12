@@ -312,14 +312,27 @@ function echo_lines() {
 listtmuxpanes()
 {
   if [ -z "$1" ] ; then
-    session=main
+    session=$(tmux display-message -p '#S')
   else
     session="$1"
   fi
-  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{pane_tty}"
+  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{window_id}|#{pane_id}|#{pane_tty}"
 }
 
-listtmuxlog()
+listalltmuxpanes()
+{
+    for i in $(tmux list-sessions -F '#S') ; do
+        listtmuxpanes $i
+    done
+}
+
+listalltmuxpanesptysorted()
+{
+    listalltmuxpanes | sort -t\| -k 8
+}
+
+# prints an output if some tmux pane is logging
+listtmuxlogpanes()
 {
    ps -ef | grep '\<cat\>' | grep -v grep
    pids=$(ps -ef | grep '\<cat\>' | grep -v grep | awk '{print $2}')
@@ -328,7 +341,7 @@ listtmuxlog()
      lsof -p $i
    done
 }
-alias ltl=listtmuxlog
+alias ltl=listtmuxlogpanes
 
 dumptmuxpane()
 {
@@ -513,6 +526,57 @@ gotoCurrentTest() {
 
 gotoCurrentExecution() {
     gotoTmuxPane 04-test 1 0
+}
+
+getSessionWindowPaneForPaneId() {
+    if [ -z "$1" ] ; then
+        pane_id=$(tmux display-message -p '#{pane_id}')
+    else
+        pane_id="$1"
+    fi
+    pane_line=$(listalltmuxpanes | grep $pane_id)
+    if [ $(echo ${pane_line} | wc -l) != 1 ] ; then
+        return
+    fi
+    session_name=$(echo $pane_line | cut -d\| -f 1)
+    window_id=$(echo $pane_line | cut -d\| -f 2)
+    pane_id=$(echo $pane_line | cut -d\| -f 4)
+    echo "$session_name $window_id $pane_id"
+}
+
+gotoAbsolutePaneId() {
+    sessWindPane=$(getSessionWindowPaneForPaneId $1)
+    if [[ -z "${sessWindPane// }" ]] ; then
+        echo "No pane found for $1"
+        return
+    fi
+    sessWindPandArr=()
+    for i in $sessWindPane ; do
+        sessWindPandArr+=($i)
+    done
+    gotoTmuxPane ${sessWindPandArr[0]} ${sessWindPandArr[1]} ${sessWindPandArr[2]}
+}
+
+gotoWindowGivenbyFile() {
+    file=$1
+    if [ -f ${file} ] ; then
+        gotoAbsolutePaneId $(cat ${file})
+    fi
+}
+
+gotoWindowGivenbyW() {
+    gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForW
+}
+
+gotoWindowGivenbyG() {
+    gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForG
+}
+
+settmuxWindowForG() {
+    echo "$1" > $HOME/tmuxlogs/.windowForG
+}
+settmuxWindowForW() {
+    echo "$1" > $HOME/tmuxlogs/.windowForW
 }
 
 cmdsh()
