@@ -316,7 +316,7 @@ listtmuxpanes()
   else
     session="$1"
   fi
-  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{window_id}|#{pane_id}|#{pane_tty}"
+  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{window_id}|#{pane_id}|#{pane_tty}|#{?session_attached,#{?window_active,current, }, }"
 }
 
 listalltmuxpanes()
@@ -402,39 +402,6 @@ tmuxatt()
   fi
 }
 
-tmuxrandchoose()
-{
-  FILE=/tmp/chossepanetmux
-  FILE2=/tmp/chossepanetmux2
-  tmux list-panes -a -F "#S | #I | #W | #P | #T" | fzf-tmux -d 20% --exact --reverse --no-sort > $FILE
-  session=$(cut -d\| -f 1 $FILE | sed -e 's/^ *//g;s/ *$//g')
-  window=$(cut -d\| -f 2 $FILE | sed -e 's/^ *//g;s/ *$//g')
-  echo -n "$session:$window" > $FILE2
-}
-
-ftpane() {
-  local panes current_window current_pane target target_window target_pane
-  panes=$(tmux list-panes -a -F '#S:#I:#W:#P:#T - #{pane_current_path} #{pane_current_command}' | nl -s ':')
-  current_pane=$(tmux display-message -p '#I:#P')
-  current_window=$(tmux display-message -p '#I')
-  current_session=$(tmux display-message -p '#S')
-
-  target=$(echo "$panes" | grep -v "$current_pane" | fzf-tmux -d 20% --exact --reverse --no-sort ) || return
-
-  target_session=$(echo $target | awk 'BEGIN{FS=":"} {print$2}')
-  target_window=$(echo $target | awk 'BEGIN{FS=":"} {print$3}')
-  target_pane=$(echo $target | awk 'BEGIN{FS=":"} {print$5}')
-  echo "$target" > /tmp/debugftpane
-  echo "$target_session:$target_window.$target_pane" >> /tmp/debugftpane
-  echo "$current_session:$current_window.$current_pane" >> /tmp/debugftpane
-
-  if [[ $current_session != $target_session ]]; then
-    tmux switch-client -t $target_session
-  fi
-  tmux select-pane -t ${target_window}.${target_pane} &&
-  tmux select-window -t $target_window
-}
-
 tmux_win_title_get()
 {
   #tmux list-panes -s -F "#W|#{pane_id}" | grep --color=none "$TMUX_PANE" | cut -d\| -f 1
@@ -452,7 +419,8 @@ tmux_pane_title_set() {
     echo "supply title"
     return
   fi
-  printf '\033]2;%s\033\\' $1
+  #printf '\033]2;%s\033\\' $1
+  tmux select-pane -T "$1"
 }
 
 tmux_win_title_set() {
@@ -490,6 +458,7 @@ gotoTmuxPane() {
     fi
 
     tmux select-window -t "${target_session}:${target_window}.${target_pane}"
+    tmux select-pane -t "${target_session}:${target_window}.${target_pane}"
 }
 
 gotoMusicPane() {
@@ -577,6 +546,14 @@ settmuxWindowForG() {
 }
 settmuxWindowForW() {
     echo "$1" > $HOME/tmuxlogs/.windowForW
+}
+
+fzfchoosepane() {
+    pane_id=$(listalltmuxpanes | column -t -s '|' | fzf --exact --prompt 'switch session: ' --reverse | cut -d\% -f2 | awk '{print $1}')
+    if [ -z "${pane_id}" ] ; then
+        return
+    fi
+    gotoAbsolutePaneId "%${pane_id}"
 }
 
 cmdsh()
