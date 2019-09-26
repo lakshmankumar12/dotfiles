@@ -1,42 +1,42 @@
 [user]
-	email = lakshmankumar@gmail.com
-	name = lakshman kumar
+    email = lakshmankumar@gmail.com
+    name = lakshman kumar
 [alias]
-	dt = difftool --dir-diff
-	cset = diff-tree --no-commit-id --name-only -r
-	lsm = ls-files --modified
-	export = "!f() { /usr/bin/git show --pretty=format: $1 ; } ; f "
-	logol = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n20
-	logoln = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate
-	logoln100 = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n100
-	supercommitpatch = "!f() { patch -p1 -i $1 ; if [ $? -ne 0 ] ; then echo \"patching failed\" ; return 1 ; fi ; chmod +w $(git ls-files --modified) ; /usr/bin/git add $(/usr/bin/git ls-files --modified) ; /usr/bin/git commit -m \"$2\" ; } ; f "
-	statusporcut = !/usr/bin/git status --porcelain | cut -c4-
-	bot = "!git log --pretty=oneline | tail -n 1 | cut -f 1 -d\\ "
-	statusnewporcut = !/usr/bin/git status --porcelain | grep '^??' | cut -c4-
-	csetr = "!f() { /usr/bin/git fetch ; /usr/bin/git log HEAD..origin/$(/usr/bin/git rev-parse --abbrev-ref HEAD) ; } ; f"
-	resetbasetag = "!f() { git tag -d base ; git tag base HEAD ; } ; f"
-	mytags = tag -l 'lakshman*'
-	newfiles = ls-files --others --exclude-standard
-	reflogd = reflog --date=relative
-	dno = diff --name-only
-	root = rev-parse --show-cdup
-	reorder = "!GIT_SEQUENCE_EDITOR=\"sed -i -n 'h;1n;/^pick/p;/^pick/n;g;p'\" git rebase"
+    dt = difftool --dir-diff
+    cset = diff-tree --no-commit-id --name-only -r
+    lsm = ls-files --modified
+    export = "!f() { /usr/bin/git show --pretty=format: $1 ; } ; f "
+    logol = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n20
+    logoln = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate
+    logoln100 = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n100
+    supercommitpatch = "!f() { patch -p1 -i $1 ; if [ $? -ne 0 ] ; then echo \"patching failed\" ; return 1 ; fi ; chmod +w $(git ls-files --modified) ; /usr/bin/git add $(/usr/bin/git ls-files --modified) ; /usr/bin/git commit -m \"$2\" ; } ; f "
+    statusporcut = !/usr/bin/git status --porcelain | cut -c4-
+    bot = "!git log --pretty=oneline | tail -n 1 | cut -f 1 -d\\ "
+    statusnewporcut = !/usr/bin/git status --porcelain | grep '^??' | cut -c4-
+    csetr = "!f() { /usr/bin/git fetch ; /usr/bin/git log HEAD..origin/$(/usr/bin/git rev-parse --abbrev-ref HEAD) ; } ; f"
+    resetbasetag = "!f() { git tag -d base ; git tag base HEAD ; } ; f"
+    mytags = tag -l 'lakshman*'
+    newfiles = ls-files --others --exclude-standard
+    reflogd = reflog --date=relative
+    dno = diff --name-only
+    root = rev-parse --show-cdup
+    reorder = "!GIT_SEQUENCE_EDITOR=\"sed -i -n 'h;1n;/^pick/p;/^pick/n;g;p'\" git rebase"
 [diff]
-	tool = meld
-	renameLimit = 25000
+    tool = meld
+    renameLimit = 25000
 [push]
-	default = upstream
+    default = matching
 [merge]
-	tool = diffconflicts
-	renameLimit = 25000
+    tool = diffconflicts
+    renameLimit = 25000
 [mergetool "diffconflicts"]
-	cmd = diffconflicts $HOME/bin/nvim $BASE $LOCAL $REMOTE $MERGED
-	trustExitCode = true
-	keepBackup = false
+    cmd = diffconflicts $HOME/bin/nvim $BASE $LOCAL $REMOTE $MERGED
+    trustExitCode = true
+    keepBackup = false
 [mergetool "splice"]
     cmd = "/home/lnara002/bin/vim -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
-	trustExitCode = true
-	keepBackup = false
+    trustExitCode = true
+    keepBackup = false
 [mergetool "mymeld"]
     cmd = meld "$LOCAL" "$BASE" "$REMOTE" --auto-merge --diff $BASE $MERGED
 [mergetool "p4merge"]
@@ -45,10 +45,10 @@
     trustExitCode = false
     keepBackup = false
 [difftool]
-	prompt = false
-[sr]
-	githelperver = b7a3e3ec809368a9ae66f2bf054f528a0d96b859
+    prompt = false
 [remote "origin"]
-	fetch = +refs/notes/*:refs/notes/*
+    fetch = +refs/notes/*:refs/notes/*
 [apply]
-	whitespace = nowarn
+    whitespace = nowarn
+[svn]
+    authorsfile = /home/lakshman_narayanan/ws/git-dir-for-svn/authors.txt

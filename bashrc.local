@@ -926,8 +926,12 @@ to_mac_clip() {
 }
 
 check_clip() {
+    ps -ef | grep sshd | grep 'lakshma\+'
     echo "user: $(cat $HOME/.mymacusername) port: $(cat $HOME/.mymacport) ip: $(cat $HOME/.mymacip)"
-    echo "## check_clip at $(date)" | to_mac_clip
+    use_color=33 #yellow
+    color_msg='\033[38;5;'"${use_color}"'m'
+    reset_msg='\033[0;0m'
+    echo -e "## check_clip at ${color_msg}$(date)${reset_msg}" | sed 's/\x1b\[[0-9;]*m//g' | to_mac_clip
     echo "You can check your clip by pasting"
 }
 
