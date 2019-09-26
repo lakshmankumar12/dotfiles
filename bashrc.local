@@ -1016,9 +1016,14 @@ collect() {
 
 fzf2dirs()
 {
+    fzfndirs "${@}"
+}
+
+fzfndirs()
+{
     unset s
     unset d
-    ainternal=$(find "$1" "$2" -type f | fzf --exact)
+    ainternal=$(find "${@}" -type f | fzf --exact)
     if [ -z "$ainternal" ] ; then
         return 1
     fi

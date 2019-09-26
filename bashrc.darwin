@@ -63,7 +63,8 @@ fzfsongs()
 {
     dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs"
     dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs"
-    fzf2dirs "$dir1" "$dir2"
+    dir3="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/purchased-songs"
+    fzfndirs "$dir1" "$dir2" "$dir3"
 }
 
 fzfinst()
