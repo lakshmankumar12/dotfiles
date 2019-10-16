@@ -1,5 +1,6 @@
 export EMAIL_ADDR=lakshmankumar@gmail.com
 alias ls='ls --color -F'
+alias lsd='ls --color -F -d'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
@@ -503,7 +504,7 @@ getSessionWindowPaneForPaneId() {
     else
         pane_id="$1"
     fi
-    pane_line=$(listalltmuxpanes | grep $pane_id)
+    pane_line=$(listalltmuxpanes | grep -w $pane_id)
     if [ $(echo ${pane_line} | wc -l) != 1 ] ; then
         return
     fi
