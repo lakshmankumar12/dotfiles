@@ -1,9 +1,9 @@
 
 alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 alias vlcnv='/Applications/VLC.app/Contents/MacOS/VLC --no-video'
-alias dn='cd ~/Downloads'
-alias dns='cd ~/Downloads/songs-download'
-alias dnse='cd ~/Downloads/songs-download/English'
+alias dn='cd ${HOME}/Downloads'
+alias dns='cd ${HOME}/Downloads/songs-download'
+alias dnse='cd ${HOME}/Downloads/songs-download/English'
 
 #Copied from oh-my-zsh/plugins/osx/osx.plugin.zsh
 
@@ -54,37 +54,37 @@ opens()
 
 fzfbooks()
 {
-    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/books"
-    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/books"
+    dir1="${HOME}/Google Drive/root_of_ramukkln/books"
+    dir2="${HOME}/Google Drive/root-of-suraksha-park-view/books"
     fzf2dirs "$dir1" "$dir2"
 }
 
 fzfsongs()
 {
-    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs"
-    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs"
-    dir3="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/purchased-songs"
+    dir1="${HOME}/Google Drive/root_of_ramukkln/curated-songs"
+    dir2="${HOME}/Google Drive/root-of-suraksha-park-view/curated-songs"
+    dir3="${HOME}/Google Drive/root-of-suraksha-park-view/purchased-songs"
     fzfndirs "$dir1" "$dir2" "$dir3"
 }
 
 fzfinst()
 {
-    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs/Instrumentals"
-    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs/Instrumentals"
+    dir1="${HOME}/Google Drive/root_of_ramukkln/curated-songs/Instrumentals"
+    dir2="${HOME}/Google Drive/root-of-suraksha-park-view/curated-songs/Instrumentals"
     fzf2dirs "$dir1" "$dir2"
 }
 
 fzfeng()
 {
-    dir1="/Users/lakshman.narayanan/Google Drive/root_of_ramukkln/curated-songs/English Collection"
-    dir2="/Users/lakshman.narayanan/Google Drive/root-of-suraksha-park-view/curated-songs/English"
+    dir1="${HOME}/Google Drive/root_of_ramukkln/curated-songs/English Collection"
+    dir2="${HOME}/Google Drive/root-of-suraksha-park-view/curated-songs/English"
     fzf2dirs "$dir1" "$dir2"
 }
 
 fzfcloud()
 {
-    dir1="/Users/lakshman.narayanan/Google Drive"
-    dir2="/Users/lakshman.narayanan/Dropbox"
+    dir1="${HOME}/Google Drive"
+    dir2="${HOME}/Dropbox"
     fzf2dirs "$dir1" "$dir2"
 }
 
