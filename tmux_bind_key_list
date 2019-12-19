@@ -3,9 +3,9 @@ Search: KEY BINDINGS in man page
 a  -- (MY MAP) send prefix                     A -- rename window
 b  --                                          B -- nightly/backup
 c  -- create new window                        C -- current-code
-d  -- detach                                   D -- choose to detach
+d  -- (MY MAP) choose any pane fzf way         D -- choose to detach
 e  -- (MY MAP) switch-client -l                E -- first test window
-f  -- (MY MAP) choose any pane fzf way         F -- (MY MAP) find-windows (name, title, content)
+f  -- (MY MAP) choose any pane fzf way         F -- detach
 g  -- (MY MAP) attach-session with detach      G -- (MY MAP) gotoCustomPaneForG
 h  -- (MY MAP) tab left
 i  -- (MY MAP) stop logging                    I -- start logging

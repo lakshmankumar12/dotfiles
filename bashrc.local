@@ -1,6 +1,5 @@
 export EMAIL_ADDR=lakshmankumar@gmail.com
 alias ls='ls --color -F'
-alias lsd='ls --color -F -d'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
@@ -46,7 +45,11 @@ svnst() {
                if (length(allelse) != 0) { printf "### ALL ELSE:%s\n",allelse } }'
 }
 
-alias psme="ps -ef | grep '^521'"
+alias psme="ps -u lakshman_narayanan -o pid,ppid,tt,%mem,rss,bsdstart,args --sort +rss"
+killallthisterm() {
+    kill -9 $(ps -o pid= | grep -v $$)
+}
+alias damnit=killallthisterm
 
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
@@ -163,6 +166,11 @@ track_time_pid()
       break
     fi
   done
+}
+
+function lsd()
+{
+   eval ls --color -F -d "*$1*"
 }
 
 
@@ -332,6 +340,55 @@ listalltmuxpanesptysorted()
     listalltmuxpanes | sort -t\| -k 8
 }
 
+listalltmuxpids()
+{
+    awk '
+        NR==FNR  {
+            key="/dev/" $3 ;
+            exist ="" ;
+            if (key in psttydict) {
+                exist = psttydict[key] "\n"
+            } ;
+            exist = exist "               " substr($0,1,120) ;
+            psttydict[key]=exist;
+            next
+        }
+        FNR == 1 {
+            print "Unassociated to TTY" ;
+            print psttydict["/dev/?"]
+        }
+        1 {
+            print $0 ;
+            if ($8 in psttydict) {
+                print psttydict[$8]
+            }
+        }
+    ' <(psme) <(listalltmuxpanes | tr '|' ' ')
+}
+
+psmewithtmuxpanes() {
+    awk '
+        NR==FNR {
+            value=$1 "." $3 ":" substr($5,1,15) ;
+            value=substr(value,1,30) ;
+            ttydict[$8]=value ;
+            next
+        } 1 {
+            key="/dev/" $3 ;
+            if (key in ttydict) {
+                tty=ttydict[key]
+            } else {
+                tty=$3
+            } ;
+            $3=tty;
+            printf "%6s %6s %30s %6s %8s %10s ",$1,$2,$3,$4,$5,$6 ;
+            s="" ;
+            for ( i = 7 ; i <= NF ; ++i) s = s " " $i ;
+            print s
+        }
+    '  <(listalltmuxpanes | tr '|' ' ' ) <(psme)
+}
+
 # prints an output if some tmux pane is logging
 listtmuxlogpanes()
 {
@@ -368,9 +425,10 @@ dumptmuxpane()
 
 getAllLogFromPane()
 {
-    dumptmuxpane $1 log $2
-    sed -i 's/[[:space:]]\+$//' log
-    vi log
+    file=$(pwd)/log
+    dumptmuxpane $1 $file $2
+    sed -i 's/[[:space:]]\+$//' $file
+    vi $file
 }
 
 getLogFromPane()
