@@ -111,3 +111,12 @@ qs() {
     fi
     quickplay.py "$s"
 }
+
+m3clip() {
+    ssh -nNT -R 9222:localhost:22 lakshman_narayanan@mforge3.corp.aryaka.com &
+}
+
+m3alertlisten() {
+    ssh -nNT -R 25020:localhost:25020 lakshman_narayanan@mforge3.corp.aryaka.com &
+}
+

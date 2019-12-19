@@ -855,6 +855,11 @@ sshdevdoc() {
   ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $port lakshman@localhost
 }
 
+sshdevdocargs() {
+  port=$(docker port devbox | grep '22/tcp' | grep -o ':.*$' | tr -d :)
+  ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $port lakshman@localhost "$@"
+}
+
 sshdeldoc() {
   port=$(docker port todel | grep '22/tcp' | grep -o ':.*$' | tr -d :)
   echo "Port is $port"
@@ -1118,4 +1123,31 @@ pcol() {
 
 errecho() {
     2>&1 echo "$@"
+}
+
+scptomforge3() {
+    if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ] ; then
+        echo "scptomforge3 <tgt-dir-in-mforge3> <one-or-more-files-to-scp>"
+        return
+    fi
+    dir="$1"; shift
+    if [ -z "$1" ] ; then
+        echo "missing file. Use -h for help"
+        return
+    fi
+    scp "$@" lakshman_narayanan@mforge3.corp.aryaka.com:${dir}
+}
+
+scp_with_anap_key_from() {
+    if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ] ; then
+        echo "scp_with_anap_key_from <anap> <full-path-in-anap>"
+        return
+    fi
+    anap="$1"; shift
+    if [ -z "$1" ] ; then
+        echo "missing file. Use -h for help"
+        return
+    fi
+    file=$1
+    scp -i ~/.ssh/anap_shared_key root@${anap}:${file} .
 }
