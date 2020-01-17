@@ -64,6 +64,7 @@ fzfsongs()
     dir1="${HOME}/Google Drive/root_of_ramukkln/curated-songs"
     dir2="${HOME}/Google Drive/root-of-suraksha-park-view/curated-songs"
     dir3="${HOME}/Google Drive/root-of-suraksha-park-view/purchased-songs"
+    dir3="${HOME}/Downloads/songs-download"
     fzfndirs "$dir1" "$dir2" "$dir3"
 }
 
@@ -112,11 +113,43 @@ qs() {
     quickplay.py "$s"
 }
 
+waspp() {
+    $HOME/github/mac_scripts/get_track_info_spotify.py
+}
+
+volspp() {
+    if [ -z "$1" ] ; then
+        echo "provide volume 1 to 100. volspp <volume>"
+        return
+    fi
+    osascript -e 'tell application "spotify" to set sound volume to '"$1"
+}
+
 m3clip() {
     ssh -nNT -R 9222:localhost:22 lakshman_narayanan@mforge3.corp.aryaka.com &
 }
 
+devclip() {
+    ssh -nNT -R 9222:localhost:22 lakshman_narayanan@mydev &
+}
+
+
+machinealertlisten() {
+    mc=$1
+    shift
+    nc localhost 25020 <<< 'Enabling alert with '"${mc}"
+    if [ $? -ne 0 ] ; then
+        echo "Is the github/quick-utility-scripts/alert_tcp_listener.py running?? netcat failed"
+        return 1
+    fi
+    ssh -nNT -R 25020:localhost:25020 lakshman_narayanan@${mc} &
+}
+
 m3alertlisten() {
-    ssh -nNT -R 25020:localhost:25020 lakshman_narayanan@mforge3.corp.aryaka.com &
+    machinealertlisten mforge3 "$@"
+}
+
+devalertlisten() {
+    machinealertlisten mydev "$@"
 }
 

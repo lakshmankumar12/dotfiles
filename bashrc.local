@@ -1286,7 +1286,7 @@ scptomforge3() {
 
 scp_with_anap_key_from() {
     if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ] ; then
-        echo "scp_with_anap_key_from <anap> <full-path-in-anap>"
+        echo "scp_with_anap_key_from <anap> <full-path-in-anap> [<save-name>]"
         return
     fi
     anap="$1"; shift
@@ -1295,7 +1295,13 @@ scp_with_anap_key_from() {
         return
     fi
     file=$1
-    scp -i ~/.ssh/anap_shared_key root@${anap}:${file} .
+    shift
+    if [ -n "$1" ]; then
+        save_name="$1"
+    else
+        save_name="$(pwd)/"
+    fi
+    scp -i ~/.ssh/anap_shared_key root@${anap}:${file} ${save_name}
 }
 scp_with_aryaka_user_key_from() {
     if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ] ; then
