@@ -65,6 +65,9 @@ case $hn in
     mforge3*)
     hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/m3_overrides
     ;;
+    lakshman-dev*)
+    hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/dev_overrides
+    ;;
 esac
 
 #rev-order
@@ -311,6 +314,10 @@ function echo_color() {
     echo -e "${color_msg}${msg}"'\033[0;0m'
 }
 
+function yellow_sep() {
+    echo_color yellow "=================="
+}
+
 function echo_lines() {
     for i in "$@" ; do
         echo $i
@@ -388,6 +395,7 @@ psmewithtmuxpanes() {
         }
     '  <(listalltmuxpanes | tr '|' ' ' ) <(psme)
 }
+alias mc=psmewithtmuxpanes
 
 # prints an output if some tmux pane is logging
 listtmuxlogpanes()
@@ -400,6 +408,7 @@ listtmuxlogpanes()
    done
 }
 alias ltl=listtmuxlogpanes
+alias ltf="ls $HOME/tmuxlogs"
 
 dumptmuxpane()
 {
@@ -416,7 +425,11 @@ dumptmuxpane()
     if [ -z "$2" ] ; then
        file="$(pwd)/log.txt"
     else
-       file=$2
+        if [ "${2:0:1}" == "/" ] ; then
+            file="$2"
+        else
+            file="$(pwd)/$2"
+        fi
     fi
     window=$1
     tmux capture-pane -eCJ -S- -t $session:$window
@@ -425,16 +438,34 @@ dumptmuxpane()
 
 getAllLogFromPane()
 {
-    file=$(pwd)/log
-    dumptmuxpane $1 $file $2
-    sed -i 's/[[:space:]]\+$//' $file
+    if [ -z "$3" ] ; then
+       session=""
+    else
+       session=$3
+    fi
+    if [ -z "$2" ] ; then
+       file=$(pwd)/log
+    else
+       file=$(pwd)/$2
+    fi
+    dumptmuxpane $1 ${file} ${session}
+    sed -i 's/[[:space:]]\+$//' ${file}
     vi $file
 }
 
 getLogFromPane()
 {
-    file=$(pwd)/log
-    dumptmuxpane $1 $file $2
+    if [ -z "$3" ] ; then
+       session=""
+    else
+       session=$3
+    fi
+    if [ -z "$2" ] ; then
+       file=$(pwd)/log
+    else
+       file=$(pwd)/$2
+    fi
+    dumptmuxpane $1 ${file} ${session}
     number=$(grep -n HERE $file | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
     sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' $file
     vi $file
@@ -504,6 +535,54 @@ tmux_set_fg_color() {
   tmux select-pane -P $value
 }
 
+tcrt() {
+    win_name=""
+    sess_name="$(tmux display-message -p '#S')"
+    dir="$HOME"
+    detach="no"
+    command=""
+    while [[ $# > 0 ]] ; do
+        key="$1"
+        shift 1
+        case $key in
+            -n|--name)
+                win_name="-n "'"'"$1"'"'
+                shift
+                ;;
+            -s|--sess)
+                sess_name="$1"
+                shift
+                ;;
+            -d|--dir)
+                dir="$1"
+                shift
+                ;;
+            -D|--detach)
+                detach="yes"
+                ;;
+            -C|--command)
+                command="$1"
+                shift
+                ;;
+            *)
+                echo "tcrt [-n|--name window_name] [-s|--sess session_name] [-d|--dir dir] [-C|--command <command>] [-D|--detach]"
+                return 1
+                ;;
+        esac
+    done
+    if [ "$detach" = "yes" ] ; then
+        detach_arg="-d"
+    else
+        detach_arg=""
+    fi
+    cmd="pane_id=\$(tmux new-window -t "'"'"${sess_name}:"'"'" ${win_name} -c "'"'"${dir}"'"'" ${detach_arg} -P -F "'"'"#{pane_id}"'"'")"
+    echo "${cmd}"
+    eval "${cmd}"
+    if [ -n "${command}" ] ; then
+        tmux send-keys -t ${pane_id} "${command}" "C-m"
+    fi
+}
+
 gotoTmuxPane() {
     target_session="$1"
     target_window="$2"
@@ -533,7 +612,7 @@ gotoIL3X() {
 }
 
 gotoLaunchPad() {
-    gotoTmuxPane 01-scripts 6 0
+    gotoTmuxPane 05-tests 0 0
 }
 
 gotoCurrentCode() {
@@ -541,7 +620,7 @@ gotoCurrentCode() {
 }
 
 gotoNightly() {
-    gotoTmuxPane 02-code 1 0
+    gotoTmuxPane 02-code 2 0
 }
 
 gotoJiraList() {
@@ -553,7 +632,7 @@ gotoCurrentTest() {
 }
 
 gotoCurrentExecution() {
-    gotoTmuxPane 04-test 1 0
+    gotoTmuxPane 04-tgsetup 0 0
 }
 
 getSessionWindowPaneForPaneId() {
@@ -622,7 +701,7 @@ cmdsh()
   FILE=/tmp/tmuxbuffer/resultcmdsh
   DIR_PREFIX=$(dirname $FILE)
   rm -f /tmp/tmuxbuffer/resultcmdsh
-  cat $GREPPER_CMD | fzf-tmux -d 20% --exact --reverse --no-sort -m > $FILE
+  cat $GREPPER_CMD | fzf --exact --reverse --no-sort -m > $FILE
 }
 
 cmdsh2ndpart()
@@ -641,6 +720,20 @@ cmdsh2ndpart()
     echo " " > $FILE
   fi
   perl -pi -e 's/^;#.*?;#\s*//;s/\s*;#.*$//;chomp if eof' $FILE
+}
+
+cmdshnew() {
+    cmdsh
+    cmdsh2ndpart
+    tmux load-buffer /tmp/tmuxbuffer/resultcmdsh
+    gotoAbsolutePaneId $(cat /tmp/tmuxbuffer/pane_id)
+    tmux send-keys "C-u"
+    tmux paste-buffer
+}
+
+savecurrentpane() {
+    pane_id=$(tmux display-message -p '#{pane_id}')
+    echo ${pane_id} > /tmp/tmuxbuffer/pane_id
 }
 
 tmuxsendhereanddate () {
@@ -662,6 +755,10 @@ tmuxserv() {
     ps -ef | grep tmux | grep '\?' | awk '{print $2}'
 }
 
+shoottmuxpanes() {
+    # kills all panes other than the first pane in the tmux session. Best run from the first session hence.
+    tmux list-panes -s  -F '#{pane_id}' | tail -n +2 | while read i ; do tmux kill-pane -t $i ; done
+}
 
 # From https://gist.github.com/msabramo/746585#file-pyval-sh
 _pyval() {
