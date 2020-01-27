@@ -408,7 +408,7 @@ listtmuxlogpanes()
    done
 }
 alias ltl=listtmuxlogpanes
-alias ltf="ls $HOME/tmuxlogs"
+alias ltf="cd $HOME/tmuxlogs ; ls"
 
 dumptmuxpane()
 {
