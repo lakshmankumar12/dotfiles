@@ -413,14 +413,9 @@ alias ltf="cd $HOME/tmuxlogs ; ls"
 dumptmuxpane()
 {
     if [ -z "$1" -o "$1" = "-h" -o "$1" = "--help" ] ; then
-        echo "Supply window-name"
-        echo "Usage: dumptmuxpane <window> [<filename> [<session>]]"
+        echo "Supply absolute pane id. Include the percent% sign"
+        echo "Usage: dumptmuxpane <absolute-pane-id> [<filename>]"
         return
-    fi
-    if [ -z "$3" ] ; then
-       session=""
-    else
-       session=$3
     fi
     if [ -z "$2" ] ; then
        file="$(pwd)/log.txt"
@@ -431,41 +426,31 @@ dumptmuxpane()
             file="$(pwd)/$2"
         fi
     fi
-    window=$1
-    tmux capture-pane -eCJ -S- -t $session:$window
+    target_pane=$1
+    tmux capture-pane -eCJ -S- -t "${target_pane}"
     tmux save-buffer $file
 }
 
 getAllLogFromPane()
 {
-    if [ -z "$3" ] ; then
-       session=""
-    else
-       session=$3
-    fi
     if [ -z "$2" ] ; then
        file=$(pwd)/log
     else
        file=$(pwd)/$2
     fi
-    dumptmuxpane $1 ${file} ${session}
+    dumptmuxpane $1 ${file}
     sed -i 's/[[:space:]]\+$//' ${file}
     vi $file
 }
 
 getLogFromPane()
 {
-    if [ -z "$3" ] ; then
-       session=""
-    else
-       session=$3
-    fi
     if [ -z "$2" ] ; then
        file=$(pwd)/log
     else
        file=$(pwd)/$2
     fi
-    dumptmuxpane $1 ${file} ${session}
+    dumptmuxpane $1 ${file}
     number=$(grep -n HERE $file | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
     sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' $file
     vi $file
@@ -1305,4 +1290,17 @@ scp_with_anap_key_from() {
     fi
     file=$1
     scp -i ~/.ssh/anap_shared_key root@${anap}:${file} .
+}
+scp_with_aryaka_user_key_from() {
+    if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ] ; then
+        echo "scp_with_anap_key_from <anap> <full-path-in-anap>"
+        return
+    fi
+    anap="$1"; shift
+    if [ -z "$1" ] ; then
+        echo "missing file. Use -h for help"
+        return
+    fi
+    file=$1
+    scp -i ~/.ssh/anap_aryaka_key aryaka@${anap}:${file} .
 }

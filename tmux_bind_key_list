@@ -7,15 +7,16 @@ d  -- (MY MAP) choose any pane fzf way         D -- choose to detach
 e  -- (MY MAP) switch-client -l                E -- first test window
 f  -- (MY MAP) choose any pane fzf way         F -- detach
 g  -- (MY MAP) attach-session with detach      G -- (MY MAP) gotoCustomPaneForG
-h  -- (MY MAP) tab left
+h  -- (MY MAP) tab left                        H -- (MY MAP) horizontal layout
 i  -- (MY MAP) stop logging                    I -- start logging
 j  -- (MY MAP) tab down                        J -- join pane
-k  -- (MY MAP) tab up
+k  -- (MY MAP) tab up                          K -- (MY MAP) confirm-kill-pane
 l  -- (MY MAP) tab right                       L -- gotoLaunchpad
 m  -- mark a window                            M -- move pane
 n  -- next window                              N -- gotoNotes
-o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane p  -- prev window                              P -- music pane/ary-scripts pane
-q  -- show pane numbers
+o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
+p  -- prev window                              P -- music pane/ary-scripts pane
+q  -- show pane numbers                        Q -- (MY MAP)display current pane id
 r  -- reload conf                              R -- jira-list-pane
 s  -- (MY MAP) choose any pane fzf way         S -- swap windows
 t  -- set pane-title                           T -- current-test
