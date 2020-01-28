@@ -332,7 +332,13 @@ listtmuxpanes()
   else
     session="$1"
   fi
-  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{window_id}|#{pane_id}|#{pane_tty}|#{?session_attached,#{?window_active,current, }, }"
+  if [ -f /tmp/tmuxbuffer/pane_id ] ; then
+    current_pane=$(cat /tmp/tmuxbuffer/pane_id)
+  else
+    current_pane="unavailable"
+  fi
+  tmux set-env -g TMUX_TEMP_CURR_PANE "${current_pane}"
+  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{window_id}|#{pane_id}|#{pane_tty}|#{?#{==:#{TMUX_TEMP_CURR_PANE},#{pane_id}},current,}"
 }
 
 listalltmuxpanes()
