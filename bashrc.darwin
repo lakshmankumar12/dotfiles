@@ -133,6 +133,10 @@ devclip() {
     ssh -nNT -R 9222:localhost:22 lakshman_narayanan@mydev &
 }
 
+checkclip() {
+    pbpaste | less
+}
+alias ccc=checkclip
 
 machinealertlisten() {
     mc=$1
@@ -153,3 +157,19 @@ devalertlisten() {
     machinealertlisten mydev "$@"
 }
 
+vpnss() {
+    scutil --nc status 'Aryaka Milpitas'
+}
+
+vpnx() {
+    scutil --nc stop 'Aryaka Milpitas'
+}
+
+vpnst() {
+    osascript ~/github/mac_scripts/vpn_script.applescript
+}
+
+vpnre() {
+    vpnx
+    vpnst
+}
