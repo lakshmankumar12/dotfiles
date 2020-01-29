@@ -6,7 +6,7 @@ c  -- create new window                        C -- current-code
 d  -- (MY MAP) choose any pane fzf way         D -- choose to detach
 e  -- (MY MAP) switch-client -l                E -- first test window
 f  -- (MY MAP) choose any pane fzf way         F -- detach
-g  -- (MY MAP) attach-session with detach      G -- (MY MAP) gotoCustomPaneForG
+g  --                                          G -- (MY MAP) gotoCustomPaneForG
 h  -- (MY MAP) tab left                        H -- (MY MAP) horizontal layout
 i  -- (MY MAP) stop logging                    I -- start logging
 j  -- (MY MAP) tab down                        J -- join pane
