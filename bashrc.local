@@ -495,6 +495,15 @@ tmux_pane_title_get()
   echo $(tmux display-message -p '#T')
 }
 
+tmux_info_pane() {
+    eval $(tmux display-message -p 'sn="#S"; wn="#W"; pn="#T"; pidx="#P"; pid=#{pane_id}')
+    echo "Session-Name(sn): ${sn}"
+    echo "Window-name(wn) : ${wn}"
+    echo "Pane-name(pn)   : ${pn}"
+    echo "Pane-index(pidx): ${pidx}"
+    echo "Pane-id(pid)    : ${pid}"
+}
+
 tmux_pane_title_set() {
   if [ -z "$1" ]; then
     echo "supply title"
@@ -747,8 +756,9 @@ tmuxserv() {
 }
 
 shoottmuxpanes() {
-    # kills all panes other than the first pane in the tmux session. Best run from the first session hence.
-    tmux list-panes -s  -F '#{pane_id}' | tail -n +2 | while read i ; do tmux kill-pane -t $i ; done
+    me=$(tmux display-message -p '#{pane_id}')
+    tmux list-panes -s  -F '#{pane_id}' | grep -v ${me} | while read i ; do tmux kill-pane -t $i ; done
+    tmux move-window -t 0 2> /dev/null
 }
 
 # From https://gist.github.com/msabramo/746585#file-pyval-sh
