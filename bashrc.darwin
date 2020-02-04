@@ -141,7 +141,7 @@ alias ccc=checkclip
 machinealertlisten() {
     mc=$1
     shift
-    nc localhost 25020 <<< 'Enabling alert with '"${mc}"
+    echo "Enabling alert with ${mc}" | nc localhost 25020
     if [ $? -ne 0 ] ; then
         echo "Is the github/quick-utility-scripts/alert_tcp_listener.py running?? netcat failed"
         return 1
@@ -166,7 +166,27 @@ vpnx() {
 }
 
 vpnst() {
-    osascript ~/github/mac_scripts/vpn_script.applescript
+    current_status=$(vpnss | head -n +1)
+    if [ "x${current_status}" == "xDisconnected" ] ; then
+        pass_file=$HOME/.mypassfile
+        ##echo -n "PasswdToEncrypt:" ; read -s a ; echo ; openssl enc -aes-256-cbc -in <(echo -n $a) -out ${pass_file}
+        MYPASSWD=$(openssl enc -d -aes-256-cbc -in ${pass_file} -out >(cat))
+        if [ $? -ne 0 ] ; then
+            echo "Didn't get passwd"
+            return 1
+        fi
+        export MYPASSWD
+        osascript ~/github/mac_scripts/vpn_script.applescript
+        unset MYPASSWD
+        current_status=$(vpnss | head -n +1)
+        if [ "x${current_status}" == "xConnected" ] ; then
+            echo "Successfully done"
+        else
+            echo "current_status is ${current_status}"
+        fi
+    else
+        echo "current_status is ${current_status}. Skipping"
+    fi
 }
 
 vpnre() {
