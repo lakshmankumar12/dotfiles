@@ -23,6 +23,16 @@ alias svnstt="svn status | awk '/^\~/ { print \$2 }'"
 alias svnstc="svn status | awk '/^C/ { print \$2 }'"
 alias svnstd="svn status | awk '/^!/ { print \$2 }'"
 
+col() {
+    if [ -z "$1" ] ; then
+        field=1
+    else
+        field="$1"
+        shift
+    fi
+    awk "$@" '{print $'"${field}"' }'
+}
+
 svnst() {
     svn status | awk ' BEGIN { m="" ; c = "" ; q = "" ; r="" ; allelse = "" ; prop_set }
         /^Performing/ { next }
@@ -759,6 +769,18 @@ shoottmuxpanes() {
     me=$(tmux display-message -p '#{pane_id}')
     tmux list-panes -s  -F '#{pane_id}' | grep -v ${me} | while read i ; do tmux kill-pane -t $i ; done
     tmux move-window -t 0 2> /dev/null
+}
+
+shootallvims() {
+    awk '   NR==FNR {
+                ttydict[$8]=$7 ;
+                next
+            } 1 {
+                key="/dev/" $3 ;
+                if (key in ttydict) {
+                    command=sprintf("tmux send-keys -t \"%s\" Escape \"::qa\" C-m\n",ttydict[key]) ; system(command)
+                }
+            } '  FS='|' <(listalltmuxpanes) FS=' ' <(psme | grep '[n]vim' )
 }
 
 # From https://gist.github.com/msabramo/746585#file-pyval-sh
