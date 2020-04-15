@@ -61,6 +61,28 @@ killallthisterm() {
 }
 alias damnit=killallthisterm
 
+pstreeme() {
+    login_pids=($(psme | grep -- '-[b]ash' | awk '{print $1}') )
+    for i in "${login_pids[@]}" ; do
+        pstree -p $i
+    done
+}
+
+# List the cwd of each login bash
+pstreemewhere() {
+    login_pids=($(psme | grep -- '-[b]ash' | awk '{print $1}') )
+    for i in "${login_pids[@]}" ; do
+        pstree -A -p $i
+    done | awk -F- '
+            /^bash/ {
+                if (!length($4)) {
+                    next
+                }
+                match($4,/.*\((.*)\)/,pid);
+                system("ls -ld /proc/" pid[1] "/cwd")
+            }';
+}
+
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
 
@@ -74,6 +96,9 @@ case $hn in
     ;;
     mforge3*)
     hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/m3_overrides
+    ;;
+    tforge.corp.aryaka.com*)
+    hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/t1_overrides
     ;;
     lakshman-dev*)
     hostspecific=/home/lakshman_narayanan/gitlab/aryaka-scripts/dev_overrides
@@ -199,7 +224,7 @@ analy()
 
 howlong()
 {
-  ps -o "%p %t" $1
+  ps -o pid=,etime= "$@"
 }
 
 pgrp()
@@ -743,7 +768,7 @@ cmdshnew() {
 
 savecurrentpane() {
     pane_id=$(tmux display-message -p '#{pane_id}')
-    echo ${pane_id} > /tmp/tmuxbuffer/pane_id
+    echo -n ${pane_id} > /tmp/tmuxbuffer/pane_id
 }
 
 tmuxsendhereanddate () {
