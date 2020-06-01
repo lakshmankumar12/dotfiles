@@ -11,7 +11,6 @@ alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
 alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
 alias tmuxcopy="tr -d '\n' | tmux loadb -"
-alias ft='$HOME/github/vimfiles/open_first_tab.py'
 
 #bless my typo
 alias snv=svn
@@ -31,6 +30,17 @@ col() {
         shift
     fi
     awk "$@" '{print $'"${field}"' }'
+}
+
+back() {
+    if [ -z "$1" ] ; then
+        how_much=1
+    else
+        how_much=$1
+    fi
+    back=$(printf "../%.0s" {1..${how_much}})
+    cd ${back}
+    pwd
 }
 
 svnst() {
@@ -86,8 +96,6 @@ pstreemewhere() {
 export FORGE='lakshman_narayanan@mforge2:/home/lakshman_narayanan'
 export GOPATH="$HOME/gopath"
 
-export RTAGS_WRAP_PATH=/Users/lakshman.narayanan/software/rtags/installb/wrap
-
 hostspecific=""
 hn=$(hostname)
 case $hn in
@@ -110,7 +118,6 @@ export PATH=$HOME/bin:$PATH
 if [ -n "$hostspecific" ]; then
 export PATH=$hostspecific:$PATH
 fi
-export PATH=$RTAGS_WRAP_PATH:$PATH
 
 #regular order
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
@@ -238,6 +245,22 @@ pgrp()
             ps -fp $pids
         fi
     fi
+}
+
+function ft() {
+    $HOME/github/vimfiles/open_first_tab.py "$@"
+}
+function ftp() {
+    $HOME/github/vimfiles/open_first_tab.py -p "$@"
+}
+function ftn() {
+    $HOME/github/vimfiles/open_first_tab.py -n "$@"
+}
+function ftc() {
+    $HOME/github/vimfiles/open_first_tab.py -c "$@"
+}
+function ftnc() {
+    $HOME/github/vimfiles/open_first_tab.py -N "$@"
 }
 
 calc()
@@ -1135,7 +1158,7 @@ to_mac_clip() {
 }
 
 check_clip() {
-    ps -ef | grep sshd | grep 'lakshma\+'
+    ps -ef | grep '[s]shd' | grep 'lakshma\+'
     echo "user: $(cat $HOME/.mymacusername) port: $(cat $HOME/.mymacport) ip: $(cat $HOME/.mymacip)"
     use_color=33 #yellow
     color_msg='\033[38;5;'"${use_color}"'m'
