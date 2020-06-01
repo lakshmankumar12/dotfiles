@@ -5,6 +5,24 @@ alias dn='cd ${HOME}/Downloads'
 alias dns='cd ${HOME}/Downloads/songs-download'
 alias dnse='cd ${HOME}/Downloads/songs-download/English'
 
+rmdll() {
+    launchctl list | grep local.reminder
+}
+
+rmdld() {
+    for i in $(\ls /Users/lakshman_narayanan/Library/LaunchAgents/local.reminder*plist) ; do
+        launchctl load $i
+    done
+}
+
+rmdun() {
+    count=$(rmdlist | wc -l)
+    if [ ${count} -gt 0 ] ; then
+        launchctl list | awk '/local.reminder/ {system("launchctl unload /Users/lakshman_narayanan/Library/LaunchAgents/" $3 ".plist");}'
+    fi
+    echo "Unloaded ${count} items"
+}
+
 #Copied from oh-my-zsh/plugins/osx/osx.plugin.zsh
 
 #mnemonic : 'P'rint 'F'in'D'er
@@ -157,6 +175,19 @@ devalertlisten() {
     machinealertlisten mydev "$@"
 }
 
+m1alertlisten() {
+    machinealertlisten mforge1 "$@"
+}
+
+listsshes() {
+    ps -eo pid=,args= | grep '[s]sh -nNT'
+}
+
+killsshes() {
+    kill -9 $(ps -eo pid=,args= | grep '[s]sh -nNT')
+
+}
+
 vpnss() {
     scutil --nc status 'Aryaka Milpitas'
 }
@@ -192,4 +223,56 @@ vpnst() {
 vpnre() {
     vpnx
     vpnst
+}
+
+killallvimsinmac() {
+    cmds=$(awk  'NR==FNR {pane=$7;tty=substr($8,6,7); ttydict[tty]=pane;next} 1 { printf "tmux send-keys -t '"'"'%s'"'"' \"Esc\" '"'"'::qa'"'"' \"C-m\"\n",ttydict[$6]}' FS='|' <(listalltmuxpanes) FS=" " <(ps -ef | grep '[n]vim'))
+    echo ${cmds} | while read i ; do eval $i ; done
+}
+
+cps() {
+    if [ -z "$s" ] ; then
+        echo "s is empty. Aborting"
+        return 1
+    fi
+    if [[ $(echo $s | wc -l | tr -d ' ') != "1" ]] ; then
+        echo "s is bigger than a line. Aborting"
+        return 1
+    fi
+    echo -n $s | pbcopy -
+    echo "copied: $s"
+}
+
+pwdc() {
+    pwd | pbcopy -
+}
+
+focus() {
+    if [ -z "$1" ]; then
+        echo "Usage: focus <n-minutes>"
+        return 1
+    fi
+    time_requested=$1 ; shift
+    pid=$(ps -o pid,args | grep '[f]ocus')
+    if [ -n "$pid" ] ; then
+        echo "focus timer already running"
+        echo $pid
+        return 1
+    fi
+    started=$(date '+%Y-%m-%d-%H-%M-%S')
+    start_timer.sh -t ${time_requested} -m "focus ${time_requested}"
+    if [ $? -eq 0 ] ; then
+        finished=$(date '+%Y-%m-%d-%H-%M-%S')
+        echo "Focus started at ${started} and ended at ${finished}. Time Requested ${time_requested}" >> ~/.focus_times
+    fi
+}
+
+count_today_focus() {
+    if [ -z "$1" ] ; then
+        today=$(date +'%m-%d')
+    else
+        today="$1"
+    fi
+    cnt=$(grep $(date +'%m-%d') ~/.focus_times  | wc -l)
+    echo "Focus counts for $today is: $cnt"
 }
