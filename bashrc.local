@@ -1396,3 +1396,14 @@ scp_with_aryaka_user_key_from() {
     file=$1
     scp -i ~/.ssh/anap_aryaka_key aryaka@${anap}:${file} .
 }
+
+lsfile() {
+    file=$1
+    while read i ; do
+        ls "$i"
+    done < ${file}
+}
+
+mypublicip() {
+    dig @resolver1.opendns.com -4 myip.opendns.com +short
+}
