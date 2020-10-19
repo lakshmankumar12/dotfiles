@@ -796,7 +796,7 @@ savecurrentpane() {
 
 tmuxsendhereanddate () {
   date=$(date)
-  tmux send-keys "C-m" "C-m" "  HERE:  $date" "C-m" "C-m"
+  tmux send-keys "C-m" "C-m" "  #HERE:  $date" "C-m" "C-m"
 }
 
 #cd to the contents in tmux clipboard
@@ -1406,4 +1406,16 @@ lsfile() {
 
 mypublicip() {
     dig @resolver1.opendns.com -4 myip.opendns.com +short
+}
+
+screenht() {
+    seq 100 -1 1
+}
+screenwd() {
+    if [ -n "$1" ] ; then
+        times=$1
+    else
+        times=20
+    fi
+    printf "1234567890%.0s" $(seq 1 $times)
 }
