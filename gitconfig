@@ -14,8 +14,9 @@
     bot = "!git log --pretty=oneline | tail -n 1 | cut -f 1 -d\\ "
     statusnewporcut = !/usr/bin/git status --porcelain | grep '^??' | cut -c4-
     csetr = "!f() { /usr/bin/git fetch ; /usr/bin/git log HEAD..origin/$(/usr/bin/git rev-parse --abbrev-ref HEAD) ; } ; f"
-    resetbasetag = "!f() { if [ -n "$1" ]; then what=$1 ; else what=HEAD; fi ; git tag -d base ; git tag base $what ; } ; f"
+    resetbasetag = "!f() { if [ -n "$1" ]; then what=$1 ; else what=HEAD; fi ; git tag -d base ; git tag base $what ; git logol; } ; f"
     resetwttag = "!f() { if [ -n "$1" ]; then what=$1 ; else what=HEAD; fi ; git tag -d working_tip ; git tag working_tip $what ; } ; f"
+    resetatag = "!f() { if [ -n \"$2\" ] ; then commitpoint=$2 ; else commitpoint=HEAD ; fi ; if [ -z \"$1\" ] ; then echo 'usage: git resetatag <tag> <new-treeish|def:HEAD>' ; return ; else tagtowork=$1 ; fi ; git tag -d $tagtowork; git tag $tagtowork $commitpoint; git logol; } ; f"
     mytags = tag -l 'lakshman*'
     newfiles = ls-files --others --exclude-standard
     reflogd = reflog --date=relative

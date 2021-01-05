@@ -6,7 +6,7 @@ c  -- create new window                        C -- current-code
 d  -- (MY MAP) choose any pane fzf way         D -- choose to detach
 e  -- (MY MAP) switch-client -l                E -- first test window
 f  -- (MY MAP) choose any pane fzf way         F -- detach
-g  --                                          G -- (MY MAP) gotoCustomPaneForG
+g  --                                          G -- (MY MAP) gotoWindowGivenbyG/settmuxWindowForG <abs-pane-id>
 h  -- (MY MAP) tab left                        H -- (MY MAP) horizontal layout
 i  -- (MY MAP) stop logging                    I -- start logging
 j  -- (MY MAP) tab down                        J -- join pane
@@ -23,7 +23,7 @@ t  -- set pane-title                           T -- current-test
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
 w  -- (MY MAP) switch-session (just sess list)
-                                               W -- gotoCustomPaneForW
+                                               W -- settmuxWindowForW <abs-pane-id>
 x  -- kill pane                                X -- gotoIL3X
 y  -- ^r from grepper_commands                 Y - kill lines and do same as y
 z  -- zoom                                     Z -- transfer current buffer to a named bufer

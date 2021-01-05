@@ -22,6 +22,9 @@ alias svnstt="svn status | awk '/^\~/ { print \$2 }'"
 alias svnstc="svn status | awk '/^C/ { print \$2 }'"
 alias svnstd="svn status | awk '/^!/ { print \$2 }'"
 
+#help nvim terminal exit
+alias aexit="exit"
+
 col() {
     if [ -z "$1" ] ; then
         field=1
@@ -261,6 +264,12 @@ function ftc() {
 }
 function ftnc() {
     $HOME/github/vimfiles/open_first_tab.py -N "$@"
+}
+function ftt() {
+    $HOME/github/vimfiles/open_first_tab.py -t "$@"
+}
+function ftt1() {
+    $HOME/github/vimfiles/open_first_tab.py -t 1
 }
 
 calc()
@@ -1097,19 +1106,6 @@ sshmachine() {
   ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${mc}
 }
 
-sshspvm1() {
-  sshmachine 172.18.14.11
-}
-
-sshspvm2() {
-  sshmachine 172.18.14.12
-}
-
-
-sshspiderman() {
-    ssh lakshman_narayanan@172.18.14.1
-}
-
 setup_prompt_msg() {
     found=""
     for i in "${POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[@]}" ; do
@@ -1418,4 +1414,24 @@ screenwd() {
         times=20
     fi
     printf "1234567890%.0s" $(seq 1 $times)
+}
+
+killothermosh() {
+    myMosh=$(ps -ef | grep '[m]osh-server' | grep $PPID)
+    if [ -z "$myMosh" ]; then
+        echo "please run this directly in a mosh'ed shell"
+        return 1
+    fi
+    otherMosh=$(ps -ef | grep '[m]osh-server' | grep -v $PPID)
+    if [ -z "$otherMosh" ] ; then
+        echo "No other mosh detected"
+        return 1
+    fi
+    pidsToKill=$(echo "${otherMosh}" | awk '{print $2}')
+    echo "Killing ${pidsToKill}"
+    kill -9 ${pidsToKill}
+}
+
+rmgorig() {
+    rm $(git newfiles | grep '.orig')
 }
