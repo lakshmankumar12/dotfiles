@@ -5,6 +5,7 @@
     dt = difftool --dir-diff
     cset = diff-tree --no-commit-id --name-only -r
     lsm = ls-files --modified
+    lss = !git --no-pager diff --name-only --cached
     export = "!f() { /usr/bin/git show --pretty=format: $1 ; } ; f "
     logol = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate -n20
     logoln = !git --no-pager log --pretty=oneline --abbrev-commit --graph --decorate

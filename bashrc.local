@@ -3,6 +3,7 @@ alias ls='ls --color -F'
 alias grep='egrep --color'
 alias gitnp='git --no-pager'
 alias npgit='git --no-pager'
+alias gittags='git for-each-ref --sort=creatordate --format "%(refname) ; %(creatordate)" refs/tags | column -t -s\; | cut -c11-'
 alias gr='cd ./$(git rev-parse --show-cdup) ; export GITROOT=$(pwd)'
 alias ttyrec='$HOME/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='$HOME/software/ttygif/ttygif'
@@ -250,6 +251,16 @@ pgrp()
     fi
 }
 
+study_args() {
+    #Search: list arg args study count
+    echo "No of args given: ${#[@]}"
+    c=1
+    for i in "$@" ; do
+        echo "Arg $c: $i"
+        c=$((c+1))
+    done
+}
+
 function ft() {
     $HOME/github/vimfiles/open_first_tab.py "$@"
 }
@@ -271,6 +282,13 @@ function ftt() {
 function ftt1() {
     $HOME/github/vimfiles/open_first_tab.py -t 1
 }
+alias 1gt=ftt1
+alias a1gt=ftt1
+function ftt2() {
+    $HOME/github/vimfiles/open_first_tab.py -t 2
+}
+alias 2gt=ftt2
+alias a2gt=ftt2
 
 calc()
 {
@@ -500,9 +518,33 @@ dumptmuxpane()
         fi
     fi
     target_pane=$1
+    grep '^%[[:digit:]]+$' <(echo ${target_pane}) > /dev/null
+    if [[ $? -ne 0 ]] ;  then
+        echo "Supply a valid-paneid of the form %num. Got: ${target_pane}"
+        return 1
+    fi
     tmux capture-pane -eCJ -S- -t "${target_pane}"
     tmux save-buffer $file
 }
+
+putpaneid() {
+    # Just head the 3 lines off tmux-clip. If there is 10K junk in there
+    # we dont want to waste counting all. Just need to know if there is a
+    # valid pane-id there.
+    nolines=$(tmux saveb - | head -n3 | wc -l)
+    if [[ $nolines != 0 ]] ; then
+        echo "%-1"
+        return 1
+    fi
+    tmuxclip=$(tmux saveb -)
+    grep '^%[[:digit:]]+$' <(echo ${tmuxclip}) > /dev/null
+    if [[ $? -ne 0 ]] ;  then
+        echo "%-1"
+        return 1
+    fi
+    echo ${tmuxclip}
+}
+alias ppi=putpaneid
 
 getAllLogFromPane()
 {
@@ -512,22 +554,60 @@ getAllLogFromPane()
        file=$(pwd)/$2
     fi
     dumptmuxpane $1 ${file}
+    if [ $? -ne 0 ] ; then
+        return 1
+    fi
     sed -i 's/[[:space:]]\+$//' ${file}
     vi $file
 }
+alias galogp='getAllLogFromPane $(ppi)'
 
 getLogFromPane()
 {
-    if [ -z "$2" ] ; then
+    pane=$1
+    shift
+    if [ -z "$1" ] ; then
        file=$(pwd)/log
     else
-       file=$(pwd)/$2
+       file=$(pwd)/$1
+       shift
     fi
-    dumptmuxpane $1 ${file}
+    openvi="yes"
+    strip=""
+    while [ 1 ] ; do
+        if [ -z "$1" ] ; then
+            break;
+        fi
+        if [ "$1" = "skip" ] ; then
+            echo "skipping vi"
+            openvi=""
+            shift
+            continue
+        fi
+        if [ "$1" = "strip" ] ; then
+            echo "will strip color chars"
+            strip="yes"
+            shift
+            continue
+        fi
+        echo "Unrecognized arg: $1, Usage: getLogFromPane <pane-id> [<file-name>] [skip] [strip]"
+        return 1
+    done
+    dumptmuxpane $pane ${file}
+    if [ $? -ne 0 ] ; then
+        return 1
+    fi
     number=$(grep -n HERE $file | tail -n 1 | cut -d: -f1); number=$(expr $number - 1) ; echo $number
     sed -i -e "1,${number}d" -e 's/[[:space:]]\+$//' $file
-    vi $file
+    if [ -n "$strip" ] ; then
+        sed -r 's:\\033\[[0-9;]*[mK]::g' -i $file
+        sed -r 's:\x1B\[[0-9;]*[mK]::g' -i $file
+    fi
+    if [ -n "$openvi" ] ; then
+        vi $file
+    fi
 }
+alias glogp='getLogFromPane $(ppi)'
 
 tmuxatt()
 {
@@ -1433,5 +1513,97 @@ killothermosh() {
 }
 
 rmgorig() {
-    rm $(git newfiles | grep '.orig')
+    list=$(git newfiles | grep '.orig')
+    if [ -z "$list" ] ; then
+        echo "No orig files"
+    else
+        eval rm $list
+    fi
+}
+
+rmgrej() {
+    for i in $(git newfiles | grep '.rej') ; do
+        echo $i ;
+        echo -n "clear(y/n)?" ; read yn ;
+        if [ $yn = "y" ] ; then
+            rm $i
+        fi
+    done
+}
+
+flip_comments() {
+    file=$1 ; shift
+    start=$1 ; shift
+    if [ -n "$1" ] ; then
+        no_lines=$1
+        shift
+    else
+        no_lines=1
+    fi
+    for line in $(seq $start $(($start+$no_lines-1))) ; do
+        echo "working on line ${line} in file ${file}"
+        is_commented=$(sed -n "${line}p" ${file} | grep '<!--')
+        if [ -n "$is_commented" ] ; then
+            echo "Uncommenting"
+            sed -i -e "${line}"'s/^\([[:space:]]*\)<!--/\1/' -e "$line"'s/-->\([[:space:]]*\)$/\1/' $file
+        else
+            echo "Commenting"
+            sed -i -e "$line"'s/^\([[:space:]]*\)</\1<!--</' -e "$line"'s/>\([[:space:]]*\)$/>-->\1/' $file
+        fi
+        echo -n "line ${line} is now:"
+        sed -n "${line}p" ${file}
+    done
+}
+
+rmfdir() {
+    echo "$1" | sed 's|^[^/]*/||'
+}
+
+gototag() {
+    force="no"
+    tag="unset"
+    while [ -n "$1" ] ; do
+        key="$1"
+        if [ "$key" = "-f" ] ; then
+            force="yes"
+            shift
+        elif [ "$key" = "-t" ] ; then
+            if [ -z "$2" ] ; then
+                echo "You didn't supply tag"
+                return 1
+            fi
+            tag="$2"
+            shift 2
+        else
+            echo "Unknown arg: $key"
+            return 1
+        fi
+    done
+    if [ "$tag" = "unset" ] ; then
+        echo "Supply -t <tag>"
+        return 1
+    fi
+    modified=$(git lsm)
+    newfiles=$(git newfiles)
+    if [ "$force" != "yes" ] ; then
+        if [ -n "$modified" ] ; then
+            echo "You have modified files: $modified"
+            return 1
+        fi
+        if [ -n "$newfiles" ] ; then
+            echo "You have untracked files: $newfiles"
+            return 1
+        fi
+    fi
+    git reset --hard $tag
+    git logol
+}
+gobase() {
+    gototag -t base "$@"
+}
+gowt() {
+    gototag -t working_tip "$@"
+}
+rebaseup() {
+    git rebase update
 }
