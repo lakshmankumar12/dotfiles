@@ -128,7 +128,7 @@ qs() {
     if [ -z "$s" ]; then
         "echo var s is not set"
     fi
-    quickplay.py "$s"
+    quickplay.py "$@" "$s"
 }
 
 waspp() {
@@ -155,6 +155,16 @@ checkclip() {
     pbpaste | less
 }
 alias ccc=checkclip
+
+checkclip_keepbanging() {
+    while [ 1 ] ; do
+        pbpaste
+        echo
+        echo "----"
+        sleep 1
+    done
+}
+alias ccck=checkclip_keepbanging
 
 machinealertlisten() {
     mc=$1
@@ -189,11 +199,11 @@ killsshes() {
 }
 
 vpnss() {
-    scutil --nc status 'Aryaka Milpitas'
+    scutil --nc status 'Aryaka Bangalore'
 }
 
 vpnx() {
-    scutil --nc stop 'Aryaka Milpitas'
+    scutil --nc stop 'Aryaka Bangalore'
 }
 
 vpnst() {
@@ -275,4 +285,24 @@ count_today_focus() {
     fi
     cnt=$(grep $(date +'%m-%d') ~/.focus_times  | wc -l)
     echo "Focus counts for $today is: $cnt"
+}
+
+loopone() {
+    if [ -z "$s" ] ; then
+        echo "\$s is not set"
+        return 1
+    fi
+    if [ ! -f "$s" ] ; then
+        echo "\$s:$s doest seem to be a valid file"
+        return 1
+    fi
+    if [ -z "$SONG_VOLUME" ] ; then
+        SONG_VOLUME=100
+    fi
+    echo "SONG_VOLUME set at ${SONG_VOLUME}"
+    ( while [ 1 ] ; do  date ; qs -v ${SONG_VOLUME} ; echo ; reset ; done )
+}
+
+looponekill() {
+    kill -9 $(ps -ef | grep '[q]uickplay' | awk '{print $3}')
 }
