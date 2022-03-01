@@ -26,6 +26,13 @@ alias svnstd="svn status | awk '/^!/ { print \$2 }'"
 #help nvim terminal exit
 alias aexit="exit"
 
+function check_array() {
+    arrayname=$1[@] ;
+    array=(${!arrayname}) ;
+    printf "elem: %s\n" "${array[@]}" ;
+}
+alias array_print=check_array
+
 col() {
     if [ -z "$1" ] ; then
         field=1
@@ -126,7 +133,12 @@ fi
 #regular order
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
-export EDITOR=vim
+host=$(hostname)
+if [ "$host" = "mforge3.corp.aryaka.com" -o "$host" = "lakshman-dev" ] ; then
+    export EDITOR=nvim
+else
+    export EDITOR=vim
+fi
 export GITHUB="git@github.com:lakshmankumar12"
 export GITLAB="git@gitlab.com:lakshmankumar12"
 export BITBUCKET="git@bitbucket.org:lakshmankumar12"
@@ -1226,6 +1238,10 @@ to_mac_clip() {
     toSet=$(cat)
     l=$(echo "$toSet" | wc -l)
     echo -n "$toSet" | sed 's/\x1b\[[0-9;]*m//g' | ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $(cat $HOME/.mymacport) $(cat $HOME/.mymacusername)@$(cat $HOME/.mymacip) pbcopy
+    if [[ $? -ne 0 ]] ; then
+        echo_color red "Trouble in ssh'ing back mac"
+        return 1
+    fi
     if [[ $l -le 3 ]] ; then
         echo "Your clip is setup with: $toSet"
     else
