@@ -306,3 +306,47 @@ loopone() {
 looponekill() {
     kill -9 $(ps -ef | grep '[q]uickplay' | awk '{print $3}')
 }
+
+utf8toclip() {
+    utf8=$1
+    echo -e -n ${utf8} | pbcopy -
+}
+
+dumpclip() {
+    count=$(pbpaste - | wc -c)
+    if [[ $count -gt 100 ]] ; then
+        pbpaste - | hexdump -C | less
+    else
+        pbpaste - | hexdump -C
+    fi
+}
+
+dumpclipforcopy() {
+    pbpaste - | hexdump -e '"\\\x"/1 "%02x"'
+}
+
+decipher_unicode() {
+    python3 -c 'import sys;a=sys.argv[1]; [print("U+%05x %25s %s"%(ord(i),bytes(i.encode("utf-8")),i)) for i in a ]' $1
+}
+
+decipher_unicode_clip() {
+    decipher_unicode $(pbpaste -)
+}
+
+devnahelp() {
+    $HOME/github/quick-utility-scripts/devnachar.py --help
+}
+alias dvh=devnahelp
+
+devnaload() {
+    $HOME/github/quick-utility-scripts/devnachar.py "$@" | tee >(pbcopy -)
+}
+alias dvl=devnaload
+
+tamhelp() {
+    $HOME/github/quick-utility-scripts/tamilchar.py --help
+}
+
+tamload() {
+    $HOME/github/quick-utility-scripts/tamilchar.py "$@" | tee >(pbcopy -)
+}
