@@ -1268,14 +1268,25 @@ clip_username() {
     echo "$user" > $HOME/.mymacusername
 }
 
-tmuxcliptomac() {
-    tmux show-buffer | to_mac_clip
-}
-alias ttc=tmuxcliptomac
-
 from_mac_clip() {
     ssh -p $(cat /home/lakshman_narayanan/.mymacport) lakshman.narayanan@$(cat /home/lakshman_narayanan/.mymacip) pbpaste
 }
+
+to_winhost_clip() {
+    file=/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
+    cat > $file
+    #strip newline from last-line
+    printf %s "$(< $file)" > $file
+}
+
+to_host_clip() {
+    to_winhost_clip "$@"
+}
+
+tmuxcliptomac() {
+    tmux show-buffer | to_host_clip
+}
+alias ttc=tmuxcliptomac
 
 alert_on_pid() {
     if [ -z "$1" -o -z "$2" ] ; then
@@ -1627,3 +1638,7 @@ gowt() {
 rebaseup() {
     git rebase update
 }
+
+if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
