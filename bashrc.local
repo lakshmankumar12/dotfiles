@@ -1429,6 +1429,10 @@ if [ "$(hostname)x" == "DevBoxx" ] ; then
   . ~/.bashrc.devbox
 fi
 
+if [ "$(hostname)x" == "lakshman-VirtualBoxx" ] ; then
+  . ~/.bashrc.virtualbox
+fi
+
 if [ -f ~/.bashrc.private.sh ] ; then
   . ~/.bashrc.private.sh
 fi

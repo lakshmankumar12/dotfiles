@@ -1,0 +1,6 @@
+USERS_DIR="/home/lakshman/host_c/Users/laksh/"
+DOWNLOADS_DIR="${USERS_DIR}/Downloads"
+
+dn() {
+    cd ${DOWNLOADS_DIR}
+}
