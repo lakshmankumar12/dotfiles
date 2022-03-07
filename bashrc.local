@@ -635,7 +635,7 @@ tmuxatt()
   else
     echo "No screen-256color-bce or xterm-256color in /usr/share/terminfo/s. Not setting TERM. current TERM is $TERM"
   fi
-  tmux -2 attach -d -t $session
+  tmux -2 -u attach -d -t $session
   if [ $? -ne 0 ] ; then
       echo "Got a failure code.. list all sessions"
       tmux list-session
