@@ -1226,6 +1226,7 @@ showpath() {
     echo $PATH | tr ':' '\n'
 }
 
+unalias alert
 alert() {
     if [ -z "$1" ] ; then
         echo "Supply message"
