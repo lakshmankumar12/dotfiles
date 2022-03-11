@@ -4,3 +4,24 @@ DOWNLOADS_DIR="${USERS_DIR}/Downloads"
 dn() {
     cd ${DOWNLOADS_DIR}
 }
+
+clip_anchor() {
+    ssh -R 25020:localhost:25020 -p 8022 lakshman@hetzner
+}
+
+clipcheck() {
+    file=/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
+    echo "Contents of $file:"
+    cat $file
+    echo "*********"
+}
+
+scpfromhetzner() {
+    if [ -z "$1" ] ; then
+        echo "Supply file to scp from hetzner"
+        return 1
+    fi
+    dn
+    echo "Running: scp -P 8022 lakshman@hetzner:$1 ."
+    scp -P 8022 "lakshman@hetzner:$1" .
+}
