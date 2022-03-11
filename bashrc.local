@@ -1226,7 +1226,7 @@ showpath() {
     echo $PATH | tr ':' '\n'
 }
 
-unalias alert
+unalias alert 2> /dev/null
 alert() {
     if [ -z "$1" ] ; then
         echo "Supply message"
@@ -1284,10 +1284,15 @@ to_host_clip() {
     to_winhost_clip "$@"
 }
 
-tmuxcliptomac() {
+tmuxcliptohost() {
     tmux show-buffer | to_host_clip
 }
-alias ttc=tmuxcliptomac
+alias thc=tmuxcliptohost
+
+totmuxclip() {
+    cat | tmux loadb -
+}
+alias ttc=totmuxclip
 
 alert_on_pid() {
     if [ -z "$1" -o -z "$2" ] ; then
