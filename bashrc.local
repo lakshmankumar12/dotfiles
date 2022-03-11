@@ -778,8 +778,8 @@ gotoCurrentCode() {
     gotoTmuxPane 02-code 0 0
 }
 
-gotoNightly() {
-    gotoTmuxPane 02-code 2 0
+gotoNotes() {
+    gotoTmuxPane 01-main 0 0
 }
 
 gotoJiraList() {
@@ -791,7 +791,7 @@ gotoCurrentTest() {
 }
 
 gotoCurrentExecution() {
-    gotoTmuxPane 04-tgsetup 0 0
+    gotoTmuxPane 03-test 0 0
 }
 
 getSessionWindowPaneForPaneId() {
@@ -855,7 +855,7 @@ fzfchoosepane() {
 
 cmdsh()
 {
-  GREPPER_CMD=$HOME/bitbucket/aryaka-notes/grepper_commands
+  GREPPER_CMD=/home/lakshman/gitlab/genxcomm-notes/grepper_commands
   mkdir -p /tmp/tmuxbuffer
   FILE=/tmp/tmuxbuffer/resultcmdsh
   DIR_PREFIX=$(dirname $FILE)
@@ -1281,7 +1281,11 @@ to_winhost_clip() {
 }
 
 to_host_clip() {
-    to_winhost_clip "$@"
+    if [ "$(hostname)x" == "lakshmandevhetznerx" ] ; then
+        cat | nc localhost 25020
+    else
+        to_winhost_clip "$@"
+    fi
 }
 
 tmuxcliptohost() {
@@ -1647,4 +1651,8 @@ rebaseup() {
 
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+if [ -f ~/.bashrc.devhetzner.sh ] ; then
+    . ~/.bashrc.devhetzner.sh
 fi
