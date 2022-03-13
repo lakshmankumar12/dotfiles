@@ -1251,14 +1251,13 @@ to_mac_clip() {
 }
 
 check_clip() {
-    ps -ef | grep '[s]shd' | grep 'lakshma\+'
-    echo "user: $(cat $HOME/.mymacusername) port: $(cat $HOME/.mymacport) ip: $(cat $HOME/.mymacip)"
     use_color=33 #yellow
     color_msg='\033[38;5;'"${use_color}"'m'
     reset_msg='\033[0;0m'
-    echo -e "## check_clip at ${color_msg}$(date)${reset_msg}" | to_mac_clip
+    echo -e "## check_clip at ${color_msg}$(date)${reset_msg}" | to_host_clip
     echo "You can check your clip by pasting"
 }
+alias ccc=check_clip
 
 clip_username() {
     user="lakshman.narayanan"
@@ -1287,6 +1286,7 @@ to_host_clip() {
         to_winhost_clip "$@"
     fi
 }
+alias hhc=to_host_clip
 
 tmuxcliptohost() {
     tmux show-buffer | to_host_clip

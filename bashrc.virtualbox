@@ -9,12 +9,13 @@ clip_anchor() {
     ssh -R 25020:localhost:25020 -p 8022 lakshman@hetzner
 }
 
-clipcheck() {
+check_clip() {
     file=/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
     echo "Contents of $file:"
     cat $file
     echo "*********"
 }
+alias ccc=check_clip
 
 scpfromhetzner() {
     if [ -z "$1" ] ; then
