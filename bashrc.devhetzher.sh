@@ -12,3 +12,7 @@ sshmgm() {
 sshbare() {
   ssh lakshman@${HETZNER_IP}
 }
+
+sshbareasroot() {
+  ssh asroot@${HETZNER_IP}
+}

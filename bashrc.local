@@ -758,12 +758,20 @@ gotoTmuxPane() {
     tmux select-pane -t "${target_session}:${target_window}.${target_pane}"
 }
 
-gotoMusicPane() {
-    gotoTmuxPane second 0 0
+gotoNotes() {
+    gotoTmuxPane 01-main 0 0
 }
 
-gotoNotes() {
-    gotoTmuxPane 01-scripts 4 0
+gotoGenxNotes() {
+    gotoTmuxPane 01-main 1 0
+}
+
+gotoCurrentCode() {
+    gotoTmuxPane 02-code 0 0
+}
+
+gotoCurrentExecution() {
+    gotoTmuxPane 03-test 0 0
 }
 
 gotoIL3X() {
@@ -774,14 +782,6 @@ gotoLaunchPad() {
     gotoTmuxPane 05-tests 0 0
 }
 
-gotoCurrentCode() {
-    gotoTmuxPane 02-code 0 0
-}
-
-gotoNotes() {
-    gotoTmuxPane 01-main 0 0
-}
-
 gotoJiraList() {
     gotoTmuxPane 03-jira 0 0
 }
@@ -790,9 +790,10 @@ gotoCurrentTest() {
     gotoTmuxPane 03-jira 1 0
 }
 
-gotoCurrentExecution() {
-    gotoTmuxPane 03-test 0 0
+gotoMusicPane() {
+    gotoTmuxPane second 0 0
 }
+
 
 getSessionWindowPaneForPaneId() {
     if [ -z "$1" ] ; then
@@ -1251,6 +1252,7 @@ to_mac_clip() {
 }
 
 check_clip() {
+    netstat -plant | grep 25020
     use_color=33 #yellow
     color_msg='\033[38;5;'"${use_color}"'m'
     reset_msg='\033[0;0m'

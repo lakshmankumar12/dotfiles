@@ -1,30 +1,30 @@
 Search: KEY BINDINGS in man page
 
 a  -- (MY MAP) send prefix                     A -- rename window
-b  --                                          B -- nightly/backup
-c  -- create new window                        C -- current-code
+b  --                                          B -- (HOTKEY) gotoGenxNotes
+c  -- create new window                        C -- (HOTKEY) gotoCurrentCode
 d  -- (MY MAP) choose any pane fzf way         D -- choose to detach
-e  -- (MY MAP) switch-client -l                E -- first test window
+e  -- (MY MAP) switch-client -l                E -- (HOTKEY) gotoCurrentExecution
 f  -- (MY MAP) choose any pane fzf way         F -- detach
-g  --                                          G -- (MY MAP) gotoWindowGivenbyG/settmuxWindowForG <abs-pane-id>
+g  --                                          G -- (HOTKEY) gotoWindowGivenbyG/settmuxWindowForG <abs-pane-id>
 h  -- (MY MAP) tab left                        H -- (MY MAP) horizontal layout
 i  -- (MY MAP) stop logging                    I -- start logging
 j  -- (MY MAP) tab down                        J -- join pane
 k  -- (MY MAP) tab up                          K -- (MY MAP) confirm-kill-pane
-l  -- (MY MAP) tab right                       L -- gotoLaunchpad
+l  -- (MY MAP) tab right                       L -- (HOTKEY) gotoLaunchpad
 m  -- mark a window                            M -- move pane
-n  -- next window                              N -- gotoNotes
+n  -- next window                              N -- (HOTKEY) gotoNotes
 o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
 p  -- prev window                              P -- music pane/ary-scripts pane
 q  -- show pane numbers                        Q -- (MY MAP)display current pane id
-r  -- reload conf                              R -- jira-list-pane
+r  -- reload conf                              R -- (HOTKEY)
 s  -- (MY MAP) choose any pane fzf way         S -- swap windows
-t  -- set pane-title                           T -- current-test
+t  -- set pane-title                           T -- (HOTKEY)
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
 w  -- (MY MAP) switch-session (just sess list)
                                                W -- settmuxWindowForW <abs-pane-id>
-x  -- kill pane                                X -- gotoIL3X
+x  -- kill pane                                X -- (HOTKEY)
 y  -- ^r from grepper_commands                 Y - kill lines and do same as y
 z  -- zoom                                     Z -- transfer current buffer to a named bufer
 

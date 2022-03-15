@@ -1,6 +1,10 @@
 [user]
     email = lakshmankumar@gmail.com
     name = lakshman kumar
+[includeIf "gitdir:~/genxcomm/"]
+    path = .gitconfig-genxcomm
+[includeIf "gitdir:/magma_vm/"]
+    path = .gitconfig-genxcomm
 [alias]
     dt = difftool --dir-diff
     cset = diff-tree --no-commit-id --name-only -r
