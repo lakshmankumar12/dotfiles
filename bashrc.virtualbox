@@ -1,8 +1,14 @@
-USERS_DIR="/home/lakshman/host_c/Users/laksh/"
+HOST_DIR="/home/lakshman/host_c/"
+USERS_DIR="${HOST_DIR}/Users/laksh/"
 DOWNLOADS_DIR="${USERS_DIR}/Downloads"
+DATA_DIR="${HOST_DIR}/Data"
 
 dn() {
     cd ${DOWNLOADS_DIR}
+}
+
+data() {
+    cd ${DATA_DIR}
 }
 
 clip_anchor() {
