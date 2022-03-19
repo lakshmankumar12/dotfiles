@@ -1095,6 +1095,10 @@ ifaddr()
   ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[  ]+inet / { print ifname " " $2  } ' | grep "$1"
 }
 
+ilshow()
+{
+    ip link show | awk ' /^[0-9]+:/ { id=$1; link=$2; getline; print id " " link " " $0  } ' | grep "$1"
+}
 
 get_rate_if()
 {

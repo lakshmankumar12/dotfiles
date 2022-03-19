@@ -12,6 +12,13 @@ data() {
 }
 
 clip_anchor() {
+    clip_listening=$(ps -ef | egrep '\bclip_listener')
+    if [ -z "$clip_listening" ] ; then
+        echo "Clip listener being started"
+        ~/github/quick-utility-scripts/clip_listener.py
+    else
+        echo "Clip listener already found running"
+    fi
     ssh -R 25020:localhost:25020 -p 8022 lakshman@hetzner
 }
 
