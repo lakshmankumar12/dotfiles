@@ -770,17 +770,18 @@ gotoCurrentCode() {
     gotoTmuxPane 02-code 0 0
 }
 
-gotoCurrentExecution() {
+gotoLaunchPad() {
     gotoTmuxPane 03-test 0 0
+}
+
+gotoCurrentExecution() {
+    gotoTmuxPane 03-test 2 0
 }
 
 gotoIL3X() {
     gotoTmuxPane 01-scripts 5 0
 }
 
-gotoLaunchPad() {
-    gotoTmuxPane 05-tests 0 0
-}
 
 gotoJiraList() {
     gotoTmuxPane 03-jira 0 0
@@ -1292,6 +1293,7 @@ to_host_clip() {
         to_winhost_clip "$@"
     fi
 }
+export to_host_clip
 alias hhc=to_host_clip
 
 tmuxcliptohost() {

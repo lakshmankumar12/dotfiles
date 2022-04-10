@@ -15,14 +15,14 @@ l  -- (MY MAP) tab right                       L -- (HOTKEY) gotoLaunchpad
 m  -- mark a window                            M -- move pane
 n  -- next window                              N -- (HOTKEY) gotoNotes
 o  -- (MY MAP) mac-open                        O -- (MY MAP)sanitize pane
-p  -- prev window                              P -- music pane/ary-scripts pane
+p  -- prev window                              P -- (HOTKEY)
 q  -- show pane numbers                        Q -- (MY MAP)display current pane id
 r  -- reload conf                              R -- (HOTKEY)
 s  -- (MY MAP) choose any pane fzf way         S -- swap windows
 t  -- set pane-title                           T -- (HOTKEY)
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
-w  -- (MY MAP) switch-session (just sess list)
+w  -- (MY MAP) switch-session (just sess list) U -- (MY MAP) tmuxcliptohost
                                                W -- settmuxWindowForW <abs-pane-id>
 x  -- kill pane                                X -- (HOTKEY)
 y  -- ^r from grepper_commands                 Y - kill lines and do same as y

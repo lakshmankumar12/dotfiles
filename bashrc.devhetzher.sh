@@ -16,3 +16,12 @@ sshbare() {
 sshbareasroot() {
   ssh asroot@${HETZNER_IP}
 }
+
+tnewh() {
+    python /home/lakshman/github/quick-utility-scripts/tmux_starter/tnew.py "$@"
+}
+
+tnewn() {
+    tnewh -n "$@"
+}
+alias tnew=tnewn
