@@ -302,9 +302,13 @@ function ftt2() {
 alias 2gt=ftt2
 alias a2gt=ftt2
 
+remove_ssh_host() {
+    sed -i -e '/'"$1"'/d' $HOME/.ssh/known_hosts
+}
+
 calc()
 {
-  bc <<< "scale=2; $*"
+  bc <<< "scale=2; $@"
 }
 
 catc ()
@@ -321,7 +325,7 @@ catc ()
 vi()
 {
   if [ -n "$NVIM_LISTEN_ADDRESS" ] ; then
-    nvim_edit "$@"
+    ftc "tabnew $1"
   else
     #$HOME/bin/vim -u $HOME/.vimrc "$@"
     nvim "$@"
@@ -778,6 +782,10 @@ gotoCurrentExecution() {
     gotoTmuxPane 03-test 2 0
 }
 
+gotoCurrentExecutionSecond() {
+    gotoTmuxPane 04-svt 1 0
+}
+
 gotoIL3X() {
     gotoTmuxPane 01-scripts 5 0
 }
@@ -1202,6 +1210,10 @@ sshdeldoc() {
 sshmachine() {
   mc="$1"
   ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${mc}
+}
+
+listlogins() {
+    ps -ef | grep '[s]shd' | grep -v root
 }
 
 setup_prompt_msg() {
@@ -1656,6 +1668,28 @@ gowt() {
 rebaseup() {
     git rebase update
 }
+
+getsshconfig() {
+    if [ -z "$1" ] ; then
+        echo "Supply host"
+        return 1
+    fi
+    host="Host $1"
+    awk -v host="$host" '
+        $0 ~ host {
+            gotcha=1;
+            collect = $0;
+            next;
+        } /^Host / {
+            if (gotcha == 1) {
+                print collect;
+                gotcha=0
+            }
+        } gotcha == 1 {
+            collect = collect "\n" $0
+        } ' ~/.ssh/config
+}
+
 
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
