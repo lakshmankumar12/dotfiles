@@ -1690,6 +1690,36 @@ getsshconfig() {
         } ' ~/.ssh/config
 }
 
+ep_to_time() {
+    if [ -z "$1" ] ; then
+        echo "supply epoch"
+        return 1
+    fi
+    date '-d@'"$1"
+}
+
+ep_to_time_utc() {
+    TZ=UTC ep_to_time "$@"
+}
+
+ep_to_time_ist() {
+    TZ=Asia/Kolkata ep_to_time "$@"
+}
+
+ep_to_time_cent() {
+    TZ=America/Chicago ep_to_time "$@"
+}
+
+now() {
+    date
+}
+alias now_utc='TZ=UTC now'
+alias now_ist='TZ=Asia/Kolkata now'
+alias now_cent='TZ=America/Chicago now'
+
+now_ep() {
+    date '+%s'
+}
 
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
