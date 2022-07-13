@@ -36,6 +36,18 @@ scpfromhetzner() {
         return 1
     fi
     dn
-    echo "Running: scp -P 8022 lakshman@hetzner:$1 ."
-    scp -P 8022 "lakshman@hetzner:$1" .
+    cmd="scp -P 8022 lakshman@hetzner:/home/lakshman/tmp/'$1' ."
+    echo "Running: $cmd"
+    eval $cmd
+}
+
+scptohetzner() {
+    if [ -z "$1" ] ; then
+        echo "Supply file to scp from hetzner"
+        return 1
+    fi
+    dn
+    cmd="scp -P 8022 '$1' lakshman@hetzner:/home/lakshman/tmp/"
+    echo "Running: $cmd"
+    eval $cmd
 }
