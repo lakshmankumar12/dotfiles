@@ -19,7 +19,7 @@ clip_anchor() {
     else
         echo "Clip listener already found running"
     fi
-    ssh -R 25020:localhost:25020 -p 8022 lakshman@hetzner
+    ssh -o ExitOnForwardFailure=yes -R 25020:localhost:25020 -p 8022 lakshman@hetzner
 }
 
 check_clip() {
