@@ -11,6 +11,14 @@ data() {
     cd ${DATA_DIR}
 }
 
+#tmux overrides
+gotoNotes() {
+    gotoTmuxPane virt 4 0
+}
+gotoLaunchPad() {
+    gotoTmuxPane prom 0 0
+}
+
 clip_anchor() {
     clip_listening=$(ps -ef | egrep '\bclip_listener')
     if [ -z "$clip_listening" ] ; then
