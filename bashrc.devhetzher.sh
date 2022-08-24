@@ -66,7 +66,7 @@ downloadfrommainjenkins() {
     url="$1"
     file=${url##*/}
     setup_main_jenkins_cred
-    curl --user $MAIN_JENKINS_CREDS $url -o $file
+    curl -C - --user $MAIN_JENKINS_CREDS $url -o $file
 
 }
 

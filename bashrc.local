@@ -245,6 +245,10 @@ analy()
     ls -l /proc/$1/cwd
 }
 
+when_rebooted() {
+    date -d@"$(( $(date '+%s') - $(printf "%.0f" $(awk '{print $1}' /proc/uptime)) ))"
+}
+
 howlong()
 {
   ps -o pid=,etime= "$@"
@@ -310,6 +314,22 @@ calc()
 {
   bc <<< "scale=2; $@"
 }
+
+hextodec() {
+    for i in "$@" ; do
+        i=${i#0x}
+        i=${i#0X}
+        printf "0x${i} %d\n" "0x${i}"
+    done
+}
+alias h2d=hextodec
+
+dectohex() {
+    for i in "$@" ; do
+        printf "$i 0x%x\n" $i
+    done
+}
+alias d2h=dectohex
 
 catc ()
 {
@@ -573,7 +593,7 @@ getAllLogFromPane()
     if [ $? -ne 0 ] ; then
         return 1
     fi
-    sed -i 's/[[:space:]]\+$//' ${file}
+    sed -i -r -e 's/[[:space:]]+$//' -e 's:\\033\[[0-9;]*[mK]::g' -e 's:\x1B\[[0-9;]*[mK]::g' ${file}
     vi $file
 }
 alias galogp='getAllLogFromPane $(ppi)'
@@ -1687,7 +1707,9 @@ getsshconfig() {
             }
         } gotcha == 1 {
             collect = collect "\n" $0
-        } ' ~/.ssh/config
+        } END {
+            if (gotcha == 1) { print collect; }
+        }' ~/.ssh/config
 }
 
 ep_to_time() {
@@ -1713,9 +1735,49 @@ ep_to_time_cent() {
 now() {
     date
 }
-alias now_utc='TZ=UTC now'
-alias now_ist='TZ=Asia/Kolkata now'
-alias now_cent='TZ=America/Chicago now'
+
+declare -A time_zones
+time_zones["ist"]="Asia/Kolkata"
+time_zones["cent"]="America/Chicago"
+time_zones["utc"]="Etc/UTC"
+alias now_utc="TZ=${time_zones[utc]} now"
+alias now_ist="TZ=${time_zones[ist]} now"
+alias now_cent="TZ=${time_zones[cent]} now"
+
+get_tz_zone() {
+    if [ -z "$1" ] ; then
+        echo "Time-zone missing"
+        return 1
+    fi
+    if [ -z "${time_zones[$1]}" ] ; then
+        echo "Unknown time-zone:$1"
+        return 1
+    fi
+    echo "${time_zones[$1]}"
+}
+
+convert_src_zone_to_dst_zone() {
+    src_zone=$(get_tz_zone "$1")
+    if [ $? -ne 0 ] ; then echo "src-tz: $src_zone" ; return 1 ; fi
+    shift
+    dst_zone=$(get_tz_zone "$1")
+    if [ $? -ne 0 ] ; then echo "dst-tz: $dst_zone" ; return 1 ; fi
+    shift
+    if [ -z "$1" ] ; then
+        echo "supply hour in 24 format"
+        return 1
+    fi
+    asked_hr="$1" ; shift
+    if [ "$asked_hr" -le 0 -o "$asked_hr" -ge 24 ] ; then
+        echo "Bad asked_hr:$asked_hr"
+        return 1
+    fi
+    now_ep=$(date '+%s')
+    now_date=$(TZ="Etc/UTC" date "-d@$now_ep" "+%Y-%m-%d")
+    ask_date="${now_date}T${asked_hr}:00:00"
+    ask_ep=$(TZ="$src_zone" date -d"$ask_date" "+%s")
+    TZ="$dst_zone" date -d"@$ask_ep"
+}
 
 now_ep() {
     date '+%s'
