@@ -70,17 +70,42 @@ downloadfrommainjenkins() {
 
 }
 
+pushtoartifactory() {
+    if [ -z "$1" ] ; then
+        echo "Supply repo name"
+        return 1
+    fi
+    repo="$1"
+    shift
+    if [ -z "$1" ] ; then
+        echo "Supply filename (Must be inside of pwd)"
+        return 1
+    fi
+    file="$1"
+    shift
+    binary="--upload-file '"
+    if [ -n "$1" ] ; then
+        binary="-H 'Content-Type: multipart/form-data' --data-binary '@./"
+    fi
+    setup_artifactory_admin_creds
+    cmd="curl -v -u '$ARTIFACTORY_CREDS' ${binary}${file}' http://localhost:32777/repository/$repo/"
+    echo "executing:"
+    echo $cmd
+    eval $cmd
+}
 pushmagmadebtoartifactory() {
     if [ -z "$1" ] ; then
         echo "supply DEB file name (it has to be in pwd)"
         return 1
     fi
-    DEB="$1"
-    setup_artifactory_admin_creds
-    cmd="curl -v -u '$ARTIFACTORY_CREDS' -H 'Content-Type: multipart/form-data' --data-binary '@./${DEB}' http://10.233.6.148:8081/repository/onyx-apt-repo/"
-    echo "executing:"
-    echo $cmd
-    eval $cmd
+    pushtoartifactory onyx-apt-repo "$1" "binary"
+}
+pushtoreleasetarartifactory() {
+    if [ -z "$1" ] ; then
+        echo "supply file name (it has to be in pwd)"
+        return 1
+    fi
+    pushtoartifactory release-tar "$1" ""
 }
 
 extract_from_gxc_tar() {
@@ -119,6 +144,22 @@ sshagw() {
     fi
     ssh -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no onyxedge@"$1"
 }
+
+sshagwdiffuser() {
+    if [ -z "$1" ] ; then
+        echo "Supply AGW to login"
+        return 1
+    fi
+    ip="$1"
+    shift
+    if [ -z "$1" ] ; then
+        echo "Supply username to login"
+        return 1
+    fi
+    user="$1"
+    ssh -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${user}@${ip}
+}
+
 
 scpfromagw() {
     if [ -z "$1" ] ; then

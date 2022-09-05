@@ -129,6 +129,7 @@ export PATH=$HOME/bin:$PATH
 if [ -n "$hostspecific" ]; then
 export PATH=$hostspecific:$PATH
 fi
+export PATH="$PATH:$HOME/.local/bin"
 
 #regular order
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
