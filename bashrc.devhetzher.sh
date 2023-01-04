@@ -8,6 +8,12 @@ MYDEVIP=192.168.122.162
 ARTIFACTORY_IP=10.233.6.148
 JENKINS_IP=10.233.47.126
 
+alias tkts='cd /magma_vm/ticket_logs'
+
+jira() {
+    python3 /home/lakshman/gitlab/genxcomm-scripts/jira/download_jira.py "$@"
+}
+
 sshmgm() {
   ssh hostvm
 }
@@ -137,12 +143,36 @@ cp_from_magma_cache() {
     ls -rlt ~/tmp/"$1"
 }
 
-sshagw() {
+sshagwargs() {
     if [ -z "$1" ] ; then
         echo "Supply AGW to login"
         return 1
     fi
-    ssh -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no onyxedge@"$1"
+    agw="$1"
+    shift
+    if [ -z "$1" ] ; then
+        echo "Supply username to login"
+        return 1
+    fi
+    user="$1"
+    ssh -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}"@"${agw}"
+}
+
+sshagw() {
+    sshagwargs "$1" onyxedge
+}
+sshec2() {
+    sshagwargs $(cat ~/.curr_aws_ec2_ip) onyxedge
+}
+currec2() {
+    cat ~/.curr_aws_ec2_ip
+}
+setcurrec2() {
+    if [ -z "$1" ] ; then
+        echo "Supply IP"
+        return 1
+    fi
+    echo "$1" > ~/.curr_aws_ec2_ip
 }
 
 sshagwdiffuser() {
@@ -161,7 +191,7 @@ sshagwdiffuser() {
 }
 
 
-scpfromagw() {
+scpfromagwdiffuser() {
     if [ -z "$1" ] ; then
         echo "Supply AGW to login"
         return 1
@@ -171,6 +201,94 @@ scpfromagw() {
         echo "Supply file"
         return 1
     fi
-    file="$1"
-    scp -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no onyxedge@"$agw":"$file" .
+    file="$1" ; shift
+    if [ -z "$1" ] ; then
+        echo "Supply user"
+        return 1
+    fi
+    user="$1"
+    scp -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $user@"$agw":"$file" .
+}
+scpfromagw() {
+    agw="$1"
+    file="$2"
+    scpfromagwdiffuser "$agw" "$file" "onxyedge"
+}
+
+scptoagwdiffuser() {
+    if [ -z "$1" ] ; then
+        echo "Supply AGW to login"
+        return 1
+    fi
+    agw="$1"; shift
+    if [ -z "$1" ] ; then
+        echo "Supply file"
+        return 1
+    fi
+    file="$1" ; shift
+    if [ -z "$1" ] ; then
+        echo "Supply user"
+        return 1
+    fi
+    user="$1"
+    scp -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$file" $user@"$agw":/tmp/
+}
+
+
+scpdebtoanyagw() {
+    agw="$1"
+    ssh -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no onyxedge@$agw /bin/bash -c "'rm -f /tmp/magma_*_amd64.deb'"
+    debs=($(/usr/bin/ls /magma_vm/genxcomm/gxc_magma/pkg/magma_*deb))
+    if [ ${#debs[@]} -ne 1 ] ; then
+        echo "Incorrect no-debs in /magma_vm/genxcomm/gxc_magma/pkg/ . Count: ${#debs[@]}"
+        return
+    fi
+    echo "copying ${debs[0]}"
+    scptoagwdiffuser "$agw" "${debs[0]}" onyxedge
+}
+scpdebtodagw() {
+    scpdebtoanyagw "dagw"
+}
+
+update_aws_kubecfg() {
+    aws eks update-kubeconfig --region ${REGION} --name orc8r
+}
+
+set_dev_orc8r() {
+    REGION="us-east-1"
+    update_aws_kubecfg
+    dir=/magma_vm/aws_orc8rs/aws-magmaorc8r-dev/secrets_dev/certs
+    mykey=${dir}/admin_operator.key.pem
+    mycert=${dir}/admin_operator.pem
+    orcurl="api.dev-gxcnetwork.com"
+    cacert_arg=""
+    rootcert=""
+    resolve_cmd=""
+    resolve_str=""
+}
+
+set_qa_orc8r() {
+    REGION="us-east-2"
+    update_aws_kubecfg
+    dir=/magma_vm/aws_orc8rs/aws-magmaorc8r-qa/secrets_qa/certs
+    mykey=${dir}/admin_operator.key.pem
+    mycert=${dir}/admin_operator.pem
+    orcurl="api.generationxcomm.com"
+    resolve_cmd=""
+    resolve_str=""
+    cacert_arg=""
+    rootcert=""
+}
+
+set_svt_orc8r() {
+    REGION="us-west-2"
+    update_aws_kubecfg
+    dir=/magma_vm/aws_orc8rs/aws-magmaorc8r-svt/secrets_svt/certs
+    mykey=${dir}/admin_operator.key.pem
+    mycert=${dir}/admin_operator.pem
+    orcurl="api.gxcnetwork.com"
+    cacert_arg=""
+    rootcert=""
+    resolve_cmd=""
+    resolve_str=""
 }

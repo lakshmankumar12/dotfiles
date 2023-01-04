@@ -12,6 +12,7 @@ alias lsdir='find . -maxdepth 1 ! -path . -type d'
 alias man='TERM=xterm man'
 alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
 alias tmuxcopy="tr -d '\n' | tmux loadb -"
+alias tp="cd $HOME/tmp"
 
 #bless my typo
 alias snv=svn
@@ -253,6 +254,28 @@ when_rebooted() {
 howlong()
 {
   ps -o pid=,etime= "$@"
+}
+
+#you invoke it as:
+# check_arg1 var_to_store  "$1" "You missed blah-blah";  if [ $? -ne 0 ] ; then return 1 ; fi ; shift
+check_arg1() {
+    var_name="$1"
+    if [ -z "$2" ] ; then
+        echo "$3"
+        return 1
+    fi
+    eval ${var_name}="$2"
+}
+
+#you invoke it as:
+# check_opt_arg1 var_to_store  "$1" ; if [ $? -ne 0 ] ; then shift ; fi
+check_opt_arg1() {
+    var_name="$1"
+    if [ -z "$2" ] ; then
+        eval ${var_name}=""
+        return 1
+    fi
+    eval ${var_name}="$2"
 }
 
 pgrp()
@@ -644,7 +667,7 @@ getLogFromPane()
         vi $file
     fi
 }
-alias glogp='getLogFromPane $(ppi)'
+alias glogp='getLogFromPane $(ppi) log strip'
 
 tmuxatt()
 {
@@ -1782,6 +1805,17 @@ convert_src_zone_to_dst_zone() {
 
 now_ep() {
     date '+%s'
+}
+
+get_gitlab_diff_url() {
+    check_arg1 left_commit  "$1" "Supply left commit";  if [ $? -ne 0 ] ; then return 1 ; fi ; shift
+    check_arg1 right_commit "$1" "Supply right commit"; if [ $? -ne 0 ] ; then return 1 ; fi ; shift
+    check_opt_arg1 file_blob "$1" ; if [ $? -ne 0 ] ; then shift ; fi
+    url="https://gitlab.com/gxc_corenw/onyx-corenw/-/compare/${left_commit}...${right_commit}"
+    if [ -n "$file_blob" ] ; then
+        url="${url}#${file_blob}"
+    fi
+    echo "$url"
 }
 
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
