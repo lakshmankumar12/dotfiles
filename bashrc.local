@@ -9,6 +9,7 @@ alias ttyrec='$HOME/software/ttyrec/ttyrec/ttyrec'
 alias ttygif='$HOME/software/ttygif/ttygif'
 alias ttygif_concat='$HOME/software/ttygif/concat.sh'
 alias lsdir='find . -maxdepth 1 ! -path . -type d'
+alias nonl='tr -d "\n"'
 alias man='TERM=xterm man'
 alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
 alias tmuxcopy="tr -d '\n' | tmux loadb -"
@@ -333,6 +334,7 @@ alias a2gt=ftt2
 remove_ssh_host() {
     sed -i -e '/'"$1"'/d' $HOME/.ssh/known_hosts
 }
+SSH_ARGS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes"
 
 calc()
 {
