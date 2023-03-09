@@ -257,6 +257,16 @@ howlong()
   ps -o pid=,etime= "$@"
 }
 
+howlongs()
+{
+  ps -o pid=,etimes= "$@"
+}
+
+sincewhen()
+{
+    date -d@$(( $(date '+%s') - $(ps -o etimes= "$1") ))
+}
+
 #you invoke it as:
 # check_arg1 var_to_store  "$1" "You missed blah-blah";  if [ $? -ne 0 ] ; then return 1 ; fi ; shift
 check_arg1() {
@@ -334,7 +344,7 @@ alias a2gt=ftt2
 remove_ssh_host() {
     sed -i -e '/'"$1"'/d' $HOME/.ssh/known_hosts
 }
-SSH_ARGS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes"
+export SSH_ARGS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ExitOnForwardFailure=yes"
 
 calc()
 {

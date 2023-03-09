@@ -43,8 +43,14 @@ scpfromhetzner() {
         echo "Supply file to scp from hetzner"
         return 1
     fi
+    if [ "$1" == "-r" ] ; then
+        shift
+        fullfile="$1"
+    else
+        fullfile=/home/lakshman/tmp/'$1'
+    fi
     dn
-    cmd="scp -P 8022 lakshman@hetzner:/home/lakshman/tmp/'$1' ."
+    cmd="scp -P 8022 lakshman@hetzner:$fullfile ."
     echo "Running: $cmd"
     eval $cmd
 }
@@ -58,4 +64,29 @@ scptohetzner() {
     cmd="scp -P 8022 '$1' lakshman@hetzner:/home/lakshman/tmp/"
     echo "Running: $cmd"
     eval $cmd
+}
+
+mhb() {
+    mosh hetzner
+}
+
+sshagwargs () {
+        if [ -z "$1" ]
+        then
+                echo "Supply AGW to login"
+                return 1
+        fi
+        agw="$1"
+        shift
+        if [ -z "$1" ]
+        then
+                echo "Supply username to login"
+                return 1
+        fi
+        user="$1"
+        ssh -i ~/.ssh/tr0_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}"@"${agw}"
+}
+
+sshagw() {
+    sshagwargs "$1" onyxedge
 }
