@@ -90,3 +90,27 @@ sshagwargs () {
 sshagw() {
     sshagwargs "$1" onyxedge
 }
+
+sshjmphz() {
+    ssh -J hetzner:38882 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
+}
+sshagwjmphz() {
+    gw="$1" ; shift
+    scp -J hetzner:38882 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/tr0_key onyxedge@${gw} "$@"
+}
+
+scpjmphz() {
+    scp -J hetzner:38882 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
+}
+
+scpfromagwjmphz() {
+    gw="$1" ; shift
+    what="$1"
+    scp -J hetzner:38882 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/tr0_key onyxedge@${gw}:${what} ./
+}
+
+scptoagwjmphz() {
+    gw="$1" ; shift
+    what="$1"
+    scp -J hetzner:38882 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/tr0_key ${what} onyxedge@${gw}:/tmp/
+}
