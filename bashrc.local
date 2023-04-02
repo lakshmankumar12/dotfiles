@@ -633,6 +633,9 @@ getAllLogFromPane()
     vi $file
 }
 alias galogp='getAllLogFromPane $(ppi)'
+galogpn() {
+    getAllLogFromPane $(ppi) $1
+}
 
 getLogFromPane()
 {
@@ -680,6 +683,9 @@ getLogFromPane()
     fi
 }
 alias glogp='getLogFromPane $(ppi) log strip'
+glogpn() {
+    getLogFromPane $(ppi) $1 strip
+}
 
 tmuxatt()
 {
