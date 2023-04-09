@@ -28,6 +28,9 @@
     dno = diff --name-only
     root = rev-parse --show-cdup
     reorder = "!GIT_SEQUENCE_EDITOR=\"sed -i -n 'h;1n;/^pick/p;/^pick/n;g;p'\" git rebase"
+    bsort = branch -a --sort=committerdate
+    tsort = for-each-ref --sort=creatordate --format "%(refname) %(creatordate)" refs/tags
+    has = "!f() { if [ -z \"$2\" ] ; then branch=\"HEAD\" ; else branch=\"$2\" ; fi ; /usr/bin/git merge-base --is-ancestor $1 $branch ; } ; f"
 [diff]
     tool = meld
     renameLimit = 25000
