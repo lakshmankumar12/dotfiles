@@ -62,3 +62,5 @@
     whitespace = nowarn
 [svn]
     authorsfile = /home/lakshman_narayanan/ws/git-dir-for-svn/authors.txt
+[safe]
+	directory = /centos_gxc_home/5g-ran
