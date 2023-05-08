@@ -1331,7 +1331,7 @@ to_mac_clip() {
 }
 
 check_clip() {
-    netstat -plant | grep 25020
+    sudo lsof -Pn -i4TCP:25020
     use_color=33 #yellow
     color_msg='\033[38;5;'"${use_color}"'m'
     reset_msg='\033[0;0m'
