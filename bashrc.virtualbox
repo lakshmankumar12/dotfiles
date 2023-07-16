@@ -91,6 +91,10 @@ sshagw() {
     sshagwargs "$1" onyxedge
 }
 
+sshhetzgw() {
+    sshagwargs "192.168.122.$1" onyxedge
+}
+
 sshjmphz() {
     ssh -J hetzner:38882 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "$@"
 }
