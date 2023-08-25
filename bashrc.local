@@ -1836,6 +1836,52 @@ get_gitlab_diff_url() {
     echo "$url"
 }
 
+## source: https://superuser.com/a/117600
+latest_file_in_directory () {
+    find "${@:-.}" -maxdepth 1 -type f -printf '%T@.%p\0' | \
+            sort -znr -t. -k1,2 | \
+            while IFS= read -r -d '' -r record ; do
+                    printf '%s' "$record" | cut -d. -f3-
+                    break
+            done
+}
+
+cleanup_tails() {
+    file="$1"
+    was_int="$2"
+    if [ -f $file ] ; then
+        while read pid ; do
+            echo "killing pid: $pid"
+            kill -9 $pid
+        done < ${file}
+        rm $file
+    fi
+    echo "Done with cleanup"
+    if [ -n "$was_int" ] ; then
+        continue_tailing="no"
+    fi
+}
+
+tail_latest() {
+    filters="$1"
+    latest_file=""
+    tmpfile=$(mktemp /tmp/tail-pids-XXXXXXX)
+    trap "cleanup_tails $tmpfile yes" INT
+    continue_tailing="yes"
+    while [ "$continue_tailing" == "yes" ] ; do
+        new_file=$(eval latest_file_in_directory $filters)
+        if [ "$new_file" != "$latest_file" ]; then
+            cleanup_tails $tmpfile
+            latest_file="$new_file"
+            tail -n 0 -F "$latest_file" &
+            tail_pid=$!
+            echo "Tailing $latest_file with pid: $tail_pid"
+            echo $tail_pid >> $tmpfile
+        fi
+        sleep 1
+    done
+}
+
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
