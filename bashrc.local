@@ -707,6 +707,7 @@ tmuxatt()
       tmux list-session
   fi
 }
+alias ta='tmuxatt 02-'
 
 tmux_win_title_get()
 {
@@ -1164,6 +1165,11 @@ unprotect_pdf_user_pass()
 ifaddr()
 {
   ip addr show | awk ' /^[0-9]+:/ { ifname=$2  } /^[  ]+inet / { print ifname " " $2  } ' | grep "$1"
+}
+
+myip()
+{
+  ip route get $(ip route show | grep default | grep -Po 'via \K[^[:space:]]+') | grep -Po 'src \K[^[:space:]]+'
 }
 
 ilshow()
@@ -1880,6 +1886,19 @@ tail_latest() {
         fi
         sleep 1
     done
+}
+
+npdumpcrt() {
+    openssl x509 -in $1 -noout -text
+}
+dumpcrt() {
+    npdumpcrt $@ | less
+}
+npdumpcrtin() {
+    openssl x509 -noout -text
+}
+dumpcrtin() {
+    openssl x509 -noout -text | less
 }
 
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
