@@ -1851,6 +1851,14 @@ latest_file_in_directory () {
                     break
             done
 }
+latest_dir_in_directory () {
+    find "${@:-.}" -mindepth 1 -maxdepth 1 -type d -printf '%T@.%p\0' | \
+            sort -znr -t. -k1,2 | \
+            while IFS= read -r -d '' -r record ; do
+                    printf '%s' "$record" | cut -d. -f3-
+                    break
+            done
+}
 
 cleanup_tails() {
     file="$1"
@@ -1887,6 +1895,13 @@ tail_latest() {
         sleep 1
     done
 }
+link_latest() {
+    dir=$(latest_dir_in_directory)
+    if [ -n "$dir" ] ; then
+        rm -f latest
+        ln -s $dir latest
+    fi
+}
 
 npdumpcrt() {
     openssl x509 -in $1 -noout -text
@@ -1908,3 +1923,11 @@ fi
 if [ -f ~/.bashrc.devhetzner.sh ] ; then
     . ~/.bashrc.devhetzner.sh
 fi
+
+login_container() {
+    if [ -z "$1" ] ; then
+        echo "Supply container name"
+        return 1
+    fi
+    docker exec -it "$1" /bin/bash
+}
