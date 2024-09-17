@@ -3,7 +3,7 @@ Search: KEY BINDINGS in man page
 a  -- (MY MAP) send prefix                     A -- rename window
 b  --                                          B -- (HOTKEY) gotoGenxNotes
 c  -- create new window                        C -- (HOTKEY) gotoCurrentCode
-d  -- (MY MAP) choose any pane fzf way         D -- choose to detach
+d  -- (MY MAP) choose any pane fzf way         D -- (HOSTKEY) gotoDotfiles
 e  -- (MY MAP) switch-client -l                E -- (HOTKEY) gotoCurrentExecution
 f  -- (MY MAP) choose any pane fzf way         F -- detach
 g  --                                          G -- (HOTKEY) gotoWindowGivenbyG/settmuxWindowForG <abs-pane-id>
@@ -23,7 +23,7 @@ t  -- set pane-title                           T -- (HOTKEY)
 u  -- (MY MAP) send a mark(while log-scrol)
 v  -- vertical split and cdtmuxclip            V -- (MY MAP) vertical layout
 w  -- (MY MAP) switch-session (just sess list) U -- (MY MAP) tmuxcliptohost
-                                               W -- settmuxWindowForW <abs-pane-id>
+                                               W -- (HOTKEY)
 x  -- kill pane                                X -- (HOTKEY)
 y  -- ^r from grepper_commands                 Y - kill lines and do same as y
 z  -- zoom                                     Z -- transfer current buffer to a named bufer
@@ -55,16 +55,15 @@ MOVE pange
 HOTKEY Panes
 -----------
                                mnemonic
+B - c-notes                    b is next to n, which is notes
 C - code                       C for code
+D - dot-files                  D for dotfiles
 E - first test window          E for execute
+G - custom
 L - launch                     L for launch
 N - notes                      N for notes
-P - music pane                 <none .. only free letter>
-    scripts
-R - jira-list                  R for jiRa
+P - custom
+R - custom
 T - first test jira window     T for test
-X - xml/config                 X for xml
-B - nightly                    B for build
-
-W - customforW
-G - customforG
+W - custom
+X - custom

@@ -64,7 +64,7 @@
 [svn]
     authorsfile = /home/lakshman_narayanan/ws/git-dir-for-svn/authors.txt
 [safe]
-	directory = /centos_gxc_home/5g-ran
-	directory = /centos_gxc_home/5g-ran/gnb-2.5.3/l1/source/build/source
+    directory = /centos_gxc_home/5g-ran
+    directory = /centos_gxc_home/5g-ran/gnb-2.5.3/l1/source/build/source
 [init]
-	defaultBranch = main
+    defaultBranch = main

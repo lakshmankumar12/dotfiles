@@ -7,3 +7,4 @@ defscrollback 100000
 hardstatus alwayslastline
 hardstatus string '%-Lw%{= Gk}%50>%n%f* %t%{-}%+Lw%<'
 escape `a
+# to reset escape -- escape ^Aa

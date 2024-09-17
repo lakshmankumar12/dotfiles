@@ -837,6 +837,10 @@ gotoCurrentCode() {
     gotoTmuxPane 02-code 0 0
 }
 
+gotoDotFiles() {
+    gotoTmuxPane 01-main 2 0
+}
+
 gotoLaunchPad() {
     gotoTmuxPane 03-test 0 0
 }
@@ -848,24 +852,6 @@ gotoCurrentExecution() {
 gotoCurrentExecutionSecond() {
     gotoTmuxPane 04-svt 1 0
 }
-
-gotoIL3X() {
-    gotoTmuxPane 01-scripts 5 0
-}
-
-
-gotoJiraList() {
-    gotoTmuxPane 03-jira 0 0
-}
-
-gotoCurrentTest() {
-    gotoTmuxPane 03-jira 1 0
-}
-
-gotoMusicPane() {
-    gotoTmuxPane second 0 0
-}
-
 
 getSessionWindowPaneForPaneId() {
     if [ -z "$1" ] ; then
@@ -911,11 +897,30 @@ gotoWindowGivenbyG() {
     gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForG
 }
 
+gotoWindowGivenbyX() {
+    gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForX
+}
+gotoWindowGivenbyR() {
+    gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForR
+}
+gotoWindowGivenbyP() {
+    gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForP
+}
+
 settmuxWindowForG() {
     echo "$1" > $HOME/tmuxlogs/.windowForG
 }
 settmuxWindowForW() {
     echo "$1" > $HOME/tmuxlogs/.windowForW
+}
+settmuxWindowForX() {
+    echo "$1" > $HOME/tmuxlogs/.windowForX
+}
+settmuxWindowForR() {
+    echo "$1" > $HOME/tmuxlogs/.windowForR
+}
+settmuxWindowForP() {
+    echo "$1" > $HOME/tmuxlogs/.windowForP
 }
 
 fzfchoosepane() {
@@ -1736,28 +1741,32 @@ gowt() {
 rebaseup() {
     git rebase update
 }
-
-getsshconfig() {
-    if [ -z "$1" ] ; then
-        echo "Supply host"
+taga() {
+    git resetatag lakshman_a "$1"
+}
+tagb() {
+    git resetatag lakshman_b "$1"
+}
+tagab() {
+    if [ -z "$2" ] ; then
+        echo "usage: tagab <commitA> <commitB>"
         return 1
     fi
-    host="Host $1"
-    awk -v host="$host" '
-        $0 ~ host {
-            gotcha=1;
-            collect = $0;
-            next;
-        } /^Host / {
-            if (gotcha == 1) {
-                print collect;
-                gotcha=0
-            }
-        } gotcha == 1 {
-            collect = collect "\n" $0
-        } END {
-            if (gotcha == 1) { print collect; }
-        }' ~/.ssh/config
+    taga "$1" > /dev/null
+    tagb "$2" > /dev/null
+    git logol lakshman_b
+}
+
+getcssh() {
+    ssh -G "$1" | grep -w --color=never \
+        -e "user" \
+        -e "hostname" \
+        -e "port" \
+        -e "exitonforwardfailure" \
+        -e "passwordauthentication" \
+        -e "pubkeyauthentication" \
+        -e "identityfile" \
+        -e "proxycommand"
 }
 
 ep_to_time() {
@@ -1844,7 +1853,9 @@ get_gitlab_diff_url() {
 
 ## source: https://superuser.com/a/117600
 latest_file_in_directory () {
-    find "${@:-.}" -maxdepth 1 -type f -printf '%T@.%p\0' | \
+    dir=${1:-.}
+    name=${2:-*}
+    find "$(cd ${dir} ; pwd)" -maxdepth 1 -type f -name "$name" -printf '%T@.%p\0' | \
             sort -znr -t. -k1,2 | \
             while IFS= read -r -d '' -r record ; do
                     printf '%s' "$record" | cut -d. -f3-
@@ -1930,4 +1941,32 @@ login_container() {
         return 1
     fi
     docker exec -it "$1" /bin/bash
+}
+
+re_confirm() {
+    random=$(openssl rand -base64 4)
+    read -p "Type this random string ${random}: " input
+    if [ "x$random" != "x$input" ] ; then
+        echo "Whatever you typed:$input mismatched .. get sober and try again"
+        return 1
+    fi
+    return 0
+}
+
+delete_lakshman_vms() {
+    vms=($(virsh list --all | awk '/lakshman/ {print $2}'))
+    if [ -z "$vms" ] ; then
+        echo "no vms found"
+        return 1
+    fi
+    echo "Vms are: ${vms[@]}"
+    re_confirm
+    if [ $? -ne 0 ] ; then
+        return
+    fi
+    for i in ${vms[@]} ; do
+        echo "vm is $i"
+        virsh destroy $i
+        virsh undefine --remove-all-storage $i
+    done
 }
