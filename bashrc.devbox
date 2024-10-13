@@ -23,3 +23,17 @@ pupd()
     echo "Signalled .. sleeping 2s" ; sleep 2
     tail /home/lakshman/host/Downloads/songs-download/English/pandoraScrobble.txt
 }
+
+devnastep1() {
+    python3 ${HOME}/github/quick-utility-scripts/list_unicode_chars.py "$@"
+}
+alias dns1=devnastep1
+
+devnastep2() {
+    python3 ${HOME}/github/quick-utility-scripts/print_unicode_chars.py "$@"
+}
+alias dns2=devnastep2
+
+devnasanitize() {
+    python $HOME/github/quick-utility-scripts/sanitize_devna_chars.py
+}

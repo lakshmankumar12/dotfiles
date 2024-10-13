@@ -2,6 +2,7 @@ HOST_DIR="/home/lakshman/host_c/"
 USERS_DIR="${HOST_DIR}/Users/laksh/"
 DOWNLOADS_DIR="${USERS_DIR}/Downloads"
 DATA_DIR="${HOST_DIR}/Data"
+WINTMP_DIR="${USERS_DIR}/AppData/Local/Temp"
 
 dn() {
     cd ${DOWNLOADS_DIR}
@@ -9,6 +10,18 @@ dn() {
 
 data() {
     cd ${DATA_DIR}
+}
+
+work() {
+    cd ${DATA_DIR}/work
+}
+
+specs() {
+    cd ${DATA_DIR}/specs/
+}
+
+wintmp() {
+    cd ${WINTMP_DIR}
 }
 
 #tmux overrides
@@ -20,14 +33,25 @@ gotoLaunchPad() {
 }
 
 clip_anchor() {
-    clip_listening=$(ps -ef | egrep '\bclip_listener')
-    if [ -z "$clip_listening" ] ; then
-        echo "Clip listener being started"
-        ~/github/quick-utility-scripts/clip_listener.py
-    else
-        echo "Clip listener already found running"
-    fi
-    ssh -o ExitOnForwardFailure=yes -R 25020:localhost:25020 -p 8022 lakshman@hetzner
+    while [ 1 ] ; do
+        clip_listening=$(ps -ef | egrep '\bclip_listener')
+        if [ -z "$clip_listening" ] ; then
+            echo "Clip listener being started"
+            ~/github/quick-utility-scripts/clip_listener.py
+        else
+            echo "Clip listener already found running"
+        fi
+        ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -R 25020:localhost:25020 -R 54321:localhost:22 lakshman@myhetzner
+        echo "ssh exited at $(date) .. sleeping 20s.. you should touch /tmp/stop_clip_anchor if you want to quit for good"
+        sleep 20 &
+        pid=$!
+        echo "if you want to quicly retry: kill -9 $pid"
+        wait
+        if [ -f /tmp/stop_clip_anchor ] ; then
+            echo "existing as /tmp/stop_clip_anchor exists"
+            break
+        fi
+    done
 }
 
 check_clip() {
@@ -37,6 +61,12 @@ check_clip() {
     echo "*********"
 }
 alias ccc=check_clip
+
+clear_clip() {
+    file=/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
+    echo " " > $file
+}
+alias ccd=clear_clip
 
 scpfromhetzner() {
     if [ -z "$1" ] ; then
@@ -50,7 +80,7 @@ scpfromhetzner() {
         fullfile=/home/lakshman/tmp/'$1'
     fi
     dn
-    cmd="scp -P 8022 lakshman@hetzner:$fullfile ."
+    cmd="scp lakshman@myhetzner:$fullfile ."
     echo "Running: $cmd"
     eval $cmd
 }
@@ -61,7 +91,7 @@ scptohetzner() {
         return 1
     fi
     dn
-    cmd="scp -P 8022 '$1' lakshman@hetzner:/home/lakshman/tmp/"
+    cmd="scp '$1' lakshman@myhetzner:/home/lakshman/tmp/"
     echo "Running: $cmd"
     eval $cmd
 }
@@ -117,4 +147,8 @@ scptoagwjmphz() {
     gw="$1" ; shift
     what="$1"
     scp -J hetzner:38882 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/tr0_key ${what} onyxedge@${gw}:/tmp/
+}
+
+ct() {
+    python ~/github/quick-utility-scripts/hetzner_connect.py
 }

@@ -1840,6 +1840,10 @@ now_ep() {
     date '+%s'
 }
 
+converttz() {
+    python $HOME/github/quick-utility-scripts/convert_time_from_zones.py
+}
+
 get_gitlab_diff_url() {
     check_arg1 left_commit  "$1" "Supply left commit";  if [ $? -ne 0 ] ; then return 1 ; fi ; shift
     check_arg1 right_commit "$1" "Supply right commit"; if [ $? -ne 0 ] ; then return 1 ; fi ; shift
