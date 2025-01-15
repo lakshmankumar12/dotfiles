@@ -1,7 +1,9 @@
-HOST_DIR="/home/lakshman/host_c/"
+HOST_DIR="/host_c/"
 USERS_DIR="${HOST_DIR}/Users/laksh/"
 DOWNLOADS_DIR="${USERS_DIR}/Downloads"
-DATA_DIR="${HOST_DIR}/Data"
+DATA_DIR="${DOWNLOADS_DIR}/data"
+WORK_DIR="${DOWNLOADS_DIR}/work"
+WINGITHUB_DIR="${DOWNLOADS_DIR}/work/github"
 WINTMP_DIR="${USERS_DIR}/AppData/Local/Temp"
 
 dn() {
@@ -13,7 +15,11 @@ data() {
 }
 
 work() {
-    cd ${DATA_DIR}/work
+    cd ${WORK_DIR}
+}
+
+wingh() {
+    cd ${WINGITHUB_DIR}
 }
 
 specs() {
@@ -37,7 +43,7 @@ clip_anchor() {
         clip_listening=$(ps -ef | egrep '\bclip_listener')
         if [ -z "$clip_listening" ] ; then
             echo "Clip listener being started"
-            ~/github/quick-utility-scripts/clip_listener.py
+            ~/github/quick-utility-scripts/clip_listener.py &
         else
             echo "Clip listener already found running"
         fi
@@ -151,4 +157,23 @@ scptoagwjmphz() {
 
 ct() {
     python ~/github/quick-utility-scripts/hetzner_connect.py
+}
+
+
+devnastep1() {
+    python3 ${HOME}/github/quick-utility-scripts/list_unicode_chars.py "$@"
+}
+alias dns1=devnastep1
+
+devnastep2() {
+    python3 ${HOME}/github/quick-utility-scripts/print_unicode_chars.py "$@"
+}
+alias dns2=devnastep2
+
+devnasanitize() {
+    python $HOME/github/quick-utility-scripts/sanitize_devna_chars.py
+}
+
+setup_tmux() {
+  $HOME/github/quick-utility-scripts/setup_tmux.sh
 }

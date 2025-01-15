@@ -1365,7 +1365,7 @@ from_mac_clip() {
 }
 
 to_winhost_clip() {
-    file=/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
+    file=/host_c/Users/laksh/Documents/cliptest.txt
     cat > $file
     #strip newline from last-line
     printf %s "$(< $file)" > $file
