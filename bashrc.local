@@ -842,7 +842,7 @@ gotoDotFiles() {
 }
 
 gotoLaunchPad() {
-    gotoTmuxPane 03-test 0 0
+    gotoTmuxPane 03-test 1 0
 }
 
 gotoCurrentExecution() {
@@ -1369,6 +1369,10 @@ to_winhost_clip() {
     cat > $file
     #strip newline from last-line
     printf %s "$(< $file)" > $file
+}
+
+to_host_clip_huge() {
+    cat > /tmp/cliptest.txt ; scp /tmp/cliptest.txt laptop:/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
 }
 
 to_host_clip() {
@@ -1974,3 +1978,25 @@ delete_lakshman_vms() {
         virsh undefine --remove-all-storage $i
     done
 }
+
+get_ipv4_on_ifc() {
+    guest=$1
+    ifc=$2
+    if [ -z "$ifc" ] ; then
+        echo "get_ipv4_on_ifc vm ifc"
+        return
+    fi
+    virsh domifaddr --source agent $guest | awk -v ifc=$ifc '
+        $1 ~ ifc {
+            a = 1
+        }
+        a == 1 {
+            if ($3 ~ /ipv4/) {
+                print $4
+            } ;
+            if  ($1 != "-" ) {
+                exit
+            }
+        } '
+}
+
