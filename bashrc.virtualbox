@@ -1,10 +1,12 @@
 HOST_DIR="/host_c/"
 USERS_DIR="${HOST_DIR}/Users/laksh/"
 DOWNLOADS_DIR="${USERS_DIR}/Downloads"
-DATA_DIR="${DOWNLOADS_DIR}/data"
-WORK_DIR="${DOWNLOADS_DIR}/work"
-WINGITHUB_DIR="${DOWNLOADS_DIR}/work/github"
+DATA_DIR="${USERS_DIR}/data"
+WORK_DIR="${USERS_DIR}/work"
+PERSONAL_DIR="${DATA_DIR}/personal"
+WINGITHUB_DIR="${WORK_DIR}/github"
 WINTMP_DIR="${USERS_DIR}/AppData/Local/Temp"
+CLIP_FILE=${USERS_DIR}/Documents/cliptest.txt
 
 dn() {
     cd ${DOWNLOADS_DIR}
@@ -20,6 +22,10 @@ work() {
 
 wingh() {
     cd ${WINGITHUB_DIR}
+}
+
+pers() {
+    cd ${PERSONAL_DIR}
 }
 
 specs() {
@@ -40,19 +46,26 @@ gotoLaunchPad() {
 
 clip_anchor() {
     while [ 1 ] ; do
-        clip_listening=$(ps -ef | egrep '\bclip_listener')
-        if [ -z "$clip_listening" ] ; then
-            echo "Clip listener being started"
-            ~/github/quick-utility-scripts/clip_listener.py &
+        listener_pid=$(cat /tmp/clip_listener.pid)
+        if [ -n "$listener_pid" ] ; then
+            kill_cmd="kill -9 ${listener_pid}"
+            echo $kill_cmd
+            eval $kill_cmd
         else
-            echo "Clip listener already found running"
+            echo "no listener_pid detected"
         fi
+        ~/github/quick-utility-scripts/clip_listener.py &
         ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -R 25020:localhost:25020 -R 54321:localhost:22 lakshman@myhetzner
+        if [ $? -eq 255 ] ; then
+            echo "Forwarding failed.. tying to rescue"
+            ssh lakshman@myhetzner sudo /home/lakshman/github/quick-utility-scripts/detect_and_kill_port_listener.sh 25020
+        fi
         echo "ssh exited at $(date) .. sleeping 20s.. you should touch /tmp/stop_clip_anchor if you want to quit for good"
         sleep 20 &
         pid=$!
         echo "if you want to quicly retry: kill -9 $pid"
-        wait
+        echo "if you want stop retry: touch /tmp/stop_clip_anchor"
+        wait $pid
         if [ -f /tmp/stop_clip_anchor ] ; then
             echo "existing as /tmp/stop_clip_anchor exists"
             break
@@ -61,16 +74,14 @@ clip_anchor() {
 }
 
 check_clip() {
-    file=/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
-    echo "Contents of $file:"
-    cat $file
+    echo "Contents of $CLIP_FILE"
+    cat $CLIP_FILE
     echo "*********"
 }
 alias ccc=check_clip
 
 clear_clip() {
-    file=/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
-    echo " " > $file
+    echo " " > $CLIP_FILE
 }
 alias ccd=clear_clip
 
@@ -174,6 +185,6 @@ devnasanitize() {
     python $HOME/github/quick-utility-scripts/sanitize_devna_chars.py
 }
 
-setup_tmux() {
-  $HOME/github/quick-utility-scripts/setup_tmux.sh
+stt() {
+    $HOME/github/quick-utility-scripts/setup_tmux.sh
 }

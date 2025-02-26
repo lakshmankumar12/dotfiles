@@ -708,6 +708,7 @@ tmuxatt()
   fi
 }
 alias ta='tmuxatt 02-'
+alias tav='tmuxatt virt'
 
 tmux_win_title_get()
 {

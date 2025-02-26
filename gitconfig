@@ -64,7 +64,8 @@
 [svn]
     authorsfile = /home/lakshman_narayanan/ws/git-dir-for-svn/authors.txt
 [safe]
-    directory = /host_c/Users/laksh/Downloads/work/github/autohotkey
-    directory = /host_c/Users/laksh/Downloads/work/github/quick-utility-scripts
+    directory = /host_c/Users/laksh/work/github/autohotkey
+    directory = /host_c/Users/laksh/work/github/quick-utility-scripts
+	directory = /host_c/Users/laksh/work/github/sans99converter
 [init]
     defaultBranch = main
