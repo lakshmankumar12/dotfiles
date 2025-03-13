@@ -573,6 +573,11 @@ listtmuxlogpanes()
 alias ltl=listtmuxlogpanes
 alias ltf="cd $HOME/tmuxlogs ; ls"
 
+dumptmuxclip() {
+    tmux save-buffer /tmp/tmuxclip
+    cat /tmp/tmuxclip
+}
+
 dumptmuxpane()
 {
     if [ -z "$1" -o "$1" = "-h" -o "$1" = "--help" ] ; then
@@ -851,7 +856,7 @@ gotoCurrentExecution() {
 }
 
 gotoCurrentExecutionSecond() {
-    gotoTmuxPane 04-svt 1 0
+    gotoTmuxPane 04-svt 20 0
 }
 
 getSessionWindowPaneForPaneId() {
@@ -1373,7 +1378,7 @@ to_winhost_clip() {
 }
 
 to_host_clip_huge() {
-    cat > /tmp/cliptest.txt ; scp /tmp/cliptest.txt laptop:/home/lakshman/host_c/Users/laksh/Documents/cliptest.txt
+    cat > /tmp/cliptest.txt ; scp /tmp/cliptest.txt laptop:/host_c/Users/laksh/Documents/cliptest.txt
 }
 
 to_host_clip() {
@@ -1848,6 +1853,7 @@ now_ep() {
 converttz() {
     python $HOME/github/quick-utility-scripts/convert_time_from_zones.py
 }
+alias ctz=converttz
 
 get_gitlab_diff_url() {
     check_arg1 left_commit  "$1" "Supply left commit";  if [ $? -ne 0 ] ; then return 1 ; fi ; shift
