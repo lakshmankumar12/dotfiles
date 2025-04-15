@@ -188,3 +188,7 @@ devnasanitize() {
 stt() {
     $HOME/github/quick-utility-scripts/setup_tmux.sh
 }
+
+tex2pdf() {
+    docker run --rm -v $PWD:/data moss_xelatex_fonts xelatex -interaction=batchmode -no-pdf-info -jobname=${outfile%.pdf} -output-directory=./ ${infile}
+}

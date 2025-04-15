@@ -2007,3 +2007,23 @@ get_ipv4_on_ifc() {
         } '
 }
 
+har_dump() {
+    if [ ! -f "$infile" ] ; then
+        echo "infile: $infile is not available"
+        return
+    fi
+    jq '.log.entries | to_entries | .[] | "\(.key): \(.value.request.url | if length > 200 then "..." + .[(length-200):] else . end)" ' $infile
+}
+
+har_dump_notrunc() {
+    jq '.log.entries | to_entries | .[] | "\(.key): \(.value.request.url)" ' $infile
+}
+
+har_req_show() {
+    jq '.log.entries['"$idx"'].request | del(.headers)' $infile
+}
+
+har_resp_show() {
+    jq '.log.entries['"$idx"'].response | del(.headers)' $infile
+}
+
