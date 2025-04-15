@@ -126,11 +126,6 @@ case $hn in
     ;;
 esac
 
-#rev-order
-export PATH=$HOME/bin:$PATH
-if [ -n "$hostspecific" ]; then
-export PATH=$hostspecific:$PATH
-fi
 export PATH="$PATH:$HOME/.local/bin"
 
 #regular order
@@ -1946,6 +1941,12 @@ if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+#rev-order
+export PATH=$HOME/bin:$PATH
+if [ -n "$hostspecific" ]; then
+export PATH=$hostspecific:$PATH
+fi
+
 if [ -f ~/.bashrc.devhetzner.sh ] ; then
     . ~/.bashrc.devhetzner.sh
 fi
@@ -2005,6 +2006,22 @@ get_ipv4_on_ifc() {
                 exit
             }
         } '
+}
+
+interactive_sleep() {
+    value=$1
+    if [ $value -le 0 ] ; then
+        echo "Supply value to sleep"
+        return
+    fi
+    count=$value
+    echo "Sleeping $count secs"
+    while [ $count -gt 0 ] ; do
+        printf "\rsecs left: %4d" "$count"
+        sleep 1
+        count=$((count - 1))
+    done
+    echo
 }
 
 har_dump() {
