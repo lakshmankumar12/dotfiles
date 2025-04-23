@@ -2036,11 +2036,36 @@ har_dump_notrunc() {
     jq '.log.entries | to_entries | .[] | "\(.key): \(.value.request.url)" ' $infile
 }
 
+har_show() {
+    field="$1"
+    jq '.log.entries['"$idx"'].'"$field"' | del(.headers)' $infile
+}
+
+har_show_as_json() {
+    field1=$1 ; shift
+    if [ -z "$1" ] ; then
+        echo "You have to supply the field to show as json"
+        return
+    fi
+    field2="$1"
+    if [[ ! "$field2" == "."* ]] ; then
+        field2=".$field2"
+    fi
+    har_show $field1 | jq $field2 | jq -r '.' | jq '.'
+}
+
 har_req_show() {
-    jq '.log.entries['"$idx"'].request | del(.headers)' $infile
+    har_show request
 }
 
 har_resp_show() {
-    jq '.log.entries['"$idx"'].response | del(.headers)' $infile
+    har_show response
 }
 
+har_req_show_field_as_json() {
+    har_show_as_json request "$@"
+}
+
+har_resp_show_field_as_json() {
+    har_show_as_json response "$@"
+}
