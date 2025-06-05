@@ -2069,3 +2069,11 @@ har_req_show_field_as_json() {
 har_resp_show_field_as_json() {
     har_show_as_json response "$@"
 }
+
+har_resp_show_dump_metrics() {
+    har_show_as_json response content.text | jq -r '.' | jq -r '.data.data.result[0].values[] | "\(.[0]): \(.[1])" ' | awk -F: '{cmd="date -d@" $1; cmd | getline d; close(cmd); printf "%s: %s: %s\n",$1,d,$2}'
+}
+
+showconfigssh() {
+    ssh -G "$1" | grep -i -w -e proxycommand -e user -e hostname -e identityfile -e port
+}
