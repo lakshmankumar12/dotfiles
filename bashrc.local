@@ -2029,11 +2029,11 @@ har_dump() {
         echo "infile: $infile is not available"
         return
     fi
-    jq '.log.entries | to_entries | .[] | "\(.key): \(.value.request.url | if length > 200 then "..." + .[(length-200):] else . end)" ' $infile
+    jq '.log.entries | to_entries | .[] | "\(.key): \(.value.request.method) \(.value.request.url | if length > 200 then "..." + .[(length-200):] else . end)" ' $infile
 }
 
 har_dump_notrunc() {
-    jq '.log.entries | to_entries | .[] | "\(.key): \(.value.request.url)" ' $infile
+    jq '.log.entries | to_entries | .[] | "\(.key): \(.value.request.method) \(.value.request.url)" ' $infile
 }
 
 har_show() {
