@@ -4,6 +4,7 @@ DOWNLOADS_DIR="${USERS_DIR}/Downloads"
 DATA_DIR="${USERS_DIR}/data"
 WORK_DIR="${USERS_DIR}/work"
 PERSONAL_DIR="${DATA_DIR}/personal"
+CHANTS_DIR="${PERSONAL_DIR}/chants"
 WINGITHUB_DIR="${WORK_DIR}/github"
 WINTMP_DIR="${USERS_DIR}/AppData/Local/Temp"
 CLIP_FILE=${USERS_DIR}/Documents/cliptest.txt
@@ -26,6 +27,10 @@ wingh() {
 
 pers() {
     cd ${PERSONAL_DIR}
+}
+
+chants() {
+    cd ${CHANTS_DIR}
 }
 
 specs() {

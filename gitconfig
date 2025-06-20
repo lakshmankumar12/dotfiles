@@ -67,5 +67,6 @@
     directory = /host_c/Users/laksh/work/github/autohotkey
     directory = /host_c/Users/laksh/work/github/quick-utility-scripts
 	directory = /host_c/Users/laksh/work/github/sans99converter
+	directory = /host_c/Users/laksh/work/github/slokas
 [init]
     defaultBranch = main
