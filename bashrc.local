@@ -2024,6 +2024,10 @@ interactive_sleep() {
     echo
 }
 
+url_decode() {
+    python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read().strip()))"
+}
+
 har_dump() {
     if [ ! -f "$infile" ] ; then
         echo "infile: $infile is not available"
@@ -2038,7 +2042,7 @@ har_dump_notrunc() {
 
 har_show() {
     field="$1"
-    jq '.log.entries['"$idx"'].'"$field"' | del(.headers)' $infile
+    jq '.log.entries['"$idx"'].'"$field"' | del(.headers?)' $infile
 }
 
 har_show_as_json() {
@@ -2056,6 +2060,11 @@ har_show_as_json() {
 
 har_req_show() {
     har_show request
+}
+
+har_req_show_url_decode() {
+    har_show request.url | jq -r '.' | url_decode
+    har_show request | jq -r '.queryString[] | select(.name == "query") | .value' | url_decode
 }
 
 har_resp_show() {
