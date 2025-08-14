@@ -639,6 +639,7 @@ galogpn() {
 
 getLogFromPane()
 {
+    ## args: pane-num, file, skip(for vi), strip
     pane=$1
     shift
     if [ -z "$1" ] ; then
@@ -1412,10 +1413,12 @@ ping_check() {
         return
     fi
     while [ 1 ] ; do
-        ping -c 1 $1
+        date
+        timeout 3s ping -c 1 $1
         if [ $? -eq 0 ]; then
             break;
         fi
+        sleep 1
     done
 }
 
@@ -2079,8 +2082,36 @@ har_resp_show_field_as_json() {
     har_show_as_json response "$@"
 }
 
+har_resp_show_content_text() {
+    har_show_as_json response .content.text
+}
+
+
 har_resp_show_dump_metrics() {
     har_show_as_json response content.text | jq -r '.' | jq -r '.data.data.result[0].values[] | "\(.[0]): \(.[1])" ' | awk -F: '{cmd="date -d@" $1; cmd | getline d; close(cmd); printf "%s: %s: %s\n",$1,d,$2}'
+}
+
+har_times() {
+    har_show startedDateTime | jq -r "."
+    har_show time
+}
+
+detect_gaps() {
+  local prev_epoch=""
+  while IFS=: read -r epoch rest; do
+    epoch=$(echo "$epoch" | xargs)
+    if [[ -n "$prev_epoch" ]]; then
+      diff=$((epoch - prev_epoch))
+      if [[ $diff -ne 60 ]]; then
+        missing=$(( (diff / 60) - 1 ))
+        for ((i = 1; i <= missing; i++)); do
+          echo "GAP HERE (missing sample at $((prev_epoch + i * 60)))"
+        done
+      fi
+    fi
+    echo "$epoch:$rest"
+    prev_epoch=$epoch
+  done
 }
 
 showconfigssh() {

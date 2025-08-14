@@ -85,4 +85,16 @@ setopt HIST_SAVE_NO_DUPS
 
 unset PYTHONPATH
 
+custom_warning_fn() {
+    echo "$CUSTOM_WARNING_STR"
+}
+
+set_custom_warning() {
+    CUSTOM_WARNING_STR=${1:-SET_CUSTOM_WARNING_STR}
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=(custom_warning)
+    POWERLEVEL9K_CUSTOM_WARNING=custom_warning_fn
+    POWERLEVEL9K_CUSTOM_WARNING_FOREGROUND='red'
+    POWERLEVEL9K_CUSTOM_WARNING_BACKGROUND='black'
+}
+
 prune_paths
