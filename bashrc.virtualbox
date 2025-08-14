@@ -60,7 +60,7 @@ clip_anchor() {
             echo "no listener_pid detected"
         fi
         ~/github/quick-utility-scripts/clip_listener.py &
-        ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -R 25020:localhost:25020 -R 54321:localhost:22 lakshman@myhetzner
+        ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -R 25020:localhost:25020 -R 54321:localhost:22 -R 25030:10.0.2.2:25030 lakshman@myhetzner
         if [ $? -eq 255 ] ; then
             echo "Forwarding failed.. tying to rescue"
             ssh lakshman@myhetzner sudo /home/lakshman/github/quick-utility-scripts/detect_and_kill_port_listener.sh 25020

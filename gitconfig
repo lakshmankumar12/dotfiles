@@ -68,5 +68,6 @@
     directory = /host_c/Users/laksh/work/github/quick-utility-scripts
 	directory = /host_c/Users/laksh/work/github/sans99converter
 	directory = /host_c/Users/laksh/work/github/slokas
+	directory = /host_c/Users/laksh/work/github/ping-plots
 [init]
     defaultBranch = main
