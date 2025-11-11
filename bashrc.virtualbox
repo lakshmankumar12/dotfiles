@@ -172,9 +172,12 @@ scptoagwjmphz() {
 }
 
 ct() {
-    python ~/github/quick-utility-scripts/hetzner_connect.py
+    python ~/github/quick-utility-scripts/hetzner_connect.py direct
 }
 
+ctblr() {
+    python ~/github/quick-utility-scripts/hetzner_connect.py -p /home/lakshman/.cache/.sshpasskey blr
+}
 
 devnastep1() {
     python3 ${HOME}/github/quick-utility-scripts/list_unicode_chars.py "$@"
