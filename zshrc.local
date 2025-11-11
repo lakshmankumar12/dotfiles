@@ -97,4 +97,8 @@ set_custom_warning() {
     POWERLEVEL9K_CUSTOM_WARNING_BACKGROUND='black'
 }
 
+if [[ ! " ${POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[@]} " =~ " virtualenv " ]]; then
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=(virtualenv)
+fi
+
 prune_paths

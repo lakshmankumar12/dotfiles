@@ -493,16 +493,23 @@ listtmuxpanes()
   tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{window_id}|#{pane_id}|#{pane_tty}|#{?#{==:#{TMUX_TEMP_CURR_PANE},#{pane_id}},current,}"
 }
 
-listalltmuxpanes()
+listalltmuxpanes_int()
 {
     for i in $(tmux list-sessions -F '#S') ; do
         listtmuxpanes $i
+        echo "----"
     done
 }
 
+listalltmuxpanes()
+{
+    listalltmuxpanes_int | column -t -s\|
+}
+alias latp=listalltmuxpanes
+
 listalltmuxpanesptysorted()
 {
-    listalltmuxpanes | sort -t\| -k 8
+    listalltmuxpanes_int | sort -t\| -k 8
 }
 
 listalltmuxpids()
@@ -528,7 +535,7 @@ listalltmuxpids()
                 print psttydict[$8]
             }
         }
-    ' <(psme) <(listalltmuxpanes | tr '|' ' ')
+    ' <(psme) <(listalltmuxpanes_int | tr '|' ' ')
 }
 
 psmewithtmuxpanes() {
@@ -551,7 +558,7 @@ psmewithtmuxpanes() {
             for ( i = 7 ; i <= NF ; ++i) s = s " " $i ;
             print s
         }
-    '  <(listalltmuxpanes | tr '|' ' ' ) <(psme)
+    '  <(listalltmuxpanes_int | tr '|' ' ' ) <(psme)
 }
 alias mc=psmewithtmuxpanes
 
@@ -861,7 +868,7 @@ getSessionWindowPaneForPaneId() {
     else
         pane_id="$1"
     fi
-    pane_line=$(listalltmuxpanes | grep -w $pane_id)
+    pane_line=$(listalltmuxpanes_int | grep -w $pane_id)
     if [ $(echo ${pane_line} | wc -l) != 1 ] ; then
         return
     fi
@@ -926,7 +933,7 @@ settmuxWindowForP() {
 }
 
 fzfchoosepane() {
-    pane_id=$(listalltmuxpanes | column -t -s '|' | fzf --exact --prompt 'switch session: ' --reverse | cut -d\% -f2 | awk '{print $1}')
+    pane_id=$(listalltmuxpanes_int | column -t -s '|' | fzf --exact --prompt 'switch session: ' --reverse | cut -d\% -f2 | awk '{print $1}')
     if [ -z "${pane_id}" ] ; then
         return
     fi
@@ -1009,7 +1016,7 @@ shootallvims() {
                 if (key in ttydict) {
                     command=sprintf("tmux send-keys -t \"%s\" Escape \"::qa\" C-m\n",ttydict[key]) ; system(command)
                 }
-            } '  FS='|' <(listalltmuxpanes) FS=' ' <(psme | grep '[n]vim' )
+            } '  FS='|' <(listalltmuxpanes_int) FS=' ' <(psme | grep '[n]vim' )
 }
 
 # From https://gist.github.com/msabramo/746585#file-pyval-sh
@@ -1801,6 +1808,10 @@ now() {
     date
 }
 
+today() {
+    date "+%Y-%m-%d"
+}
+
 declare -A time_zones
 time_zones["ist"]="Asia/Kolkata"
 time_zones["cent"]="America/Chicago"
@@ -1852,6 +1863,10 @@ converttz() {
     python $HOME/github/quick-utility-scripts/convert_time_from_zones.py
 }
 alias ctz=converttz
+
+py_pretty_print() {
+    python $HOME/github/quick-utility-scripts/py_pretty_print.py "$@"
+}
 
 get_gitlab_diff_url() {
     check_arg1 left_commit  "$1" "Supply left commit";  if [ $? -ne 0 ] ; then return 1 ; fi ; shift
@@ -1938,6 +1953,41 @@ npdumpcrtin() {
 }
 dumpcrtin() {
     openssl x509 -noout -text | less
+}
+
+npdumpallcrtsin() {
+
+    # Extract and process each certificate block
+    awk '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/ {
+        if (/-----BEGIN CERTIFICATE-----/) {
+            cmd = "mktemp /tmp/dumpcrts-XXXXX"
+            cmd | getline tmpfile
+            close(cmd)
+            count += 1
+            print "------------------ Cert Number: " count
+        }
+        print >> tmpfile
+        if (/-----END CERTIFICATE-----/) {
+            cmd="openssl x509 -in " tmpfile " -noout -text"
+            system(cmd)
+            cmd="rm -f " tmpfile
+            system(cmd)
+        }
+    }'
+}
+
+npdumpallcrts() {
+    infile="$1"
+    shift
+    cat $infile | npdumpallcrtsin "$@"
+}
+
+dumpallcertsin() {
+    npdumpallcrtsin "$@" | less
+}
+
+dumpallcerts() {
+    npdumpallcrts "$@" | less
 }
 
 if [ -f /home/linuxbrew/.linuxbrew/bin/brew ] ; then
@@ -2117,3 +2167,21 @@ detect_gaps() {
 showconfigssh() {
     ssh -G "$1" | grep -i -w -e proxycommand -e user -e hostname -e identityfile -e port
 }
+
+
+ganyp () {
+    if [ -z "$1" ] ; then
+        echo "supply grep matter"
+        return 1
+    fi
+    out=$(eval "kubectl get pods -A | grep $@")
+    lines=$(echo "$out" | wc -l)
+    if [ $lines -eq 1 ]
+    then
+            pod=$(echo "${out}" | awk '{print $2}')
+            echo "pod=$pod"
+    else
+            echo "$out"
+    fi
+}
+
