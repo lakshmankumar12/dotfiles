@@ -89,7 +89,7 @@ custom_warning_fn() {
     echo "$CUSTOM_WARNING_STR"
 }
 
-set_custom_warning() {
+add_custom_warning() {
     CUSTOM_WARNING_STR=${1:-SET_CUSTOM_WARNING_STR}
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=(custom_warning)
     POWERLEVEL9K_CUSTOM_WARNING=custom_warning_fn
@@ -97,8 +97,26 @@ set_custom_warning() {
     POWERLEVEL9K_CUSTOM_WARNING_BACKGROUND='black'
 }
 
+replace_custom_warning() {
+    CUSTOM_WARNING_STR=${1:-SET_CUSTOM_WARNING_STR}
+}
+
 if [[ ! " ${POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[@]} " =~ " virtualenv " ]]; then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=(virtualenv)
 fi
+
+
+function smart_exit() {
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    echo "Deactivating virtual environment..."
+    deactivate
+  else
+    exit
+  fi
+}
+
+zle -N smart_exit
+bindkey '^D' smart_exit
+
 
 prune_paths
