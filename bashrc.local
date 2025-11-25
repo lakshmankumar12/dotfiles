@@ -2185,3 +2185,15 @@ ganyp () {
     fi
 }
 
+psssh() {
+    ps -ef | grep -w -e '[s]sh'
+}
+
+killhetnzerssh() {
+    psssh | grep myhetzner | grep -v Exit
+    pid=$(psssh | grep myhetzner | grep -v Exit | awk '{print $2}')
+    if [ -n "$pid" ] ; then
+        echo "Killing: $pid"
+        kill -9 $pid
+    fi
+}
