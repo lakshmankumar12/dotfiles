@@ -106,17 +106,29 @@ if [[ ! " ${POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[@]} " =~ " virtualenv " ]]; then
 fi
 
 
-function smart_exit() {
-  if [[ -n "$VIRTUAL_ENV" ]]; then
-    echo "Deactivating virtual environment..."
-    deactivate
-  else
-    exit
-  fi
+stty eof undef
+
+handle_ctrl_d() {
+    # If line is empty
+    if [[ -z "$BUFFER" ]]; then
+        # If in a virtual environment, deactivate it
+        if [[ -n "$VIRTUAL_ENV" ]]; then
+            deactivate
+            zle reset-prompt
+        else
+            # Otherwise exit the shell
+            exit
+        fi
+    else
+        # Line is not empty, delete character under cursor
+        zle delete-char
+    fi
 }
 
-zle -N smart_exit
-bindkey '^D' smart_exit
+# Register as widget
+zle -N handle_ctrl_d
 
+# Bind to Ctrl+D
+bindkey '^D' handle_ctrl_d
 
 prune_paths
