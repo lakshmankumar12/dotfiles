@@ -131,4 +131,6 @@ zle -N handle_ctrl_d
 # Bind to Ctrl+D
 bindkey '^D' handle_ctrl_d
 
+stty eof '^]'
+
 prune_paths

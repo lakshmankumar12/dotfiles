@@ -127,6 +127,7 @@ case $hn in
 esac
 
 export PATH="$PATH:$HOME/.local/bin"
+export PATH="$HOME/.npm-global/bin:$PATH"
 
 #regular order
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
