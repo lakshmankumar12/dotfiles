@@ -14,6 +14,7 @@ alias man='TERM=xterm man'
 alias pwdtmux="pwd | tr -d '\n' | tmux loadb -"
 alias tmuxcopy="tr -d '\n' | tmux loadb -"
 alias tp="cd $HOME/tmp"
+alias mtp="cd /magma_vm/tmp"
 
 #bless my typo
 alias snv=svn
@@ -603,8 +604,13 @@ dumptmuxpane()
         echo "Supply a valid-paneid of the form %num. Got: ${target_pane}"
         return 1
     fi
-    tmux capture-pane -eCJ -S- -t "${target_pane}"
-    tmux save-buffer $file
+    # -e   Include escape sequences (colors/formatting) in output
+    # -C   Preserve unicode/UTF-8 characters correctly
+    # -J   Rejoin soft-wrapped lines into single lines
+    # -p   Print to stdout instead of the paste buffer
+    # -S-  Start from the beginning of scrollback history (- = oldest line)
+    # -t   Target pane to capture from
+    tmux capture-pane -eCJ -p -S- -t "${target_pane}" > $file
 }
 
 putpaneid() {
@@ -2170,22 +2176,6 @@ showconfigssh() {
 }
 
 
-ganyp () {
-    if [ -z "$1" ] ; then
-        echo "supply grep matter"
-        return 1
-    fi
-    out=$(eval "kubectl get pods -A | grep $@")
-    lines=$(echo "$out" | wc -l)
-    if [ $lines -eq 1 ]
-    then
-            pod=$(echo "${out}" | awk '{print $2}')
-            echo "pod=$pod"
-    else
-            echo "$out"
-    fi
-}
-
 psssh() {
     ps -ef | grep -w -e '[s]sh'
 }
@@ -2197,4 +2187,39 @@ killhetnzerssh() {
         echo "Killing: $pid"
         kill -9 $pid
     fi
+}
+
+prepend_log() {
+  local currfile="$1"
+  local histfile="$2"
+
+  if [[ -z "$currfile" || -z "$histfile" ]]; then
+    echo "Usage: prepend_log <currfile> <histfile>"
+    return 1
+  fi
+
+  cp "$currfile" "${currfile}.back"
+  if [ ! -f $histfile ] ; then
+    touch $histfile
+  else
+    cp "$histfile" "${histfile}.back"
+  fi
+
+  { echo "Date: $(date)"; echo; cat "$currfile"; echo; echo "---"; echo; cat "$histfile"; } > /tmp/_prepend_log_tmp && mv /tmp/_prepend_log_tmp "$histfile"
+}
+
+save_claude_input() {
+    if [ ! -f claude_input.txt ] ; then
+        echo "Huh! no claude_input.txt in PWD: $PWD"
+        return 1
+    fi
+    prepend_log claude_input.txt claude_input_history.txt
+}
+
+save_claude_input_cache() {
+    if [ ! -f .cache/claude_input.txt ] ; then
+        echo "Huh! no .cache/claude_input.txt in PWD: $PWD"
+        return 1
+    fi
+    prepend_log .cache/claude_input.txt .cache/claude_input_history.txt
 }
