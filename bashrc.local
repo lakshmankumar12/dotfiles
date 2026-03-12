@@ -2197,6 +2197,10 @@ prepend_log() {
     echo "Usage: prepend_log <currfile> <histfile>"
     return 1
   fi
+  if [ ! -f "$currfile" ] ; then
+    echo "Huh! no $currfile. PWD: $PWD"
+    return 1
+  fi
 
   cp "$currfile" "${currfile}.back"
   if [ ! -f $histfile ] ; then
@@ -2206,20 +2210,13 @@ prepend_log() {
   fi
 
   { echo "Date: $(date)"; echo; cat "$currfile"; echo; echo "---"; echo; cat "$histfile"; } > /tmp/_prepend_log_tmp && mv /tmp/_prepend_log_tmp "$histfile"
+  cp /dev/null $currfile
 }
 
 save_claude_input() {
-    if [ ! -f claude_input.txt ] ; then
-        echo "Huh! no claude_input.txt in PWD: $PWD"
-        return 1
-    fi
     prepend_log claude_input.txt claude_input_history.txt
 }
 
 save_claude_input_cache() {
-    if [ ! -f .cache/claude_input.txt ] ; then
-        echo "Huh! no .cache/claude_input.txt in PWD: $PWD"
-        return 1
-    fi
     prepend_log .cache/claude_input.txt .cache/claude_input_history.txt
 }
