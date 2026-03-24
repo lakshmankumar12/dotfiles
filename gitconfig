@@ -69,5 +69,9 @@
 	directory = /host_c/Users/laksh/work/github/sans99converter
 	directory = /host_c/Users/laksh/work/github/slokas
 	directory = /host_c/Users/laksh/work/github/ping-plots
+	directory = /host_c/Users/laksh/work/github/carnatic-notes
+	directory = /host_c/Users/laksh/work/github/break-timer
+	directory = /host_c/Users/laksh/work/github/taskbar_utc
+	directory = /host_c/Users/laksh/work/github/gxc-autologin-chrome-extension
 [init]
     defaultBranch = main

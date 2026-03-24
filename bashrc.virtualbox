@@ -200,3 +200,45 @@ stt() {
 tex2pdf() {
     docker run --rm -v $PWD:/data moss_xelatex_fonts xelatex -interaction=batchmode -no-pdf-info -jobname=${outfile%.pdf} -output-directory=./ ${infile}
 }
+
+brk_redraw() {
+    cmd="curl -s http://10.0.2.2:5050/redraw -X POST"
+    echo $cmd
+    eval $cmd
+}
+
+brk_reset() {
+    cmd="curl -s http://10.0.2.2:5050/reset -X POST"
+    echo $cmd
+    eval $cmd
+}
+
+brk_status() {
+    cmd="curl -s http://10.0.2.2:5050/status"
+    echo $cmd
+    eval $cmd
+}
+
+brk_help() {
+    cmd="curl -s http://10.0.2.2:5050/help"
+    echo $cmd
+    eval $cmd
+}
+
+brk_delay() {
+    cmd="curl -s http://10.0.2.2:5050/delay?value=${1:-2} -X POST"
+    echo $cmd
+    eval $cmd
+}
+
+brk_advance() {
+    cmd="curl -s http://10.0.2.2:5050/advance?value=${1:-2} -X POST"
+    echo $cmd
+    eval $cmd
+}
+
+brk_now() {
+    cmd="curl -s http://10.0.2.2:5050/take-break -X POST"
+    echo $cmd
+    eval $cmd
+}
