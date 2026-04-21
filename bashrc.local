@@ -16,6 +16,9 @@ alias tmuxcopy="tr -d '\n' | tmux loadb -"
 alias tp="cd $HOME/tmp"
 alias mtp="cd /magma_vm/tmp"
 
+## so much for my typing
+alias grpe='egrep --color'
+
 #bless my typo
 alias snv=svn
 
@@ -866,7 +869,7 @@ gotoCurrentExecution() {
 }
 
 gotoCurrentExecutionSecond() {
-    gotoTmuxPane 04-svt 20 0
+    gotoTmuxPane 04-svt 0 0
 }
 
 getSessionWindowPaneForPaneId() {
@@ -1950,6 +1953,10 @@ link_latest() {
 }
 
 npdumpcrt() {
+    if [ ! -f $1 ] ; then
+        echo "File not found: $1" 1>&2
+        return 1
+    fi
     openssl x509 -in $1 -noout -text
 }
 dumpcrt() {
@@ -1985,6 +1992,10 @@ npdumpallcrtsin() {
 
 npdumpallcrts() {
     infile="$1"
+    if [ ! -f $1 ] ; then
+        echo "File not found: $1" 1>&2
+        return 1
+    fi
     shift
     cat $infile | npdumpallcrtsin "$@"
 }
@@ -2171,6 +2182,10 @@ detect_gaps() {
   done
 }
 
+grep_non0() {
+    grep -E -v ':[[:space:]]+0$'
+}
+
 showconfigssh() {
     ssh -G "$1" | grep -i -w -e proxycommand -e user -e hostname -e identityfile -e port
 }
@@ -2202,11 +2217,11 @@ prepend_log() {
     return 1
   fi
 
-  cp "$currfile" "${currfile}.back"
+  cp "$currfile" "$(dirname "$currfile")/.$(basename "$currfile").back"
   if [ ! -f $histfile ] ; then
     touch $histfile
   else
-    cp "$histfile" "${histfile}.back"
+    cp "$histfile" "$(dirname "$histfile")/.$(basename "$histfile").back"
   fi
 
   { echo "Date: $(date)"; echo; cat "$currfile"; echo; echo "---"; echo; cat "$histfile"; } > /tmp/_prepend_log_tmp && mv /tmp/_prepend_log_tmp "$histfile"
@@ -2214,9 +2229,14 @@ prepend_log() {
 }
 
 save_claude_input() {
-    prepend_log claude_input.txt claude_input_history.txt
+    prepend_log claude_input.txt .claude_input_history.txt
 }
 
 save_claude_input_cache() {
     prepend_log .cache/claude_input.txt .cache/claude_input_history.txt
+}
+
+urlencode() {
+    input=$(cat)
+    python3 -c "import urllib.parse; print(urllib.parse.quote('${input}', safe=''))"
 }
