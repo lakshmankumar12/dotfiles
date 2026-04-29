@@ -2165,15 +2165,16 @@ har_times() {
 }
 
 detect_gaps() {
+  local interval=${1:-60}
   local prev_epoch=""
   while IFS=: read -r epoch rest; do
     epoch=$(echo "$epoch" | xargs)
     if [[ -n "$prev_epoch" ]]; then
       diff=$((epoch - prev_epoch))
-      if [[ $diff -ne 60 ]]; then
-        missing=$(( (diff / 60) - 1 ))
+      if [[ $diff -ne $interval ]]; then
+        missing=$(( (diff / interval) - 1 ))
         for ((i = 1; i <= missing; i++)); do
-          echo "GAP HERE (missing sample at $((prev_epoch + i * 60)))"
+          echo "GAP HERE (missing sample at $((prev_epoch + i * interval)))"
         done
       fi
     fi
