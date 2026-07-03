@@ -32,6 +32,7 @@
     tsort = for-each-ref --sort=creatordate --format "%(refname) %(creatordate)" refs/tags
     has = "!f() { if [ -z \"$2\" ] ; then branch=\"HEAD\" ; else branch=\"$2\" ; fi ; /usr/bin/git merge-base --is-ancestor $1 $branch ; } ; f"
     whn = "!f() { git fetch ; git log ..@{u} ; } ; f"
+    cma = "!f() { git commit --amend -m \"$1\" ; } ; f"
 [diff]
     tool = meld
     renameLimit = 25000

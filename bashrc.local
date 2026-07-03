@@ -869,7 +869,7 @@ gotoCurrentExecution() {
 }
 
 gotoCurrentExecutionSecond() {
-    gotoTmuxPane 04-svt 0 0
+    gotoTmuxPane 04-svt 1 0
 }
 
 getSessionWindowPaneForPaneId() {
@@ -2138,6 +2138,10 @@ har_req_show_url_decode() {
     har_show request | jq -r '.queryString[] | select(.name == "query") | .value' | url_decode
 }
 
+har_time_show() {
+    har_show startedDateTime | xargs
+}
+
 har_resp_show() {
     har_show response
 }
@@ -2156,6 +2160,14 @@ har_resp_show_content_text() {
 
 
 har_resp_show_dump_metrics() {
+    length=$(har_show_as_json response content.text | jq -r '.' | jq '.data.data.result | length')
+    if [ "$length" -eq 0 ]; then
+      echo "no data found" >&2
+      return 1
+    fi
+    if [ "$length" -gt 1 ]; then
+      echo -e "\033[31mW-A-R-N-I-N-G: more than one data-series found ($length)\033[0m" >&2
+    fi
     har_show_as_json response content.text | jq -r '.' | jq -r '.data.data.result[0].values[] | "\(.[0]): \(.[1])" ' | awk -F: '{cmd="date -d@" $1; cmd | getline d; close(cmd); printf "%s: %s: %s\n",$1,d,$2}'
 }
 
@@ -2191,6 +2203,32 @@ showconfigssh() {
     ssh -G "$1" | grep -i -w -e proxycommand -e user -e hostname -e identityfile -e port
 }
 
+gssh() {
+    hosts=$(grep -i '^Host ' ~/.ssh/config | awk '{for(i=2;i<=NF;i++) print $i}' | grep -v '[*?]')
+    if [ -z "$1" ]; then
+        echo "$hosts"
+        return
+    fi
+    while [ -n "$1" ]; do
+        grep_pat="$1"
+        shift
+        prevhosts="$hosts"
+        hosts=$(echo "$hosts" | grep "$grep_pat")
+        if [ -z "$hosts" ]; then
+            echo "$prevhosts"
+            echo "No hosts for pattern: $grep_pat"
+            return 1
+        fi
+    done
+    lines=$(echo "$hosts" | wc -l)
+    if [ $lines -eq 1 ]; then
+        export host="$hosts"
+        echo "host=$host"
+    else
+        echo "$hosts"
+    fi
+}
+
 
 psssh() {
     ps -ef | grep -w -e '[s]sh'
@@ -2222,7 +2260,12 @@ prepend_log() {
   if [ ! -f $histfile ] ; then
     touch $histfile
   else
-    cp "$histfile" "$(dirname "$histfile")/.$(basename "$histfile").back"
+    local hbase=$(basename "$histfile")
+    if [[ "$hbase" == .* ]]; then
+      cp "$histfile" "$(dirname "$histfile")/${hbase}.back"
+    else
+      cp "$histfile" "$(dirname "$histfile")/.${hbase}.back"
+    fi
   fi
 
   { echo "Date: $(date)"; echo; cat "$currfile"; echo; echo "---"; echo; cat "$histfile"; } > /tmp/_prepend_log_tmp && mv /tmp/_prepend_log_tmp "$histfile"
@@ -2240,4 +2283,9 @@ save_claude_input_cache() {
 urlencode() {
     input=$(cat)
     python3 -c "import urllib.parse; print(urllib.parse.quote('${input}', safe=''))"
+}
+
+strip_email_headers() {
+    emailfile=${1:-/tmp/email.html}
+    sed -i -n '/^Body:$/,/^---------$/{/^Body:$/d;/^---------$/d;p}' "$emailfile"
 }
