@@ -33,11 +33,13 @@
     has = "!f() { if [ -z \"$2\" ] ; then branch=\"HEAD\" ; else branch=\"$2\" ; fi ; /usr/bin/git merge-base --is-ancestor $1 $branch ; } ; f"
     whn = "!f() { git fetch ; git log ..@{u} ; } ; f"
     cma = "!f() { git commit --amend -m \"$1\" ; } ; f"
+    cmased = "!f() { git commit --amend -m \"$(git log -1 --format=%B | sed \"$1\")\" ; } ; f"
+    ismm = "!f() { git show --cc --format= \"$1\" ; } ; f"
 [diff]
     tool = meld
     renameLimit = 25000
 [push]
-    default = matching
+	default = simple
 [merge]
     tool = diffconflicts
     renameLimit = 25000

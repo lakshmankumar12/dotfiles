@@ -495,7 +495,7 @@ listtmuxpanes()
     current_pane="unavailable"
   fi
   tmux set-env -g TMUX_TEMP_CURR_PANE "${current_pane}"
-  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#T|#{window_id}|#{pane_id}|#{pane_tty}|#{?#{==:#{TMUX_TEMP_CURR_PANE},#{pane_id}},current,}"
+  tmux list-panes -s -t $session -F "#S|#I|#W|#P|#{?@label,#{@label},#T}|#{window_id}|#{pane_id}|#{pane_tty}|#{?#{==:#{TMUX_TEMP_CURR_PANE},#{pane_id}},current,}"
 }
 
 listalltmuxpanes_int()
@@ -990,6 +990,31 @@ cmdshnew() {
 savecurrentpane() {
     pane_id=$(tmux display-message -p '#{pane_id}')
     echo -n ${pane_id} > /tmp/tmuxbuffer/pane_id
+}
+
+tmux_track_global_window() {
+    mkdir -p /tmp/tmuxbuffer
+    prev=$(cat /tmp/tmuxbuffer/global_cur_win 2>/dev/null)
+    cur=$(tmux display-message -p '#S:#I')
+    if [ -n "$prev" ] && [ "$prev" != "$cur" ]; then
+        echo -n "$prev" > /tmp/tmuxbuffer/global_prev_win
+    fi
+    echo -n "$cur" > /tmp/tmuxbuffer/global_cur_win
+}
+
+gotoGlobalLastWindow() {
+    prev=$(cat /tmp/tmuxbuffer/global_prev_win 2>/dev/null)
+    if [ -n "$prev" ]; then
+        target_session="${prev%%:*}"
+        target_window="${prev#*:}"
+        current_session=$(tmux display-message -p '#S')
+        if [ "$current_session" != "$target_session" ]; then
+            tmux switch-client -t "$target_session"
+        fi
+        tmux select-window -t "${target_session}:${target_window}"
+    else
+        tmux last-window
+    fi
 }
 
 tmuxsendhereanddate () {
@@ -2209,7 +2234,14 @@ gssh() {
         echo "$hosts"
         return
     fi
+    local pick=""
     while [ -n "$1" ]; do
+        case "$1" in
+            -[0-9]*)
+                pick="${1#-}"
+                break
+                ;;
+        esac
         grep_pat="$1"
         shift
         prevhosts="$hosts"
@@ -2221,6 +2253,16 @@ gssh() {
         fi
     done
     lines=$(echo "$hosts" | wc -l)
+    if [ -n "$pick" ]; then
+        if [ "$pick" -gt "$lines" ]; then
+            echo "$hosts"
+            echo "Only $lines results, can't pick #$pick"
+            return 1
+        fi
+        export host=$(echo "$hosts" | sed -n "${pick}p")
+        echo "host=$host"
+        return
+    fi
     if [ $lines -eq 1 ]; then
         export host="$hosts"
         echo "host=$host"
