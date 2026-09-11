@@ -1844,7 +1844,27 @@ now() {
 }
 
 today() {
-    date "+%Y-%m-%d"
+    date -d "+${1:-0} days" "+%Y-%m-%d"
+}
+
+tomm() {
+    date -d "+$(( 1 + ${1:-0} )) days" "+%Y-%m-%d"
+}
+
+smart_date() {
+    local input="$1"
+    local day_name="${input%.*}"
+    local offset="${input#*.}"
+    local target_dow
+    local dn="$(echo "$day_name" | tr '[:upper:]' '[:lower:]')"
+    case "$dn" in
+        mon) target_dow=1 ;; tue) target_dow=2 ;; wed) target_dow=3 ;;
+        thu) target_dow=4 ;; fri) target_dow=5 ;; sat) target_dow=6 ;;
+        sun) target_dow=7 ;; *) echo "Invalid day: $day_name" >&2; return 1 ;;
+    esac
+    local current_dow=$(date +%u)
+    local days_ahead=$(( (target_dow - current_dow + 7) % 7 + 7 * offset ))
+    date -d "+${days_ahead} days" "+%Y-%m-%d"
 }
 
 declare -A time_zones
