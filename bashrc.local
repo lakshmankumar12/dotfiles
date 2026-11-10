@@ -920,7 +920,9 @@ gotoWindowGivenbyX() {
     gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForX
 }
 gotoWindowGivenbyR() {
-    gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForR
+    tmux switch-client -t 04-svt
+    tmux select-window -t 04-svt:20
+    tmux previous-window
 }
 gotoWindowGivenbyP() {
     gotoWindowGivenbyFile $HOME/tmuxlogs/.windowForP
@@ -1866,6 +1868,7 @@ smart_date() {
     local days_ahead=$(( (target_dow - current_dow + 7) % 7 + 7 * offset ))
     date -d "+${days_ahead} days" "+%Y-%m-%d"
 }
+alias sd=smart_date
 
 declare -A time_zones
 time_zones["ist"]="Asia/Kolkata"
